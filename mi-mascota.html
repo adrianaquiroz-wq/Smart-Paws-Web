@@ -7,79 +7,12 @@
   <title>Smart Paws — Mi Panel</title>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
   <link rel="stylesheet" href="css/style.css">
-
-  <style>
-
-    .sidebar {
-    position: fixed; /* Lo fija a la izquierda */
-    top: 0;
-    left: 0;
-    height: 100vh; /* Ocupa el 100% del alto de la vista */
-    width: 250px; /* Ajusta según tu diseño */
-    background-color: #1a1a1a; /* O el color que prefieras */
-    overflow-y: auto; /* Permite scroll si hay muchos menús */
-    z-index: 1000;
-}
-
-.main-content {
-    margin-left: 250px; /* Empuja el contenido para que no lo tape el sidebar */
-    padding: 20px;
-    min-height: 100vh;
-}
-    .modal-overlay {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: rgba(0, 0, 0, 0.7); /* Fondo oscuro translúcido */
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    z-index: 2000; /* Por encima de todo */
-}
-
-.modal-card {
-    background: white;
-    padding: 30px;
-    border-radius: 15px;
-    width: 90%;
-    max-width: 500px;
-    box-shadow: 0 10px 30px rgba(0,0,0,0.3);
-    position: relative;
-}
-/* Asegúrate de que el header del modal sea relativo */
-.modal-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    position: relative; /* Importante para posicionar la X */
-    padding-bottom: 15px;
-    border-bottom: 1px solid #eee;
-}
-
-/* Estilo para la X de cierre */
-.btn-cerrar {
-    background: none;
-    border: none;
-    font-size: 1.5rem;
-    cursor: pointer;
-    color: #666;
-    line-height: 1;
-    padding: 5px;
-    transition: color 0.2s;
-}
-
-.btn-cerrar:hover {
-    color: #ff4d4d; /* Se pone roja al pasar el mouse */
-}
-  </style>
+  <link rel="stylesheet" href="css/cliente-dashboard.css">
 </head>
 <body>
 
-<div class="vet-page"> <!-- Mantenemos la clase para usar el mismo CSS -->
+<div class="vet-page">
 
-  <!-- SIDEBAR DUEÑO -->
   <aside class="sidebar" id="sidebar">
     <div class="vet-info">
       <img src="img/dueno.jpg" alt="Usuario" class="avatar">
@@ -91,93 +24,103 @@
       <a href="#" class="active"><i class="fas fa-paw"></i> Mis Mascotas</a>
       <a href="#historial-global"><i class="fas fa-file-medical"></i> Historial Médico</a>
       <a href="tienda.html"><i class="fas fa-store"></i> Tienda</a>
-      <a href="javascript:void(0)" onclick="agendarCita()"><i class="fas fa-calendar-plus"></i> Agendar Cita</a>
+      <a href="#seccion-agendar"><i class="fas fa-calendar-plus"></i> Agendar Cita</a>
       <a href="php/logout.php" class="logout"><i class="fas fa-sign-out-alt"></i> Cerrar sesión</a>
     </nav>
   </aside>
 
-  <!-- CONTENIDO PRINCIPAL -->
   <main class="main-content">
+    
     <div class="content-header">
-      <div style="display:flex;align-items:center;gap:14px;">
-        <button id="menu-toggle" class="menu-toggle"><i class="fas fa-bars"></i></button>
+      <div class="header-titulo-agrupado"> 
+        <button id="menu-toggle" class="menu-toggle">
+          <i class="fas fa-bars"></i>
+        </button>
         <div>
           <h1 id="saludo-dueno">¡Hola!</h1>
-          <p style="font-size:.8rem;color:var(--texto-suave);margin-top:2px;">Gestiona la salud de tus peluditos desde aquí.</p>
+          <p class="subtitulo-dashboard">Gestiona la salud de tus peluditos desde aquí.</p>
         </div>
       </div>
       <span class="header-date" id="fecha-hoy"></span>
     </div>
 
-    <!-- MIS MASCOTAS GRID -->
     <div class="block">
       <h3><i class="fas fa-dog" style="color:var(--verde-vivo)"></i> Mis Consentidos</h3>
-      <div id="lista-mis-mascotas" class="stats-row" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 20px;">
-        <!-- Se llena con JS -->
-      </div>
+      <div id="lista-mis-mascotas" class="grid-mascotas">
+        </div>
     </div>
 
-    <!-- PRÓXIMAS CITAS DEL DUEÑO -->
-<div class="card">
-  <h3><i class="fas fa-clock" style="color:var(--ambar)"></i> Mis Citas Programadas</h3>
-  <!-- El JS buscará este ID para reemplazar el "Cargando..." por las citas reales -->
-  <div id="citas-dueno" class="lista-citas">
-    <p style="font-size: .9rem; color: gray;">Cargando tus próximas citas...</p>
-  </div>
-</div>
+    <div class="grid-layout-desktop">
       
-
-      <!-- ACCESO RÁPIDO -->
       <div class="card">
-        <h3><i class="fas fa-star" style="color:var(--coral)"></i> Acciones Rápidas</h3>
-        
-        <button class="btn-principal" style="width:100%; margin-bottom:10px;" onclick="agendarCita()">
-          <i class="fas fa-calendar-alt"></i> Agendar Nueva Cita
-        </button>
+        <h3><i class="fas fa-clock" style="color:var(--ambar)"></i> Mis Citas Programadas</h3>
+        <div id="citas-dueno" class="lista-citas-contenedor">
+          <p class="citas-vacias-texto">Cargando tus próximas citas...</p>
+        </div>
       </div>
+
+      <div class="form-card" id="seccion-agendar">
+        <h3 class="form-card-title"><i class="fas fa-calendar-alt" style="color: var(--verde-vivo)"></i> Agendar una Nueva Cita</h3>
+        <p class="form-subtitle">Selecciona los datos para verificar los horarios del doctor en tiempo real.</p>
+        
+        <form id="form-agendar-cita" class="field-group">
+          
+          <div class="field">
+            <label for="select-mascotas">Selecciona tu mascota:</label>
+            <select id="select-mascotas" name="id_mascota" required>
+              <option value="" disabled selected>Cargando tus consentidos...</option>
+            </select>
+          </div>
+
+          <div class="field-row">
+            <div class="field">
+              <label for="select-veterinarios">Veterinario Especialista:</label>
+              <select id="select-veterinarios" name="carnetVet" required>
+                <option value="" disabled selected>Cargando médicos...</option>
+              </select>
+            </div>
+            
+            <div class="field">
+              <label for="input-fecha">Fecha Deseada:</label>
+              <input type="date" name="fecha" id="input-fecha" required>
+            </div>
+          </div>
+
+          <button type="button" id="btn-ver-horarios" class="btn-consultar-horas" disabled>
+            <i class="fas fa-search"></i> Consultar Disponibilidad de Horas
+          </button>
+
+          <div id="agenda-dia-container" class="agenda-dia-recuadro hidden">
+            <p><i class="fas fa-clock"></i> Horas del día seleccionado:</p>
+            <div id="grid-horas" class="grid-horas-bloques"></div>
+            
+            <input type="hidden" name="hora" id="input-hora-final" required>
+          </div>
+
+          <div class="field">
+            <label for="txt-motivo">Motivo de la atención médica:</label>
+            <textarea id="txt-motivo" name="motivo" placeholder="Ej: Control de rutina, vacunas anuales..." required></textarea>
+          </div>
+
+          <button type="submit" class="btn-submit">
+            <i class="fas fa-check-circle"></i> Confirmar Cita Programada
+          </button>
+        </form>
+      </div>
+
     </div>
   </main>
 </div>
-<!-- MODAL PARA AGENDAR CITA -->
-<div id="modal-cita" class="modal-overlay hidden">
-    <div class="modal-card">
-        <div class="modal-header">
-
-
-            <h3><i class="fas fa-calendar-plus"></i> Agendar Nueva Cita</h3>
-            <button onclick="cerrarModal()" class="btn-cerrar">&times;</button>
-        </div>
-
-        <form id="form-agendar-cita" class="input-group">
-            <label>Selecciona tu mascota:</label>
-            <select id="select-mascotas" name="id_mascota" required>
-                <!-- Se llena dinámicamente desde cliente.js -->
-            </select>
-
-            <label>Fecha:</label>
-            <input type="date" name="fecha" id="input-fecha" required>
-
-            <label>Hora:</label>
-            <input type="time" name="hora" id="input-hora" required>
-
-            
-            <label>Selecciona el Veterinario:</label>
-            <select id="select-veterinarios" name="carnetVet" required>
-              <option value="" disabled selected>Cargando especialistas...</option>
-            </select>
-
-            <label>Motivo de la cita:</label>
-            <textarea name="motivo" placeholder="Ej: Control de rutina o audición del coro..."></textarea>
-
-            <button type="submit" class="btn-principal" style="margin-top:15px;">Confirmar Cita</button>
-        </form>
-    </div>
-</div>
+ 
 <script src="js/cliente.js"></script>
-<script>  
-    document.getElementById('fecha-hoy').textContent = new Date().toLocaleDateString('es-BO', {
+<script> 
+  // Ejecución segura de fecha local para Bolivia
+  const fechaEl = document.getElementById('fecha-hoy');
+  if (fechaEl) {
+    fechaEl.textContent = new Date().toLocaleDateString('es-BO', {
       weekday: 'long', year: 'numeric', month: 'long', day: 'numeric'
     });
+  }
 </script>
 </body>
 </html>

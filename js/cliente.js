@@ -1,111 +1,250 @@
-// --- FUNCIONES ---
+// cliente.js
 
-function cargarPerfil() {
-    fetch("php/get_perfil.php")
-    .then(res => res.json())
-    .then(user => {
-        if(!user.error) {
-            document.getElementById("nombre-dueno").textContent = `${user.nombre} ${user.apellido}`;
-            document.getElementById("saludo-dueno").textContent = `¡Hola, ${user.nombre}! 👋`;
-        }
-    })
-    .catch(err => console.log("No se pudo cargar el perfil"));
-}
-
-function cargarMisMascotas() {
-    fetch("php/get_mis_mascotas.php")
-    .then(res => res.json())
-    .then(data => {
-        const contenedor = document.getElementById("lista-mis-mascotas");
-        if (!contenedor) return;
-        contenedor.innerHTML = "";
-
-        if (!data || data.length === 0) {
-            contenedor.innerHTML = `<p style="grid-column:1/-1; text-align:center; color:gray;">No tienes mascotas vinculadas.</p>`;
-            return;
-        }
-
-        data.forEach(m => {
-            // USAR BACKTICKS `` PARA TODO EL BLOQUE HTML
-            contenedor.innerHTML += `
-                <div class="card" style="text-align:center; padding:20px; background:white; border-radius:15px; box-shadow:0 4px 10px rgba(0,0,0,0.05);">
-                    <img src="${m.foto || 'img/default.png'}" style="width:100px; height:100px; border-radius:50%; object-fit:cover; border:3px solid #4CAF50; margin-bottom:15px;">
-                    <h3 style="margin:5px 0;">${m.nombre}</h3>
-                    <p style="color:gray; font-size:.9rem; margin-bottom:15px;">${m.raza}</p>
-                    <div style="display:flex; gap:10px; justify-content:center;">
-                        <button class="btn-secundario" onclick="verHistorial(${m.id_mascota})">Historial</button>
-                        <button class="btn-principal" onclick="agendarCita(${m.id_mascota})" style="background:#FF9800; border:none; color:white; padding:5px 10px; border-radius:5px; cursor:pointer;">Cita</button>
-                    </div>
-                </div>`;
-        });
-    })
-    .catch(err => console.error("Error cargando mascotas:", err));
-}
-
-
-
-// --- FUNCIONES GLOBALES (Fuera del DOMContentLoaded para que el HTML las vea) ---
-/* --- FUNCIONES GLOBALES          CCCCIIIITTTTAAAASSSS       --- */
-
-function agendarCita(id = '') { 
-    const modal = document.getElementById('modal-cita');
-    const select = document.getElementById('select-mascotas');
-
-    if (modal) {
-        modal.classList.remove('hidden');
-        
-        if (select) {
-            if (id !== '') {
-                // Entra desde una mascota específica: bloqueamos el select en esa mascota
-                select.value = id;
-            } else {
-                // Entra desde el sidebar: dejamos que elija cualquiera
-                select.value = ""; 
-            }
-        }
-    }
-}
-
+// Redirige a la página de historial de la mascota
 function verHistorial(id) { 
     window.location.href = `historial-cliente.html?id=${id}`; 
 }
 
-/* --- LÓGICA PRINCIPAL --- */
+// Hace scroll suave y preselecciona la mascota en el formulario integrado
+function enfocarYSeleccionarMascota(idMascota) {
+    const select = document.getElementById('select-mascotas');
+    const seccionForm = document.getElementById('seccion-agendar');
 
+    if (select) {
+        select.value = idMascota;
+    }
+    if (seccionForm) {
+        seccionForm.scrollIntoView({ behavior: 'smooth' });
+    }
+}
+
+// Carga los datos del perfil del propietario
+function cargarPerfil() {
+    fetch("php/get_perfil.php")
+    .then(res => res.json())
+    .then(user => {
+        if (!user.error) {
+            const nombreEl = document.getElementById("nombre-dueno");
+            const saludoEl = document.getElementById("saludo-dueno");
+
+            if (nombreEl) nombreEl.textContent = user.nombre;
+            if (saludoEl) saludoEl.textContent = `¡Hola, ${user.nombre.split(' ')[0]}! 👋`;
+        }
+    })
+    .catch(err => console.error("No se pudo cargar el perfil:", err));
+}
+
+// Carga mascotas y veterinarios disponibles
+function cargarMisMascotasYSelect() {
+    fetch("php/get_mis_mascotas.php")
+    .then(res => res.json())
+    .then(data => {
+        const selectMascota = document.getElementById('select-mascotas');
+        const contenedor = document.getElementById("lista-mis-mascotas");
+
+        // Llenar select del formulario
+        if (selectMascota) {
+            selectMascota.innerHTML = '<option value="" disabled selected>Selecciona una mascota</option>';
+            data.forEach(m => {
+                selectMascota.innerHTML += `<option value="${m.id_mascota}">${m.nombre}</option>`;
+            });
+        }
+
+        // Renderizar tarjetas en el dashboard
+        if (contenedor) {
+            contenedor.innerHTML = "";
+
+            if (!data || data.length === 0) {
+                contenedor.innerHTML = `<p class="citas-vacias-texto" style="grid-column: 1/-1; text-align: center;">No tienes mascotas vinculadas.</p>`;
+                return;
+            }
+
+            data.forEach(m => {
+                contenedor.innerHTML += `
+                <div class="mascota-card-dinamica">
+                    <img src="${m.foto || 'img/default.png'}" alt="${m.nombre}">
+                    <h3>${m.nombre}</h3>
+                    <p>${m.raza}</p>
+                    <div style="display:flex; gap:10px; justify-content:center;">
+                        <button class="card-btn-accion" style="padding: 6px 12px; background: var(--arena); border-radius: var(--radio-sm); border:none; font-weight:600; cursor:pointer;" onclick="verHistorial(${m.id_mascota})">Historial</button>
+                        <button class="btn-principal" style="padding: 6px 12px; font-size:0.85rem;" onclick="enfocarYSeleccionarMascota(${m.id_mascota})">Cita</button>
+                    </div>
+                </div>`;
+            });
+        }
+    })
+    .catch(err => console.error("Error al obtener mascotas:", err));
+
+    // Cargar Catálogo de Veterinarios
+    fetch("php/get_veterinarios.php")
+    .then(res => res.json())
+    .then(vets => {
+        const selectVet = document.getElementById('select-veterinarios');
+        if (selectVet) {
+            selectVet.innerHTML = '<option value="" disabled selected>Selecciona un especialista</option>';
+            vets.forEach(v => {
+                selectVet.innerHTML += `<option value="${v.carnetVet}">Dr(a). ${v.nombre} ${v.apellido}</option>`;
+            });
+        }
+        // Ejecutamos validación por si la fecha ya estaba puesta
+        if (typeof validarActivacionConsulta === "function") {
+            validarActivacionConsulta();
+        }
+    })
+    .catch(err => console.error("Error al cargar veterinarios:", err));
+}
+
+// Cargar citas pendientes
+function cargarCitasPendientes() {
+    fetch("php/get_mis_citas.php")
+    .then(res => res.json())
+    .then(data => {
+        const contenedor = document.getElementById("citas-dueno");
+        if (!contenedor) return;
+
+        if (!data || data.length === 0) {
+            contenedor.innerHTML = `<p class="citas-vacias-texto">No tienes citas próximas agendadas.</p>`;
+            return;
+        }
+
+        contenedor.innerHTML = ""; 
+        data.forEach(c => {
+            contenedor.innerHTML += `
+            <div class="cita-item-fila">
+                <div class="cita-calendario-badge">
+                    <span class="badge-dia">${c.dia}</span>
+                    <span class="badge-mes">${c.mes}</span>
+                </div>
+                <div class="cita-info-texto">
+                    <h4>${c.mascota} — <span>${c.hora}</span></h4>
+                    <p>Dr(a). ${c.vet_nombre} | ${c.motivo}</p>
+                </div>
+                <span class="status-badge pendiente">${c.estado}</span>
+            </div>`;
+        });
+    })
+    .catch(err => console.error("Error cargando citas:", err));
+}
+
+// Global scope para que la carga asíncrona la detecte de forma segura
+function validarActivacionConsulta() {
+    const selectVet = document.getElementById("select-veterinarios");
+    const inputFecha = document.getElementById("input-fecha");
+    const btnVerHorarios = document.getElementById("btn-ver-horarios");
+
+    if (selectVet && inputFecha && btnVerHorarios) {
+        if (selectVet.value !== "" && inputFecha.value !== "") {
+            btnVerHorarios.removeAttribute("disabled");
+        } else {
+            btnVerHorarios.setAttribute("disabled", "true");
+        }
+    }
+}
+
+// --- 3. INICIALIZACIÓN COMPLETA DEL DOM ---
 document.addEventListener("DOMContentLoaded", () => {
     
-    // 1. Cargar Perfil (Nombre y Saludo)
-    fetch('php/get_perfil.php')
-        .then(res => res.json())
-        .then(data => {
-            if (!data.error) {
-                const nombreEl = document.getElementById('nombre-dueno');
-                const saludoEl = document.getElementById('saludo-dueno');
-                
-                if (nombreEl) nombreEl.textContent = data.nombre;
-                if (saludoEl) saludoEl.textContent = `¡Hola, ${data.nombre.split(' ')[0]}! 👋`;
+    // ==========================================
+    // 1. CONTROL DEL MENÚ HAMBURGUESA
+    // ==========================================
+    const menuBtn = document.getElementById("menu-toggle");
+    const sidebar = document.getElementById("sidebar");
+
+    if (menuBtn && sidebar) {
+        menuBtn.addEventListener("click", (e) => {
+            e.preventDefault();
+            e.stopPropagation(); 
+            sidebar.classList.toggle("active");
+        });
+
+        document.addEventListener("click", (e) => {
+            const clickDentroSidebar = e.target.closest("#sidebar");
+            const clickBoton = e.target.closest("#menu-toggle");
+
+            if (sidebar.classList.contains("active") && !clickDentroSidebar && !clickBoton) {
+                sidebar.classList.remove("active");
             }
-        })
-        .catch(err => console.error("Error cargando perfil:", err));
+        });
+    }
 
-    // 2. Cargar las Tarjetas de Mascotas Y el Select del Modal
-    // Llamamos a esta función que ahora hará ambas tareas
+    // Inicializar datos iniciales
+    cargarPerfil();
     cargarMisMascotasYSelect();
-
 
     if (document.getElementById("citas-dueno")) {
         cargarCitasPendientes();
     }
 
-    // 3. Manejo del Formulario de Citas (Se mantiene igual)
-    const formCita = document.getElementById('form-agendar-cita');
-    if (formCita) {
-        formCita.addEventListener('submit', (e) => {
-            e.preventDefault();
-            const formData = new FormData(formCita);
+    // ==========================================
+    // 2. SISTEMA DE HORARIOS Y AGENDA
+    // ==========================================
+    const selectVet = document.getElementById("select-veterinarios");
+    const inputFecha = document.getElementById("input-fecha");
+    const btnVerHorarios = document.getElementById("btn-ver-horarios");
+    const agendaContainer = document.getElementById("agenda-dia-container");
+    const gridHoras = document.getElementById("grid-horas");
+    const inputHoraFinal = document.getElementById("input-hora-final");
 
-            fetch('php/guardar_cita.php', {
-                method: 'POST',
+    const rangoHorasBase = [
+        "08:00","08:30","09:00","09:30","10:00","10:30","11:00","11:30","14:00","14:30","15:00","15:30"
+    ];
+
+    // Escuchar cambios para activar el botón (Corregido y verificado)
+    if (selectVet && inputFecha) {
+        selectVet.addEventListener("change", validarActivacionConsulta);
+        inputFecha.addEventListener("change", validarActivacionConsulta);
+        inputFecha.addEventListener("input", validarActivacionConsulta);
+    }
+
+    // Evento Click para visualizar horarios
+    if (btnVerHorarios) {
+        btnVerHorarios.addEventListener("click", () => {
+            gridHoras.innerHTML = "";
+            inputHoraFinal.value = "";
+
+            // Simulación actual (Modificable en el futuro para fetch real)
+            const horasOcupadasBD = ["09:30", "15:00"];
+
+            rangoHorasBase.forEach(hora => {
+                const botonHora = document.createElement("button");
+                botonHora.type = "button";
+                botonHora.textContent = hora;
+                botonHora.classList.add("hora-bloque");
+
+                if (horasOcupadasBD.includes(hora)) {
+                    botonHora.classList.add("ocupado");
+                    botonHora.setAttribute("disabled", "true");
+                } else {
+                    botonHora.classList.add("disponible");
+                    botonHora.addEventListener("click", () => {
+                        document.querySelectorAll(".hora-bloque.seleccionado").forEach(b => {
+                            b.classList.remove("seleccionado");
+                        });
+                        botonHora.classList.add("seleccionado");
+                        inputHoraFinal.value = hora;
+                    });
+                }
+                gridHoras.appendChild(botonHora);
+            });
+
+            agendaContainer.classList.remove("hidden");
+        });
+    }
+
+    // Envío del formulario de cita
+    const formCita = document.getElementById("form-agendar-cita");
+    if (formCita) {
+        formCita.addEventListener("submit", (e) => {
+            e.preventDefault();
+
+            if (!inputHoraFinal || !inputHoraFinal.value) {
+                alert("Por favor, consulta los horarios y selecciona una hora disponible en la cuadrícula.");
+                return;
+            }
+
+            const formData = new FormData(formCita);
+            fetch("php/guardar_cita.php", {
+                method: "POST",
                 body: formData
             })
             .then(res => res.text())
@@ -114,93 +253,10 @@ document.addEventListener("DOMContentLoaded", () => {
                     alert("¡Cita agendada con éxito!");
                     location.reload();
                 } else {
-                    alert("Error: " + res);
+                    alert("Error al procesar: " + res);
                 }
-            });
+            })
+            .catch(err => console.error("Error al guardar la cita:", err));
         });
     }
 });
-// NUEVA VERSIÓN DE TU FUNCIÓN PARA LLENAR EL SELECT
-
-function cargarMisMascotasYSelect() {
-    
-    // 1. CARGAR MASCOTAS (Para el Select y las Tarjetas)
-    fetch("php/get_mis_mascotas.php")
-    .then(res => res.json())
-    .then(data => {
-        const selectMascota = document.getElementById('select-mascotas');
-        const contenedor = document.getElementById("lista-mis-mascotas");
-
-        // Llenamos el select de mascotas en el modal
-        if (selectMascota) {
-            selectMascota.innerHTML = '<option value="" disabled selected>Selecciona una mascota</option>';
-            data.forEach(m => {
-                selectMascota.innerHTML += `<option value="${m.id_mascota}">${m.nombre}</option>`;
-            });
-        }
-
-        if (contenedor) {
-            contenedor.innerHTML = "";
-            data.forEach(m => {
-                contenedor.innerHTML += `
-                <div class="card" style="text-align:center; padding:20px; background:white; border-radius:15px; box-shadow:0 4px 10px rgba(0,0,0,0.05);">
-                    <img src="${m.foto || 'img/default.png'}" style="width:100px; height:100px; border-radius:50%; object-fit:cover; border:3px solid var(--verde-vivo); margin-bottom:15px;">
-                    <h3 style="margin:5px 0;">${m.nombre}</h3>
-                    <p style="color:gray; font-size:.9rem; margin-bottom:15px;">${m.raza}</p>
-                    
-                    <button class="btn-secundario" onclick="verHistorial(${m.id_mascota})" style="width:100%; padding:10px;">
-                        <i class="fas fa-file-medical"></i> Ver Historial
-                    </button>
-                </div>`;
-            });
-        }
-    })
-    .catch(err => console.error("Error al obtener mascotas:", err));
-
-    // 2. CARGAR VETERINARIOS (Para el nuevo select del modal)
-    fetch("php/get_veterinarios.php")
-    .then(res => res.json())
-    .then(vets => {
-        const selectVet = document.getElementById('select-veterinarios');
-        if (selectVet) {
-            selectVet.innerHTML = '<option value="" disabled selected>Selecciona un especialista</option>';
-            vets.forEach(v => {
-                // Usamos v.nombre y v.apellido que ahora vienen del JOIN
-                selectVet.innerHTML += `<option value="${v.carnetVet}">Dr(a). ${v.nombre} ${v.apellido}</option>`;
-            });
-        }
-    })
-    
-    .catch(err => console.error("Error al cargar veterinarios:", err));
-}
-
-
-function cargarCitasPendientes() {
-    fetch("php/get_mis_citas.php")
-    .then(res => res.json())
-    .then(data => {
-        const contenedor = document.getElementById("citas-dueno");
-        if (!contenedor) return;
-
-        if (data.length === 0) {
-            contenedor.innerHTML = `<p style="font-size: .9rem; color: gray;">No tienes citas próximas.</p>`;
-            return;
-        }
-
-        contenedor.innerHTML = ""; 
-        data.forEach(c => {
-            contenedor.innerHTML += `
-            <div class="cita-item" style="display:flex; align-items:center; gap:15px; padding:10px; border-bottom:1px solid #eee;">
-                <div style="background:var(--verde-vivo); color:white; padding:8px; border-radius:10px; text-align:center; min-width:60px;">
-                    <span style="display:block; font-size:1.1rem; font-weight:bold;">${c.dia}</span>
-                    <span style="font-size:0.7rem; text-transform:uppercase;">${c.mes}</span>
-                </div>
-                <div style="flex:1;">
-                    <h4 style="margin:0; font-size:0.95rem;">${c.mascota} — <span style="color:var(--verde-vivo)">${c.hora}</span></h4>
-                    <p style="margin:2px 0 0; font-size:0.8rem; color:gray;">Dr(a). ${c.vet_nombre} | ${c.motivo}</p>
-                </div>
-                <span class="tag-estado" style="font-size:0.7rem; padding:4px 8px; border-radius:12px; background:#fff3cd; color:#856404;">${c.estado}</span>
-            </div>`;
-        });
-    });
-}

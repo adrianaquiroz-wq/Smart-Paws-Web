@@ -1,0 +1,383 @@
+/* cliente-dashboard.css */
+
+.main-content{
+  margin-left:264px;
+  padding:32px;
+  min-height:100vh;
+  width:calc(100% - 264px);
+}
+
+.header-titulo-agrupado{
+  display:flex;
+  align-items:center;
+  gap:14px;
+}
+
+.subtitulo-dashboard{
+  font-size:.88rem;
+  color:var(--texto-suave);
+  margin-top:5px;
+}
+
+.menu-toggle{
+  display:none;
+
+  border:none;
+  outline:none;
+
+  background:var(--blanco);
+
+  align-items:center;
+  justify-content:center;
+
+  width:42px;
+  height:42px;
+
+  border:1px solid var(--arena);
+  border-radius:var(--radio-sm);
+
+  color:var(--verde-oscuro);
+
+  font-size:1.2rem;
+
+  cursor:pointer;
+
+  box-shadow:var(--sombra-sm);
+
+  transition:var(--transicion);
+
+  z-index:10000;
+}
+
+.menu-toggle:hover{
+  transform:scale(1.04);
+}
+
+@media (max-width:768px){
+
+  .main-content{
+    margin-left:0;
+    width:100%;
+    padding:20px;
+  }
+
+  .menu-toggle{
+    display:flex;
+  }
+
+}
+
+.grid-layout-desktop{
+  display:grid;
+  grid-template-columns:1fr 1.2fr;
+  gap:24px;
+  align-items:start;
+}
+
+@media(max-width:992px){
+
+  .grid-layout-desktop{
+    grid-template-columns:1fr;
+  }
+
+}
+
+.grid-mascotas{
+  display:grid;
+  grid-template-columns:repeat(auto-fill,minmax(280px,1fr));
+  gap:20px;
+}
+
+.mascota-card-dinamica{
+  text-align:center;
+
+  padding:24px;
+
+  background:var(--blanco);
+
+  border-radius:var(--radio-md);
+
+  box-shadow:var(--sombra-sm);
+
+  border:1px solid var(--arena);
+
+  transition:var(--transicion);
+}
+
+.mascota-card-dinamica:hover{
+  transform:translateY(-3px);
+  box-shadow:var(--sombra-md);
+}
+
+.mascota-card-dinamica img{
+  width:100px;
+  height:100px;
+
+  border-radius:50%;
+
+  object-fit:cover;
+
+  border:3px solid var(--verde-vivo);
+
+  margin:0 auto 15px;
+}
+
+.mascota-card-dinamica h3{
+  margin:5px 0;
+
+  font-size:1.25rem;
+
+  font-family:'Playfair Display',serif;
+}
+
+.mascota-card-dinamica p{
+  color:var(--texto-suave);
+
+  font-size:.9rem;
+
+  margin-bottom:18px;
+}
+
+/* ============================= */
+/* CITAS */
+/* ============================= */
+
+.lista-citas-contenedor{
+  min-height:150px;
+}
+
+.citas-vacias-texto{
+  font-size:.9rem;
+  color:var(--texto-suave);
+}
+
+.cita-item-fila{
+  display:flex;
+  align-items:center;
+  gap:15px;
+
+  padding:14px 0;
+
+  border-bottom:1px solid var(--arena);
+}
+
+.cita-item-fila:last-child{
+  border-bottom:none;
+}
+
+.cita-calendario-badge{
+  background:var(--verde-vivo);
+
+  color:var(--blanco);
+
+  padding:8px;
+
+  border-radius:var(--radio-sm);
+
+  text-align:center;
+
+  min-width:62px;
+
+  box-shadow:var(--sombra-sm);
+}
+
+.cita-calendario-badge .badge-dia{
+  display:block;
+
+  font-size:1.15rem;
+
+  font-weight:700;
+
+  line-height:1;
+}
+
+.cita-calendario-badge .badge-mes{
+  font-size:.68rem;
+
+  text-transform:uppercase;
+
+  font-weight:600;
+}
+
+.cita-info-texto{
+  flex:1;
+}
+
+.cita-info-texto h4{
+  margin:0;
+
+  font-size:.95rem;
+
+  font-family:'DM Sans',sans-serif;
+
+  font-weight:600;
+}
+
+.cita-info-texto h4 span{
+  color:var(--verde-vivo);
+  font-weight:700;
+}
+
+.cita-info-texto p{
+  margin:3px 0 0;
+
+  font-size:.82rem;
+
+  color:var(--texto-suave);
+}
+
+/* ============================= */
+/* BOTÓN HORARIOS */
+/* ============================= */
+
+.btn-consultar-horas{
+  width:100%;
+
+  padding:13px 18px;
+
+  background:linear-gradient(
+    135deg,
+    var(--verde-medio),
+    var(--verde-vivo)
+  );
+
+  color:var(--blanco);
+
+  border:none;
+
+  border-radius:var(--radio-sm);
+
+  font-family:'DM Sans',sans-serif;
+
+  font-weight:700;
+
+  font-size:.9rem;
+
+  cursor:pointer;
+
+  transition:var(--transicion);
+
+  box-shadow:0 4px 12px rgba(30,92,58,.15);
+
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  gap:8px;
+
+  margin:8px 0;
+}
+
+.btn-consultar-horas:hover:not(:disabled){
+  transform:translateY(-2px);
+
+  box-shadow:0 6px 18px rgba(30,92,58,.25);
+}
+
+.btn-consultar-horas:disabled{
+  background:#e2e8f0;
+
+  color:#94a3b8;
+
+  box-shadow:none;
+
+  cursor:not-allowed;
+
+  opacity:.7;
+}
+
+/* ============================= */
+/* HORARIOS */
+/* ============================= */
+
+.agenda-dia-recuadro{
+  margin-top:15px;
+
+  background:var(--crema);
+
+  padding:18px;
+
+  border-radius:var(--radio-md);
+
+  border:1.5px dashed var(--arena);
+}
+
+.agenda-dia-recuadro p{
+  font-size:.78rem;
+
+  font-weight:700;
+
+  color:var(--verde-oscuro);
+
+  margin-bottom:12px;
+
+  text-transform:uppercase;
+
+  letter-spacing:.5px;
+}
+
+.grid-horas-bloques{
+  display:grid;
+
+  grid-template-columns:
+  repeat(auto-fill,minmax(85px,1fr));
+
+  gap:8px;
+}
+
+/* ============================= */
+/* BLOQUES HORA */
+/* ============================= */
+
+.hora-bloque{
+  padding:10px 6px;
+
+  border:1.5px solid transparent;
+
+  border-radius:var(--radio-sm);
+
+  font-family:'DM Sans',sans-serif;
+
+  font-weight:600;
+
+  font-size:.82rem;
+
+  cursor:pointer;
+
+  text-align:center;
+
+  transition:var(--transicion);
+}
+
+.hora-bloque.disponible{
+  background:var(--verde-claro);
+
+  color:var(--verde-medio);
+}
+
+.hora-bloque.disponible:hover{
+  background:var(--verde-vivo);
+
+  color:var(--blanco);
+
+  transform:translateY(-1px);
+}
+
+.hora-bloque.ocupado{
+  background:#fee2e2;
+
+  color:var(--coral);
+
+  cursor:not-allowed;
+
+  opacity:.55;
+
+  text-decoration:line-through;
+}
+
+.hora-bloque.seleccionado{
+  background:var(--verde-oscuro);
+
+  color:var(--blanco);
+
+  border-color:var(--verde-oscuro);
+}
