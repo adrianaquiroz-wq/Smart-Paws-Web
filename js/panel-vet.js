@@ -83,6 +83,9 @@ document.addEventListener('DOMContentLoaded', function() {
     cargarMascotasRecientes();
     cargarStatsDashboard();
     cargarProximasCitasLista();
+    cargarNotificacionesCanceladas();
+
+    setInterval(cargarNotificacionesCanceladas, 30000);
 
     // 2. Configuramos el calendario
     var calendarEl = document.getElementById('calendario');
@@ -197,4 +200,58 @@ function cargarProximasCitasLista() {
             console.error("Error cargando lista de citas:", err);
             document.getElementById('contenedor-proximas-citas').innerHTML = "Error al conectar con el servidor.";
         });
+}
+
+/* --- AUMENTADO: CARGAR NOTIFICACIONES DE CITAS CANCELADAS --- */
+function cargarNotificacionesCanceladas() {
+    const contenedor = document.getElementById("contenedor-notificaciones");
+    if (!contenedor) return;
+
+    fetch("php/get_notificaciones.php")
+    .then(res => res.json())
+    .then(response => {
+        if (response.success && response.data.length > 0) {
+            contenedor.innerHTML = ""; // Limpiamos el texto "Cargando avisos del sistema..."
+            
+            response.data.forEach(noti => {
+                // Formateamos la fecha de la cita cancelada de forma más legible
+                const fechaPartes = noti.fecha.split('-');
+                const fechaFormateada = `${fechaPartes[2]}/${fechaPartes[1]}/${fechaPartes[0]}`;
+
+                contenedor.innerHTML += `
+                    <div class="mascota-item" style="border-left: 4px solid #ff4d4d; margin-bottom: 10px; padding: 12px; background: #fff5f5; border-radius: var(--radio-sm, 6px); box-shadow: 0 2px 4px rgba(255,0,0,0.03);">
+                        <div style="display: flex; justify-content: space-between; align-items: flex-start;">
+                            <div>
+                                <span style="font-size: 0.75rem; font-weight: 800; color: #ff4d4d; letter-spacing: 0.5px;">
+                                    <i class="fas fa-exclamation-triangle"></i> CITA CANCELADA
+                                </span>
+                                <h4 style="margin: 4px 0; font-size: 0.95rem; color: #333;">
+                                    <b>${noti.mascota}</b> — <span style="color: #555;">${noti.hora.substring(0, 5)}</span>
+                                </h4>
+                                <p style="font-size: 0.85rem; color: #555; margin: 2px 0;">
+                                    Propietario: <strong>${noti.dueno}</strong>
+                                </p>
+                                <p style="font-size: 0.8rem; color: #777; margin-top: 4px; font-style: italic; background: rgba(0,0,0,0.03); padding: 4px 8px; border-radius: 4px;">
+                                    Motivo original: ${noti.motivo || 'No especificado'}
+                                </p>
+                            </div>
+                            <span style="font-size: 0.75rem; font-weight: 700; background: #ffebee; color: #c62828; padding: 3px 8px; border-radius: 12px;">
+                                ${fechaFormateada}
+                            </span>
+                        </div>
+                    </div>`;
+            });
+        } else {
+            // Si el backend responde sin datos o success es false
+            contenedor.innerHTML = `
+                <div style="text-align: center; padding: 20px; color: var(--texto-suave);">
+                    <i class="fas fa-bell-slash" style="font-size: 1.5rem; margin-bottom: 8px; color: #ccc;"></i>
+                    <p style="font-size: 0.88rem; margin: 0;">No hay nuevas alertas ni cancelaciones.</p>
+                </div>`;
+        }
+    })
+    .catch(err => {
+        console.error("Error al obtener las notificaciones:", err);
+        contenedor.innerHTML = "<p style='color:red; padding:10px; font-size:0.85rem;'>Error al conectar con los avisos del sistema.</p>";
+    });
 }

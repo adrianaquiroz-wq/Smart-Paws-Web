@@ -95,6 +95,7 @@ function cargarMisMascotasYSelect() {
 }
 
 // Cargar citas pendientes
+// Cargar citas pendientes
 function cargarCitasPendientes() {
     fetch("php/get_mis_citas.php")
     .then(res => res.json())
@@ -109,17 +110,34 @@ function cargarCitasPendientes() {
 
         contenedor.innerHTML = ""; 
         data.forEach(c => {
+            // VERIFICACIÓN: Solo mostramos el botón si la cita sigue en estado "Pendiente"
+            let botonCancelar = "";
+            if (c.estado.trim().toLowerCase() === "pendiente") {
+                botonCancelar = `
+                    <button class="btn-cancelar-cita-dinamico" 
+                            style="background: #ff4d4d; color: white; border: none; padding: 6px 10px; border-radius: var(--radio-sm); cursor: pointer; font-weight: 600; font-size: 0.8rem; margin-left: auto;" 
+                            onclick="cancelarMiCita(${c.id_cita})">
+                        <i class="fas fa-times-circle"></i> Cancelar
+                    </button>
+                `;
+            }
+
             contenedor.innerHTML += `
-            <div class="cita-item-fila">
-                <div class="cita-calendario-badge">
-                    <span class="badge-dia">${c.dia}</span>
-                    <span class="badge-mes">${c.mes}</span>
+            <div class="cita-item-fila" style="display: flex; align-items: center; justify-content: space-between; gap: 10px;">
+                <div style="display: flex; align-items: center; gap: 15px;">
+                    <div class="cita-calendario-badge">
+                        <span class="badge-dia">${c.dia}</span>
+                        <span class="badge-mes">${c.mes}</span>
+                    </div>
+                    <div class="cita-info-texto">
+                        <h4>${c.mascota} — <span>${c.hora}</span></h4>
+                        <p>Dr(a). ${c.vet_nombre} | ${c.motivo}</p>
+                    </div>
                 </div>
-                <div class="cita-info-texto">
-                    <h4>${c.mascota} — <span>${c.hora}</span></h4>
-                    <p>Dr(a). ${c.vet_nombre} | ${c.motivo}</p>
+                <div style="display: flex; align-items: center; gap: 10px;">
+                    <span class="status-badge pendiente">${c.estado}</span>
+                    ${botonCancelar}
                 </div>
-                <span class="status-badge pendiente">${c.estado}</span>
             </div>`;
         });
     })
@@ -140,7 +158,96 @@ function validarActivacionConsulta() {
         }
     }
 }
+// AUMENTADO Y CORREGIDO: Función para procesar la cancelación de la cita usando notificaciones del sistema
+// Variable global temporal para saber qué cita se desea procesar en el modal
+let idCitaParaCancelar = null;
 
+// Modificado: Abre el modal del sistema en lugar de usar el confirm() del navegador
+function cancelarMiCita(idCita) {
+    idCitaParaCancelar = idCita; // Guardamos el ID de la cita seleccionada
+    
+    const modal = document.getElementById("modal-confirmacion");
+    if (modal) {
+        modal.classList.add("active"); // Muestra el modal personalizado
+    }
+}
+
+// Evento para inicializar las acciones del modal una vez cargado el DOM
+document.addEventListener("DOMContentLoaded", () => {
+    const modal = document.getElementById("modal-confirmacion");
+    const btnAceptar = document.getElementById("btn-modal-aceptar");
+    const btnCancelar = document.getElementById("btn-modal-cancelar");
+
+    if (!modal) return;
+
+    // Si el usuario confirma en tu ventanita del sistema
+    btnAceptar.addEventListener("click", () => {
+        modal.classList.remove("active"); // Cerramos el modal
+        
+        if (idCitaParaCancelar) {
+            ejecutarCancelacionEnBackend(idCitaParaCancelar);
+        }
+    });
+
+    // Si el usuario decide dar marcha atrás
+    btnCancelar.addEventListener("click", () => {
+        modal.classList.remove("active"); // Solo cerramos el modal
+        idCitaParaCancelar = null; // Limpiamos la variable
+    });
+});
+
+// Función interna que realiza la petición FETCH real hacia tu PHP
+function ejecutarCancelacionEnBackend(idCita) {
+    const datosCita = new URLSearchParams();
+    datosCita.append('id_cita', idCita);
+
+    fetch("php/cancelar_cita.php", {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/x-www-form-urlencoded"
+        },
+        body: datosCita.toString()
+    })
+    .then(res => res.json())
+    .then(data => {
+        if (data.success) {
+            mostrarNotificacion("¡Cita cancelada con éxito!", "success");
+            cargarCitasPendientes(); // Actualiza dinámicamente tu lista de citas
+        } else {
+            mostrarNotificacion("Error al intentar cancelar: " + data.message, "error");
+        }
+    })
+    .catch(err => {
+        console.error("Error en la petición de cancelación:", err);
+        mostrarNotificacion("Ocurrió un problema de red al intentar cancelar la cita.", "error");
+    });
+}
+
+// Función para mostrar notificaciones flotantes (Toasts) dentro del sistema sin usar alert()
+function mostrarNotificacion(mensaje, tipo = "success") {
+    const contenedor = document.getElementById("toast-container");
+    if (!contenedor) return;
+
+    // Crear el elemento del toast
+    const toast = document.createElement("div");
+    toast.className = `custom-toast ${tipo}`;
+    
+    // Asignar un icono según el tipo de mensaje
+    let icono = '<i class="fas fa-check-circle" style="color:#2ecc71;"></i>';
+    if (tipo === "error") icono = '<i class="fas fa-times-circle" style="color:#ff4d4d;"></i>';
+    if (tipo === "warning") icono = '<i class="fas fa-exclamation-triangle" style="color:#f1c40f;"></i>';
+
+    toast.innerHTML = `${icono} <span>${mensaje}</span>`;
+    contenedor.appendChild(toast);
+
+    // Desvanecer y eliminar automáticamente a los 4 segundos
+    setTimeout(() => {
+        toast.classList.add("fade-out");
+        toast.addEventListener("animationend", () => {
+            toast.remove();
+        });
+    }, 4000);
+}
 // --- 3. INICIALIZACIÓN COMPLETA DEL DOM ---
 document.addEventListener("DOMContentLoaded", () => {
     
@@ -197,40 +304,52 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     // Evento Click para visualizar horarios
+    // Evento Click para visualizar horarios REALES desde la Base de Datos
     if (btnVerHorarios) {
         btnVerHorarios.addEventListener("click", () => {
-            gridHoras.innerHTML = "";
+            const vetSeleccionado = selectVet.value;
+            const fechaSeleccionada = inputFecha.value;
+
+            gridHoras.innerHTML = "<p style='grid-column:1/-1; text-align:center; color:gray;'><i class='fas fa-spinner fa-spin'></i> Consultando agenda...</p>";
             inputHoraFinal.value = "";
 
-            // Simulación actual (Modificable en el futuro para fetch real)
-            const horasOcupadasBD = ["09:30", "15:00"];
+            // Hacemos la consulta al nuevo backend pasando el veterinario y la fecha elegida
+            fetch(`php/get_horas_ocupadas.php?carnetVet=${vetSeleccionado}&fecha=${fechaSeleccionada}`)
+            .then(res => res.json())
+            .then(horasOcupadasBD => {
+                gridHoras.innerHTML = ""; // Limpiamos el cargador
 
-            rangoHorasBase.forEach(hora => {
-                const botonHora = document.createElement("button");
-                botonHora.type = "button";
-                botonHora.textContent = hora;
-                botonHora.classList.add("hora-bloque");
+                rangoHorasBase.forEach(hora => {
+                    const botonHora = document.createElement("button");
+                    botonHora.type = "button";
+                    botonHora.textContent = hora;
+                    botonHora.classList.add("hora-bloque");
 
-                if (horasOcupadasBD.includes(hora)) {
-                    botonHora.classList.add("ocupado");
-                    botonHora.setAttribute("disabled", "true");
-                } else {
-                    botonHora.classList.add("disponible");
-                    botonHora.addEventListener("click", () => {
-                        document.querySelectorAll(".hora-bloque.seleccionado").forEach(b => {
-                            b.classList.remove("seleccionado");
+                    // Comparamos si la hora (ej: "09:30") está en la lista que mandó la BD
+                    if (horasOcupadasBD.includes(hora)) {
+                        botonHora.classList.add("ocupado");
+                        botonHora.setAttribute("disabled", "true");
+                    } else {
+                        botonHora.classList.add("disponible");
+                        botonHora.addEventListener("click", () => {
+                            document.querySelectorAll(".hora-bloque.seleccionado").forEach(b => {
+                                b.classList.remove("seleccionado");
+                            });
+                            botonHora.classList.add("seleccionado");
+                            inputHoraFinal.value = hora;
                         });
-                        botonHora.classList.add("seleccionado");
-                        inputHoraFinal.value = hora;
-                    });
-                }
-                gridHoras.appendChild(botonHora);
-            });
+                    }
+                    gridHoras.appendChild(botonHora);
+                });
 
-            agendaContainer.classList.remove("hidden");
+                agendaContainer.classList.remove("hidden");
+            })
+            .catch(err => {
+                console.error("Error al obtener disponibilidad:", err);
+                gridHoras.innerHTML = "<p style='grid-column:1/-1; color:red; text-align:center;'>Error al cargar los horarios.</p>";
+            });
         });
     }
-
     // Envío del formulario de cita
     const formCita = document.getElementById("form-agendar-cita");
     if (formCita) {
@@ -260,3 +379,4 @@ document.addEventListener("DOMContentLoaded", () => {
         });
     }
 });
+

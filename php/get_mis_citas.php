@@ -9,8 +9,8 @@ if (!isset($_SESSION['carnet'])) {
 
 $carnetDue = $_SESSION['carnet'];
 
-// Consulta para traer los datos de la cita, la mascota y el veterinario (JOIN con personas)
-$sql = "SELECT c.fecha, c.hora, c.motivo, c.estado, m.nombre AS mascota, p.nombre AS vet_nombre 
+// CORRECCIÓN: Agregamos c.id_cita a la consulta SQL
+$sql = "SELECT c.id_cita, c.fecha, c.hora, c.motivo, c.estado, m.nombre AS mascota, p.nombre AS vet_nombre 
         FROM citas c
         INNER JOIN mascotas m ON c.id_mascota = m.id_mascota
         INNER JOIN personas p ON c.carnetVet = p.carnet
@@ -25,6 +25,8 @@ while($fila = $res->fetch_assoc()){
     $fecha_obj = new DateTime($fila['fecha']);
     $fila['dia'] = $fecha_obj->format('d');
     $fila['mes'] = $fecha_obj->format('M'); // Ene, Feb, Mar...
+    
+    // Como ya agregamos c.id_cita, $fila ya la incluye automáticamente aquí
     $citas[] = $fila;
 }
 

@@ -381,3 +381,95 @@
 
   border-color:var(--verde-oscuro);
 }
+/****************************************************************/
+/* --- MODAL DE CONFIRMACIÓN PERSONALIZADO --- */
+.custom-modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5);
+    backdrop-filter: blur(4px); /* Difumina un poco el fondo */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 11000;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.3s ease;
+}
+
+/* Cuando se le añade la clase 'active' se muestra */
+.custom-modal-overlay.active {
+    opacity: 1;
+    pointer-events: auto;
+}
+
+.custom-modal-box {
+    background: #ffffff;
+    padding: 30px;
+    border-radius: 16px;
+    width: 90%;
+    max-width: 400px;
+    text-align: center;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+    transform: scale(0.8);
+    transition: transform 0.3s ease;
+}
+
+.custom-modal-overlay.active .custom-modal-box {
+    transform: scale(1);
+}
+
+.custom-modal-icon {
+    font-size: 2.5rem;
+    color: #e74c3c; /* Color rojo/alerta */
+    margin-bottom: 15px;
+}
+
+.custom-modal-box h3 {
+    margin: 0 0 10px 0;
+    font-size: 1.3rem;
+    color: #2c3e50;
+}
+
+.custom-modal-box p {
+    margin: 0 0 25px 0;
+    font-size: 0.95rem;
+    color: #7f8c8d;
+    line-height: 1.5;
+}
+
+.custom-modal-buttons {
+    display: flex;
+    gap: 15px;
+    justify-content: center;
+}
+
+.btn-modal {
+    padding: 10px 20px;
+    border: none;
+    border-radius: 8px;
+    font-size: 0.95rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background 0.2s;
+    flex: 1;
+}
+
+.btn-secundario {
+    background: #ecf0f1;
+    color: #7f8c8d;
+}
+.btn-secundario:hover {
+    background: #bdc3c7;
+}
+
+.btn-peligro {
+    background: #e74c3c;
+    color: white;
+}
+.btn-peligro:hover {
+    background: #c0392b;
+}
