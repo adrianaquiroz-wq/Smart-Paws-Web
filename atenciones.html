@@ -1,0 +1,251 @@
+<!--atenciones.html-->
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Smart Paws — Módulo de Atenciones</title>
+
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="css/atenciones.css">
+  
+</head>
+
+<body>
+
+<div class="vet-page">
+
+  <aside class="sidebar" id="sidebar">
+    <div class="vet-info">
+      <img src="img/veterinaria.png" alt="Doctor" class="avatar">
+      <h3>Dr. Veterinario</h3>
+      <span class="sidebar-tag">Veterinario</span>
+    </div>
+
+    <nav class="side-nav">
+      <a href="panel-vet.html"><i class="fas fa-home"></i> Panel principal</a>
+      <a href="panel-vet.html#buscar-section"><i class="fas fa-search"></i> Buscar paciente</a>
+      <a href="panel-vet.html#calendario-section"><i class="fas fa-calendar-alt"></i> Citas del día</a>
+      <a href="atenciones.html" class="active"><i class="fas fa-notes-medical"></i> Atenciones</a>
+      <a href="registrar_cliente.html"><i class="fas fa-user-plus"></i> Registrar dueño</a>
+      <a href="registrar_mascota.html"><i class="fas fa-paw"></i> Registrar mascota</a>
+      <a href="panel-vet.html#inventario-section"><i class="fas fa-pills"></i> Inventario tienda</a>
+      <a href="login.html" class="logout"><i class="fas fa-sign-out-alt"></i> Cerrar sesión</a>
+    </nav>
+  </aside>
+
+  <main class="main-content">
+
+    <div class="content-header">
+      <div style="display:flex;align-items:center;gap:14px;">
+        <button id="menu-toggle" class="menu-toggle"><i class="fas fa-bars"></i></button>
+        <div>
+          <h1>Control de Atenciones</h1>
+          <p style="font-size:.8rem;color:var(--texto-suave);margin-top:2px;">Historial clínico y consultas en vivo</p>
+        </div>
+      </div>
+      <span class="header-date" id="fecha-hoy"></span>
+    </div>
+
+    <div id="vista-tablero" class="block">
+      
+      <div class="atenciones-actions">
+        <button class="btn-atencion btn-normal" onclick="abrirAtencionDirecta()">
+          <i class="fas fa-plus"></i> Nueva Atención Directa
+        </button>
+        <button class="btn-atencion btn-emergencia" onclick="abrirAtencionEmergencia()">
+          <i class="fas fa-bolt"></i> Atención de Emergencia
+        </button>
+      </div>
+
+      <h3><i class="fas fa-clock" style="color:var(--ambar)"></i> Pacientes en Espera de Consulta</h3>
+      
+      <div class="inv-table-wrap">
+        <table class="tabla-atenciones">
+    <thead>
+        <tr>
+            <th>Hora Cita</th>
+            <th>Mascota</th>
+            <th>Propietario</th>
+            <th>Acciones</th>
+        </tr>
+    </thead>
+    <tbody id="tabla-espera-tbody">
+        </tbody>
+</table>
+      </div>
+    </div>
+
+    <div id="vista-formulario" class="block hidden">
+      
+      <div id="pet-card" class="pet-card-header">
+        <div class="pet-avatar-frame">
+          <img id="clinical-pet-foto" src="img/huella.png" alt="Mascota">
+        </div>
+        <div class="pet-header-info">
+          <div style="display:flex; align-items:center; gap:10px;">
+            <h2 id="clinical-pet-name">Paciente de Emergencia</h2>
+            <span id="badge-tipo-consulta" class="badge-alert hidden">Emergencia Crítica</span>
+          </div>
+          <p id="clinical-pet-meta">Especie: -- | Raza: -- | Edad: Calculando...</p>
+          <p style="font-size:0.85rem; opacity:0.9;"><i class="far fa-clock"></i> Hora de Inicio: <span id="clinical-hora-inicio">00:00</span></p>
+        </div>
+      </div>
+
+      <div id="wrapper-buscador-directo" class="card hidden" style="margin-bottom:20px; background:#f8f9fa;">
+        <label style="font-weight:bold; display:block; margin-bottom:8px;">Buscar Paciente Registrado:</label>
+        <div style="display:flex; gap:10px;">
+          <input type="text" id="input-buscar-paciente" placeholder="Escribe el nombre de la mascota...">
+          <button type="button" class="btn-atencion btn-normal" onclick="buscarMascotaDirecta()"><i class="fas fa-search"></i> Buscar</button>
+        </div>
+        <div id="resultado-busqueda-directa" style="margin-top:10px;"></div>
+      </div>
+
+      <form id="form-registro-clinico" onsubmit="procesarBotonContinuar(event)">
+        
+        <h3><i class="fas fa-user-check"></i> Datos del Acompañante</h3>
+        <div class="form-grid">
+          <div class="form-group">
+            <label for="asistente_nombre">Nombre completo de quien lo trae:</label>
+            <input type="text" id="asistente_nombre" placeholder="Ej. Juan Pérez" required>
+          </div>
+          <div class="form-group">
+            <label for="asistente_relacion">Relación / Parentesco con el dueño:</label>
+            <select id="asistente_relacion" required>
+              <option value="Titular">Es el Propietario Titular</option>
+              <option value="Familiar">Familiar (Hijo/Hermano/Pareja)</option>
+              <option value="Paseador">Paseador / Tercero</option>
+              <option value="Rescatista">Rescatista (Caso callejero)</option>
+            </select>
+          </div>
+        </div>
+
+        <h3><i class="fas fa-heartbeat"></i> Signos Vitales</h3>
+        <div class="form-grid">
+          <div class="form-group">
+            <label for="peso_kg">Peso (Kg):</label>
+            <input type="number" step="0.01" id="peso_kg" placeholder="0.00" required>
+          </div>
+          <div class="form-group">
+            <label for="temperatura">Temperatura (°C):</label>
+            <input type="number" step="0.1" id="temperatura" placeholder="38.5" required>
+          </div>
+          <div class="form-group">
+            <label for="frecuencia_cardiaca">Frecuencia Cardíaca (LPM):</label>
+            <input type="number" id="frecuencia_cardiaca" placeholder="120" required>
+          </div>
+        </div>
+
+        <h3><i class="fas fa-file-medical"></i> Evaluación y Tratamiento</h3>
+        <div class="form-grid">
+          <div class="form-group full-width">
+            <label for="diagnostico">Diagnóstico Clínico:</label>
+            <textarea id="diagnostico" placeholder="Describa los síntomas observados y dictamen médico..." required></textarea>
+          </div>
+          <div class="form-group full-width">
+            <label for="tratamiento">Tratamiento e Indicaciones (Receta):</label>
+            <textarea id="tratamiento" placeholder="Medicamentos, dosis aplicadas y tratamiento ambulatorio..." required></textarea>
+          </div>
+          <div class="form-group full-width">
+            <label for="observaciones">Observaciones Internas:</label>
+            <textarea id="observaciones" placeholder="Notas adicionales o recordatorios confidenciales..."></textarea>
+          </div>
+          <div class="form-group">
+            <label for="prox_fecha">Fecha de Próximo Control (Opcional):</label>
+            <input type="date" id="prox_fecha">
+          </div>
+        </div>
+
+        <div style="display:flex; gap:15px; justify-content:flex-end;">
+          <button type="button" class="btn-atencion" style="background-color:#6c757d; color:white;" onclick="cancelarFlujoAtencion()">
+            Cancelar Consulta
+          </button>
+          <button type="submit" class="btn-atencion btn-normal" id="btn-submit-clinico">
+            <i class="fas fa-arrow-right"></i> Continuar al Registro
+          </button>
+        </div>
+      </form>
+    </div>
+
+    <div id="vista-registro-secuencial" class="block hidden">
+      <h2 style="color:#e63946;"><i class="fas fa-user-shield"></i> Fase Final: Registro de Cliente y Mascota Nueva</h2>
+      <p style="margin-bottom:20px; color:var(--texto-suave);">La atención médica se ha guardado en la memoria. Ingrese los datos obligatorios para sincronizar la información.</p>
+      
+      <form id="form-secuencial-completo" onsubmit="guardarTodoFlujoPuff(event)">
+        <h3><i class="fas fa-id-card"></i> Datos del Nuevo Propietario</h3>
+        <div class="form-grid">
+          <div class="form-group">
+            <label>Carnet de Identidad (CI):</label>
+            <input type="number" id="sec_dueño_ci" required>
+          </div>
+          <div class="form-group">
+            <label>Nombre:</label>
+            <input type="text" id="sec_dueño_nombre" required>
+          </div>
+          <div class="form-group">
+            <label>Apellido:</label>
+            <input type="text" id="sec_dueño_apellido" required>
+          </div>
+          <div class="form-group">
+            <label>Teléfono/Celular:</label>
+            <input type="number" id="sec_dueño_telefono" required>
+          </div>
+        </div>
+
+        <h3><i class="fas fa-dog"></i> Datos de la Mascota</h3>
+        <div class="form-grid">
+          <div class="form-group">
+            <label>Nombre de la Mascota:</label>
+            <input type="text" id="sec_mascota_nombre" required>
+          </div>
+          <div class="form-group">
+            <label>Especie:</label>
+            <select id="sec_mascota_especie" required>
+              <option value="Canino">Canino</option>
+              <option value="Felino">Felino</option>
+              <option value="Ave">Ave</option>
+              <option value="Exótico">Exótico</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label>Raza:</label>
+            <input type="text" id="sec_mascota_raza" placeholder="Ej. Criollo, Poodle..." required>
+          </div>
+          <div class="form-group">
+            <label>Fecha de Nacimiento:</label>
+            <input type="date" id="sec_mascota_nacimiento" required>
+          </div>
+        </div>
+
+        <div style="display:flex; gap:15px; justify-content:flex-end; margin-top:25px;">
+          <button type="submit" class="btn-atencion btn-emergencia" style="font-size:1.1rem; padding:15px 30px;">
+            <i class="fas fa-save"></i> ¡Finalizar Registro y Guardar Todo!
+          </button>
+        </div>
+      </form>
+    </div>
+
+  </main>
+</div>
+
+<div class="panel-toast" id="panel-toast"></div>
+
+<script src="js/atenciones.js"></script>
+<script>
+  // Control básico de barra lateral e inicialización de fecha
+  const toggleBtn = document.getElementById('menu-toggle');
+  const sidebar = document.getElementById('sidebar');
+  if(toggleBtn && sidebar) {
+    toggleBtn.addEventListener('click', () => sidebar.classList.toggle('active'));
+  }
+  
+  const fechaEl = document.getElementById('fecha-hoy');
+  if (fechaEl) {
+    fechaEl.textContent = new Date().toLocaleDateString('es-BO', {
+      weekday: 'long', year: 'numeric', month: 'long', day: 'numeric'
+    });
+  }
+</script>
+</body>
+</html>
