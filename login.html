@@ -37,6 +37,80 @@
             </select>
             <button type="submit" class="btn-principal">Entrar</button>
           </form>
+          <p style="text-align:center;margin-top:14px;">
+            <a href="#" id="link-olvide" style="color:var(--verde-medio);font-size:.85rem;font-weight:600;">
+              <i class="fas fa-key"></i> ¿Olvidaste tu contraseña?
+            </a>
+          </p>
+        </div>
+
+        <!-- RECUPERAR CONTRASEÑA — PASO 1: Ingresar correo + CAPTCHA -->
+        <div id="section-recuperar" class="hidden">
+          <p style="text-align:center;margin-bottom:18px;color:var(--texto-suave);font-size:.9rem;">
+            Ingresa tu correo y te enviaremos un código de verificación.
+          </p>
+          <form class="input-group" id="form-recuperar">
+            <input type="email" id="recup-correo" placeholder="Correo electrónico" required>
+            <!-- CAPTCHA matemático local (sin internet) -->
+            <div style="background:#f8faf9;border:1.5px solid var(--arena);border-radius:var(--radio-sm);padding:14px 18px;display:flex;align-items:center;gap:14px;">
+              <span id="captcha-pregunta" style="font-size:1.1rem;font-weight:700;color:var(--verde-oscuro);min-width:90px;"></span>
+              <input type="number" id="captcha-respuesta" placeholder="Tu respuesta" style="flex:1;padding:10px 14px;border:1.5px solid var(--arena);border-radius:var(--radio-sm);font-size:.95rem;outline:none;" required>
+              <button type="button" onclick="generarCaptcha()" title="Nuevo CAPTCHA" style="background:none;border:none;cursor:pointer;color:var(--verde-medio);font-size:1.2rem;">🔄</button>
+            </div>
+            <button type="submit" class="btn-principal">
+              <i class="fas fa-paper-plane"></i> Enviar código
+            </button>
+            <button type="button" class="btn-volver" onclick="volverALogin()">
+              <i class="fas fa-arrow-left"></i> Volver al login
+            </button>
+          </form>
+        </div>
+
+        <!-- RECUPERAR CONTRASEÑA — PASO 2: Verificar código -->
+        <div id="section-verificar" class="hidden">
+          <p style="text-align:center;margin-bottom:6px;color:var(--texto-suave);font-size:.9rem;">
+            Ingresa el código de 6 dígitos enviado a tu correo.
+          </p>
+          <p id="recup-correo-display" style="text-align:center;font-weight:700;color:var(--verde-oscuro);margin-bottom:18px;font-size:.88rem;"></p>
+          <form class="input-group" id="form-verificar">
+            <input type="text" id="codigo-input" placeholder="● ● ● ● ● ●"
+              maxlength="6" style="text-align:center;font-size:1.5rem;letter-spacing:8px;font-weight:700;" required>
+            <button type="submit" class="btn-principal">
+              <i class="fas fa-check-circle"></i> Verificar código
+            </button>
+            <button type="button" class="btn-volver" onclick="volverRecuperar()">
+              <i class="fas fa-redo"></i> Reenviar código
+            </button>
+          </form>
+        </div>
+
+        <!-- RECUPERAR CONTRASEÑA — PASO 3: Nueva contraseña -->
+        <div id="section-nueva-pass" class="hidden">
+          <p style="text-align:center;margin-bottom:18px;color:var(--texto-suave);font-size:.9rem;">
+            Crea tu nueva contraseña.
+          </p>
+          <form class="input-group" id="form-nueva-pass">
+            <div style="position:relative;">
+              <input type="password" id="nueva-pass" placeholder="Nueva contraseña" required style="padding-right:46px;">
+              <span onclick="togglePass('nueva-pass',this)" style="position:absolute;right:14px;top:50%;transform:translateY(-50%);cursor:pointer;color:var(--texto-suave);">
+                <i class="fas fa-eye"></i>
+              </span>
+            </div>
+            <div style="position:relative;">
+              <input type="password" id="confirmar-pass" placeholder="Confirmar contraseña" required style="padding-right:46px;">
+              <span onclick="togglePass('confirmar-pass',this)" style="position:absolute;right:14px;top:50%;transform:translateY(-50%);cursor:pointer;color:var(--texto-suave);">
+                <i class="fas fa-eye"></i>
+              </span>
+            </div>
+            <!-- Indicador de fuerza -->
+            <div id="pass-strength-bar" style="height:5px;border-radius:4px;background:#e0e0e0;transition:.3s;">
+              <div id="pass-strength-fill" style="height:100%;border-radius:4px;width:0;transition:.4s;"></div>
+            </div>
+            <p id="pass-strength-txt" style="font-size:.78rem;color:var(--texto-suave);margin-top:-8px;"></p>
+            <button type="submit" class="btn-principal">
+              <i class="fas fa-lock"></i> Actualizar contraseña
+            </button>
+          </form>
         </div>
 
         <!-- REGISTRO -->
