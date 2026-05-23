@@ -123,9 +123,10 @@ document.addEventListener('DOMContentLoaded', function() {
         });
 
         calendar.render();
+        window.smartPawsCalendar = calendar;
         window.addEventListener('resize', () => {
-    calendar.updateSize();
-});
+            calendar.updateSize();
+        });
     }
 });
 

@@ -1,0 +1,265 @@
+body.dark-mode {
+  --verde-oscuro: #dff4e7;
+  --verde-medio: #7bd39b;
+  --verde-vivo: #4ec77f;
+  --verde-claro: #1d3c2b;
+  --crema: #0d1511;
+  --arena: #26372d;
+  --ambar: #f0a15d;
+  --ambar-claro: #3c2818;
+  --coral: #ff7a7a;
+  --texto: #edf7f1;
+  --texto-suave: #aebfb6;
+  --blanco: #17231c;
+  --negro: #f5fff8;
+
+  --sombra-sm: 0 2px 10px rgba(0, 0, 0, .32);
+  --sombra-md: 0 10px 32px rgba(0, 0, 0, .36);
+  --sombra-lg: 0 22px 64px rgba(0, 0, 0, .42);
+  --sombra-xl: 0 34px 86px rgba(0, 0, 0, .52);
+}
+
+body {
+  transition: background-color .25s ease, color .25s ease;
+}
+
+body.dark-mode,
+body.dark-mode .main-content,
+body.dark-mode .form-page {
+  background: var(--crema);
+  color: var(--texto);
+}
+
+body.dark-mode h1,
+body.dark-mode h2,
+body.dark-mode h3,
+body.dark-mode h4,
+body.dark-mode label {
+  color: var(--verde-oscuro);
+}
+
+body.dark-mode input,
+body.dark-mode select,
+body.dark-mode textarea {
+  background: #111d17;
+  border-color: var(--arena);
+  color: var(--texto);
+}
+
+body.dark-mode input::placeholder,
+body.dark-mode textarea::placeholder {
+  color: #7e9288;
+}
+
+body.dark-mode .auth-page,
+body.dark-mode .hero,
+body.dark-mode .especialidades-bg,
+body.dark-mode .historia-bg,
+body.dark-mode .testimonios-bg,
+body.dark-mode .como-bg,
+body.dark-mode .tienda-main {
+  background: var(--crema);
+}
+
+body.dark-mode .auth-card,
+body.dark-mode .block,
+body.dark-mode .card,
+body.dark-mode .form-card,
+body.dark-mode .search-section,
+body.dark-mode .modal-content,
+body.dark-mode .modal-pago,
+body.dark-mode .custom-modal-box,
+body.dark-mode .card-especialidad,
+body.dark-mode .testimonio,
+body.dark-mode .producto-card,
+body.dark-mode .drawer-carrito,
+body.dark-mode .agenda-dia-recuadro {
+  background: var(--blanco);
+  border-color: var(--arena);
+  color: var(--texto);
+  box-shadow: var(--sombra-md);
+}
+
+body.dark-mode .tab-group,
+body.dark-mode .agenda-dia-recuadro,
+body.dark-mode .cita-item,
+body.dark-mode .mascota-item,
+body.dark-mode .inv-table tbody tr,
+body.dark-mode .ci-box,
+body.dark-mode .preview {
+  background: #111d17;
+  border-color: var(--arena);
+}
+
+body.dark-mode .main-header,
+body.dark-mode .tienda-header,
+body.dark-mode .sidebar {
+  background: rgba(10, 18, 14, .97);
+  border-color: rgba(255, 255, 255, .08);
+}
+
+body.dark-mode .tab-btn.active,
+body.dark-mode .auth-back,
+body.dark-mode .btn-outline {
+  background: #1c2a22;
+  color: var(--texto);
+  border-color: var(--arena);
+}
+
+body.dark-mode .content-header,
+body.dark-mode .block h3,
+body.dark-mode .inv-table td,
+body.dark-mode .inv-table th {
+  border-color: var(--arena);
+}
+
+body.dark-mode #calendario {
+  background: #101a15;
+  border: 1px solid var(--arena);
+  box-shadow: var(--sombra-md);
+}
+
+body.dark-mode #calendario .fc,
+body.dark-mode #calendario .fc-scrollgrid,
+body.dark-mode #calendario .fc-daygrid-body,
+body.dark-mode #calendario .fc-daygrid-body table,
+body.dark-mode #calendario .fc-view-harness,
+body.dark-mode #calendario .fc-view,
+body.dark-mode #calendario .fc-daygrid-day,
+body.dark-mode #calendario .fc-col-header-cell {
+  background: #111d17;
+  color: var(--texto);
+}
+
+body.dark-mode #calendario .fc-theme-standard td,
+body.dark-mode #calendario .fc-theme-standard th,
+body.dark-mode #calendario .fc-scrollgrid,
+body.dark-mode #calendario .fc-scrollgrid-section > td {
+  border-color: #2e4538;
+}
+
+body.dark-mode #calendario .fc-toolbar-title {
+  color: var(--verde-oscuro);
+  font-weight: 800;
+}
+
+body.dark-mode #calendario .fc-col-header-cell-cushion {
+  color: #bdeccb;
+  font-weight: 800;
+}
+
+body.dark-mode #calendario .fc-daygrid-day-number {
+  color: #d6eee0;
+  opacity: .95;
+}
+
+body.dark-mode #calendario .fc-day-other .fc-daygrid-day-number {
+  color: #6f8579;
+  opacity: .8;
+}
+
+body.dark-mode #calendario .fc-day-today {
+  background: rgba(78, 199, 127, .14);
+}
+
+body.dark-mode #calendario .fc-button-primary {
+  background: #203247;
+  border-color: #2b4763;
+  color: #ffffff;
+  box-shadow: none;
+}
+
+body.dark-mode #calendario .fc-button-primary:hover,
+body.dark-mode #calendario .fc-button-primary:focus {
+  background: #2b4967;
+  border-color: #3b6288;
+}
+
+body.dark-mode #calendario .fc-button-primary:not(:disabled).fc-button-active,
+body.dark-mode #calendario .fc-button-primary:not(:disabled):active {
+  background: var(--verde-medio);
+  border-color: var(--verde-vivo);
+  color: #08110d;
+}
+
+body.dark-mode #calendario .fc-event,
+body.dark-mode #calendario .fc-daygrid-event {
+  background: var(--verde-vivo);
+  border-color: var(--verde-vivo);
+  color: #06120c;
+}
+
+body.dark-mode #calendario .fc-list,
+body.dark-mode #calendario .fc-list-table,
+body.dark-mode #calendario .fc-list-day-cushion {
+  background: #111d17;
+  color: var(--texto);
+  border-color: #2e4538;
+}
+
+body.dark-mode #calendario .fc-list-event:hover td {
+  background: #1b2c22;
+}
+
+body.dark-mode .sp-chatbot-window,
+body.dark-mode .sp-chatbot-actions,
+body.dark-mode .sp-chatbot-form {
+  background: #101a15;
+  border-color: var(--arena);
+}
+
+body.dark-mode .sp-chatbot-messages {
+  background: #0d1511;
+}
+
+body.dark-mode .sp-chatbot-message.bot .sp-chatbot-bubble,
+body.dark-mode .sp-chatbot-chip {
+  background: #17231c;
+  border-color: var(--arena);
+  color: var(--texto);
+}
+
+body.dark-mode .sp-chatbot-input {
+  background: #0d1511;
+  border-color: var(--arena);
+  color: var(--texto);
+}
+
+.theme-toggle {
+  position: fixed;
+  right: 24px;
+  bottom: 96px;
+  z-index: 2999;
+  width: 48px;
+  height: 48px;
+  border: 1px solid var(--arena);
+  border-radius: 50%;
+  background: var(--blanco);
+  color: var(--verde-oscuro);
+  box-shadow: var(--sombra-md);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1rem;
+  transition: transform .2s ease, background .2s ease, color .2s ease;
+}
+
+.theme-toggle:hover {
+  transform: translateY(-2px);
+  background: var(--verde-oscuro);
+  color: var(--blanco);
+}
+
+body.dark-mode .theme-toggle {
+  background: #22352a;
+  color: #f6d48f;
+  border-color: #365340;
+}
+
+@media (max-width: 560px) {
+  .theme-toggle {
+    right: 16px;
+    bottom: 86px;
+  }
+}

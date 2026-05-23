@@ -12,6 +12,17 @@
     width: 100%;
 }
 
+#calendario .fc-view,
+#calendario .fc-view-harness,
+#calendario .fc-scrollgrid,
+#calendario .fc-scroller,
+#calendario .fc-daygrid-body,
+#calendario .fc-daygrid-body table,
+#calendario .fc-col-header,
+#calendario .fc-col-header table {
+    width: 100% ;
+}
+
 /* Altura para escritorio */
 .fc .fc-view-harness {
     min-height: 700px;

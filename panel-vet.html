@@ -7,10 +7,11 @@
   <title>Smart Paws — Panel Veterinario</title>
 
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
-  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="css/style.css?v=menu-toggle">
   <link rel="stylesheet" href="css/inventario.css">
-  <link rel="stylesheet" href="css/calendario.css">
+  <link rel="stylesheet" href="css/calendario.css?v=responsive-calendar">
   <link rel="stylesheet" href="css/chatbot.css">
+  <link rel="stylesheet" href="css/theme.css">
   <!-- Añadir en el head de panel-vet.html -->
 <script src='https://cdn.jsdelivr.net/npm/fullcalendar@6.1.11/index.global.min.js'></script>
 
@@ -77,7 +78,7 @@
 
       <div style="display:flex;align-items:center;gap:14px;">
 
-        <button id="menu-toggle" class="menu-toggle">
+        <button id="menu-toggle" class="menu-toggle" type="button" aria-label="Mostrar u ocultar opciones" aria-expanded="true">
           <i class="fas fa-bars"></i>
         </button>
 
@@ -326,17 +327,48 @@
   const toggleBtn = document.getElementById('menu-toggle');
   const sidebar = document.getElementById('sidebar');
 
+  const vetPage = document.querySelector('.vet-page');
+
+  function esMovil() {
+    return window.innerWidth <= 768;
+  }
+
+  function actualizarBotonMenu(abierto) {
+    toggleBtn.setAttribute('aria-expanded', abierto ? 'true' : 'false');
+    toggleBtn.querySelector('i').className = abierto ? 'fas fa-times' : 'fas fa-bars';
+  }
+
+  function reajustarCalendario() {
+    [60, 180, 340].forEach(delay => {
+      setTimeout(() => {
+        window.dispatchEvent(new Event('resize'));
+        if (window.smartPawsCalendar) {
+          window.smartPawsCalendar.updateSize();
+        }
+      }, delay);
+    });
+  }
+
   toggleBtn.addEventListener('click', () => {
-    sidebar.classList.toggle('active');
+    if (esMovil()) {
+      const abierto = sidebar.classList.toggle('active');
+      actualizarBotonMenu(abierto);
+    } else {
+      const colapsado = vetPage.classList.toggle('sidebar-collapsed');
+      actualizarBotonMenu(!colapsado);
+    }
+    reajustarCalendario();
   });
 
   document.addEventListener('click', (e) => {
 
     if (
+      esMovil() &&
       !sidebar.contains(e.target) &&
       !toggleBtn.contains(e.target)
     ) {
       sidebar.classList.remove('active');
+      actualizarBotonMenu(false);
     }
 
   });
@@ -348,10 +380,20 @@
 
       if (window.innerWidth <= 768) {
         sidebar.classList.remove('active');
+        actualizarBotonMenu(false);
       }
 
     });
 
+  });
+
+  window.addEventListener('resize', () => {
+    sidebar.classList.remove('active');
+    if (esMovil()) {
+      actualizarBotonMenu(false);
+    } else {
+      actualizarBotonMenu(!vetPage.classList.contains('sidebar-collapsed'));
+    }
   });
 
   // FECHA
@@ -370,6 +412,7 @@
 
 </script>
 <script src="js/chatbot.js"></script>
+<script src="js/theme.js"></script>
 
 </body>
 </html>
