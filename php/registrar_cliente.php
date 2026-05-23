@@ -1,4 +1,5 @@
 <?php
+/*registrar_cliente.php */
 include("conexion.php");
 
 // DATOS

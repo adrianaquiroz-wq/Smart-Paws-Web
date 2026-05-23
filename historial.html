@@ -1,0 +1,264 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Smart Paws — Historial Clínico</title>
+
+  <!-- Tus mismos estilos base para clonar los colores del Panel -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="css/inventario.css">
+
+  <style>
+    /* 1. SELECTORES DE ALTA PRIORIDAD PARA FORZAR EL COLOR DE LAS LETRAS */
+    body .historial-container h1,
+    body .historial-container .titulo-principal {
+      color: #ffffff !important;
+      font-size: 2.2rem !important;
+      font-weight: 700 !important;
+      display: block !important;
+      visibility: visible !important;
+      opacity: 1 !important;
+      margin-bottom: 5px !important;
+    }
+
+    body .historial-container h3,
+    body .historial-container .titulo-seccion {
+      color: #ffffff !important;
+      font-size: 1.4rem !important;
+      font-weight: 600 !important;
+      display: flex !important;
+      align-items: center !important;
+      gap: 10px !important;
+      margin: 40px 0 20px 0 !important;
+    }
+
+    /* Forzar los títulos internos de las tarjetas de atención (Diagnóstico, Tratamiento, etc.) */
+    body .atencion-body h4,
+    body .atencion-seccion h4 {
+      color: #a0a0a0 !important;
+      font-size: 0.85rem !important;
+      text-transform: uppercase !important;
+      letter-spacing: 0.5px !important;
+      margin: 0 0 8px 0 !important;
+      display: block !important;
+    }
+
+    /* 2. CONFIGURACIÓN DEL ESPACIO DE TRABAJO */
+    body {
+      background-color: #1e221f !important; /* Tu fondo gris/verdoso oscuro */
+      color: #ffffff !important;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      margin: 0;
+      padding: 0;
+    }
+
+    .historial-container {
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 30px 20px;
+    }
+
+    /* Botón Volver */
+    .btn-volver {
+      background: #262a27;
+      color: #fff !important;
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      padding: 10px 18px;
+      border-radius: 6px;
+      cursor: pointer;
+      font-weight: 600;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      text-decoration: none;
+      transition: all 0.2s ease;
+      margin-bottom: 25px;
+    }
+
+    .btn-volver:hover {
+      background: #2ecc71;
+      color: #111 !important;
+      border-color: transparent;
+    }
+
+    /* Tarjetas principales */
+    .paciente-header {
+      background: #262a27 !important; 
+      border: 1px solid rgba(255,255,255,0.05);
+      border-radius: 8px;
+      padding: 25px;
+      display: flex;
+      align-items: center;
+      gap: 25px;
+      margin-bottom: 30px;
+    }
+
+    .paciente-avatar {
+      width: 110px;
+      height: 110px;
+      border-radius: 50%;
+      object-fit: cover;
+      border: 3px solid #2ecc71;
+      background: #1e221f;
+    }
+
+    .paciente-datos h2 {
+      margin: 0 0 5px 0;
+      font-size: 1.8rem;
+      color: #ffffff !important;
+    }
+
+    .badge-especie {
+      background: rgba(46, 204, 113, 0.2);
+      color: #2ecc71 !important;
+      padding: 4px 10px;
+      border-radius: 4px;
+      font-size: 0.8rem;
+      font-weight: bold;
+      text-transform: uppercase;
+    }
+
+    .info-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 15px;
+      margin-top: 15px;
+      border-top: 1px solid rgba(255,255,255,0.08);
+      padding-top: 15px;
+    }
+
+    .info-item small {
+      color: #a0a0a0 !important;
+      display: block;
+      font-size: 0.8rem;
+      margin-bottom: 4px;
+    }
+
+    .info-item span {
+      font-size: 0.95rem;
+      color: #ffffff !important;
+    }
+
+    /* Tarjetas de Atenciones */
+    .atencion-card {
+      background: #262a27 !important;
+      border-radius: 8px;
+      border-left: 4px solid #2ecc71;
+      margin-bottom: 20px;
+      overflow: hidden;
+    }
+
+    .atencion-header {
+      background: rgba(255,255,255,0.02);
+      padding: 15px 20px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-bottom: 1px solid rgba(255,255,255,0.05);
+    }
+
+    .atencion-header b {
+      color: #ffffff !important;
+    }
+
+    .atencion-body {
+      padding: 20px;
+    }
+
+    .atencion-seccion {
+      margin-bottom: 18px;
+    }
+
+    /* Contenedores de los textos de diagnóstico/tratamiento */
+    .atencion-seccion p {
+      margin: 0;
+      color: #ffffff !important;
+      font-size: 0.95rem;
+      background: #1e221f !important; 
+      padding: 12px;
+      border-radius: 6px;
+      line-height: 1.5;
+      border: 1px solid rgba(255,255,255,0.03);
+    }
+
+    .constantes-row {
+      display: flex;
+      gap: 20px;
+      flex-wrap: wrap;
+      background: #1e221f;
+      padding: 12px 15px;
+      border-radius: 6px;
+      margin-top: 15px;
+      font-size: 0.88rem;
+      color: #a0a0a0;
+      border: 1px solid rgba(255,255,255,0.03);
+    }
+
+    .constantes-row strong {
+      color: #ffffff !important;
+    }
+
+    .badge-tipo {
+      background: #e67e22;
+      color: #000 !important;
+      padding: 4px 10px;
+      border-radius: 4px;
+      font-size: 0.75rem;
+      font-weight: 700;
+    }
+
+    .loading-box {
+      text-align: center;
+      padding: 40px;
+      color: #a0a0a0;
+    }
+
+    @media (max-width: 768px) {
+      .paciente-header { flex-direction: column; text-align: center; }
+      .info-grid { text-align: left; }
+    }
+  </style>
+
+</head>
+<body>
+
+  <div class="historial-container">
+    
+    <!-- BOTÓN VOLVER -->
+    <a href="panel-vet.html" class="btn-volver">
+      <i class="fas fa-arrow-left"></i> Volver al Panel Principal
+    </a>
+
+    <!-- TITULO DE LA PÁGINA -->
+    <div style="margin-bottom: 25px;">
+      <h1 style="margin:0; font-size: 2rem;">Expediente Clínico Digital</h1>
+      <p style="color: #888; margin: 4px 0 0 0; font-size: 0.9rem;">Consulta de antecedentes y registros médicos del paciente.</p>
+    </div>
+
+    <!-- CONTENEDOR DINÁMICO DE LA MASCOTA -->
+    <div id="bloquePaciente">
+      <!-- El JS inyectará la estructura oscura aquí -->
+      <div class="loading-box">
+        <i class="fas fa-spinner fa-spin fa-2x"></i>
+        <p>Buscando ficha de la mascota...</p>
+      </div>
+    </div>
+
+    <!-- CRONOLOGÍA DE ATENCIONES -->
+    <h3 style="margin: 40px 0 20px 0; font-size: 1.3rem; display: flex; align-items: center; gap: 10px;">
+      <i class="fas fa-history" style="color: var(--verde-vivo, #2ecc71);"></i> Historial de Atenciones
+    </h3>
+
+    <!-- CONTENEDOR DINÁMICO DE CONSULTAS -->
+    <div id="contenedorHistorial">
+      <!-- El JS inyectará las consultas aquí -->
+    </div>
+
+  </div>
+
+  <!-- Tus scripts controladores -->
+  <script src="js/historial.js"></script>
+</body>
+</html>
