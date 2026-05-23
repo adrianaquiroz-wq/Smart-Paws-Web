@@ -1,11 +1,12 @@
 <?php
+/* get_esper_aten.php */
 session_start();
 include 'conexion.php';
 header('Content-Type: application/json; charset=utf-8');
 
-$carnet_vet = $_SESSION['carnet'] ?? null;
+$carnetVet = $_SESSION['carnet'] ?? null;
 
-if (!$carnet_vet) {
+if (!$carnetVet) {
     echo json_encode([]);
     exit;
 }
@@ -31,12 +32,11 @@ $sql = "SELECT
         INNER JOIN razas r ON m.id_raza = r.id_raza
         INNER JOIN especies e ON r.id_especie = e.id_especie
         INNER JOIN personas p ON c.carnetDue = p.carnet
-        WHERE c.estado IN ('Pendiente', 'Confirmada')
+        WHERE c.estado = 'Pendiente'
           AND c.carnetVet = ?
           AND c.fecha = ?
         ORDER BY c.hora ASC";
 
-// OOP puro, consistente con tu conexion.php
 $stmt = $conexion->prepare($sql);
 
 if (!$stmt) {
@@ -45,7 +45,7 @@ if (!$stmt) {
     exit;
 }
 
-$stmt->bind_param("is", $carnet_vet, $fecha_hoy);
+$stmt->bind_param("is", $carnetVet, $fecha_hoy);
 $stmt->execute();
 $resultado = $stmt->get_result();
 
