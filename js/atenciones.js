@@ -94,7 +94,6 @@ function cargarCitasEspera() {
 
 // ══════════════════════════════════════════════════════════
 // SECCIÓN SIN DUEÑO
-// ══════════════════════════════════════════════════════════
 function cargarCasosSinDueno() {
     const contenedor = document.getElementById('lista-sin-dueno');
     const badge      = document.getElementById('badge-sin-dueno-count');
@@ -162,7 +161,6 @@ function cargarCasosSinDueno() {
                     </div>
                 `;
  
-                // El botón "Registrar dueño" sigue abriendo el modal existente
                 card.querySelector('.btn-reg-dueno').addEventListener('click', () => {
                     abrirModalCompletar(item);
                 });
@@ -181,7 +179,7 @@ function cargarCasosSinDueno() {
 
 // ══════════════════════════════════════════════════════════
 // MODAL: COMPLETAR REGISTRO
-// ══════════════════════════════════════════════════════════
+
 function abrirModalCompletar(item) {
     const modal = document.getElementById('modal-completar');
     if (!modal) return;
@@ -296,7 +294,7 @@ function guardarRegistroCompleto(e) {
 
 // ══════════════════════════════════════════════════════════
 // PANEL EDITAR ANIMAL (dentro del modal)
-// ══════════════════════════════════════════════════════════
+
 function toggleEditarAnimal() {
     const panel = document.getElementById('panel-editar-animal');
     const btn   = document.getElementById('btn-toggle-editar-animal');
@@ -416,7 +414,7 @@ function mostrarMsgEA(texto, tipo) {
 
 // ══════════════════════════════════════════════════════════
 // ATENDER / AUSENTE / TOAST
-// ══════════════════════════════════════════════════════════
+
 function atenderCita(cita) {
     const params = new URLSearchParams({
         modo:       'Normal',

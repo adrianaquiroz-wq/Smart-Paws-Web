@@ -114,9 +114,9 @@ document.addEventListener('DOMContentLoaded', function() {
             displayEventTime: true,
             
             // ── SOLUCIÓN DE CONFINAMIENTO DE EVENTO EN SU CUADRO ──
-            eventDisplay: 'block',          // Obliga a renderizar los eventos de forma individual en bloques discretos
-            nextDayThreshold: '00:00:00',   // Evita que eventos nocturnos que rozan la medianoche invadan visualmente el día siguiente
-            forceEventDuration: true,       // Asegura consistencia de tiempos en vistas rápidas
+            eventDisplay: 'block',          
+            nextDayThreshold: '00:00:00',   
+            forceEventDuration: true,       
             
             // Personalización de cómo se ve el evento en la lista
             eventDidMount: function(info) {

@@ -28,7 +28,6 @@
 
 
 /* HERO */
-/* HERO */
 .hero{background:var(--verde-oscuro);position:relative;overflow:hidden;padding:110px 0 100px;}
 .hero-bg{position:absolute;inset:0;background:radial-gradient(ellipse 60% 80% at 75% 50%,rgba(61,153,112,.18) 0%,transparent 60%),radial-gradient(ellipse 40% 60% at 15% 70%,rgba(224,123,57,.12) 0%,transparent 50%);pointer-events:none;}
 .hero-circle{position:absolute;right:-120px;top:-120px;width:600px;height:600px;border-radius:50%;border:80px solid rgba(61,153,112,.05);pointer-events:none;}

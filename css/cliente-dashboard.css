@@ -104,9 +104,9 @@
   margin-bottom:18px;
 }
 
-/* ============================= */
+
 /* CITAS */
-/* ============================= */
+
 
 .lista-citas-contenedor{
   min-height:150px;
@@ -253,7 +253,6 @@
 
 /* ============================= */
 /* HORARIOS */
-/* ============================= */
 
 .agenda-dia-recuadro{
   margin-top:15px;
@@ -290,9 +289,8 @@
   gap:8px;
 }
 
-/* ============================= */
-/* BLOQUES HORA */
-/* ============================= */
+
+/* BLOQUES HORAs */
 
 .hora-bloque{
   padding:10px 6px;
@@ -347,7 +345,7 @@
 
   border-color:var(--verde-oscuro);
 }
-/****************************************************************/
+
 /* --- MODAL DE CONFIRMACIÓN PERSONALIZADO --- */
 .custom-modal-overlay {
     position: fixed;
@@ -356,7 +354,7 @@
     width: 100%;
     height: 100%;
     background: rgba(0, 0, 0, 0.5);
-    backdrop-filter: blur(4px); /* Difumina un poco el fondo */
+    backdrop-filter: blur(4px);
     display: flex;
     justify-content: center;
     align-items: center;
@@ -390,7 +388,7 @@
 
 .custom-modal-icon {
     font-size: 2.5rem;
-    color: #e74c3c; /* Color rojo/alerta */
+    color: #e74c3c;
     margin-bottom: 15px;
 }
 
@@ -491,7 +489,7 @@
     transition: var(--transicion);
   }
 
-  /* Overlay oscuro al abrir sidebar */
+  
   .sidebar-overlay {
     display: none;
     position: fixed;

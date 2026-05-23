@@ -5,7 +5,6 @@ function verHistorial(id) {
     window.location.href = `historial-cliente.html?id=${id}`; 
 }
 
-// Hace scroll suave y preselecciona la mascota en el formulario integrado
 function enfocarYSeleccionarMascota(idMascota) {
     const select = document.getElementById('select-mascotas');
     const seccionForm = document.getElementById('seccion-agendar');
@@ -18,7 +17,7 @@ function enfocarYSeleccionarMascota(idMascota) {
     }
 }
 
-// Carga los datos del perfil del propietario
+
 function cargarPerfil() {
     fetch("php/get_perfil.php")
     .then(res => res.json())
@@ -94,7 +93,7 @@ function cargarMisMascotasYSelect() {
     .catch(err => console.error("Error al cargar veterinarios:", err));
 }
 
-// Cargar citas pendientes
+
 // Cargar citas pendientes
 function cargarCitasPendientes() {
     fetch("php/get_mis_citas.php")
@@ -144,7 +143,6 @@ function cargarCitasPendientes() {
     .catch(err => console.error("Error cargando citas:", err));
 }
 
-// Global scope para que la carga asíncrona la detecte de forma segura
 function validarActivacionConsulta() {
     const selectVet = document.getElementById("select-veterinarios");
     const inputFecha = document.getElementById("input-fecha");
@@ -158,17 +156,16 @@ function validarActivacionConsulta() {
         }
     }
 }
-// AUMENTADO Y CORREGIDO: Función para procesar la cancelación de la cita usando notificaciones del sistema
-// Variable global temporal para saber qué cita se desea procesar en el modal
+
 let idCitaParaCancelar = null;
 
 // Modificado: Abre el modal del sistema en lugar de usar el confirm() del navegador
 function cancelarMiCita(idCita) {
-    idCitaParaCancelar = idCita; // Guardamos el ID de la cita seleccionada
+    idCitaParaCancelar = idCita;
     
     const modal = document.getElementById("modal-confirmacion");
     if (modal) {
-        modal.classList.add("active"); // Muestra el modal personalizado
+        modal.classList.add("active");
     }
 }
 
@@ -182,7 +179,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
     // Si el usuario confirma en tu ventanita del sistema
     btnAceptar.addEventListener("click", () => {
-        modal.classList.remove("active"); // Cerramos el modal
+        modal.classList.remove("active");
         
         if (idCitaParaCancelar) {
             ejecutarCancelacionEnBackend(idCitaParaCancelar);
@@ -191,8 +188,8 @@ document.addEventListener("DOMContentLoaded", () => {
 
     // Si el usuario decide dar marcha atrás
     btnCancelar.addEventListener("click", () => {
-        modal.classList.remove("active"); // Solo cerramos el modal
-        idCitaParaCancelar = null; // Limpiamos la variable
+        modal.classList.remove("active");
+        idCitaParaCancelar = null;
     });
 });
 
@@ -212,7 +209,7 @@ function ejecutarCancelacionEnBackend(idCita) {
     .then(data => {
         if (data.success) {
             mostrarNotificacion("¡Cita cancelada con éxito!", "success");
-            cargarCitasPendientes(); // Actualiza dinámicamente tu lista de citas
+            cargarCitasPendientes();
         } else {
             mostrarNotificacion("Error al intentar cancelar: " + data.message, "error");
         }
@@ -307,7 +304,6 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     // Evento Click para visualizar horarios
-    // Evento Click para visualizar horarios REALES desde la Base de Datos
     if (btnVerHorarios) {
         btnVerHorarios.addEventListener("click", () => {
             const vetSeleccionado = selectVet.value;
