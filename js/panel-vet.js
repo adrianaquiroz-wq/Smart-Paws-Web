@@ -256,3 +256,64 @@ function cargarNotificacionesCanceladas() {
         contenedor.innerHTML = "<p style='color:red; padding:10px; font-size:0.85rem;'>Error al conectar con los avisos del sistema.</p>";
     });
 }
+
+function cargarSolicitudesVeterinarios() {
+    const cont = document.getElementById("lista-solicitudes-vet");
+    if (!cont) return;
+
+    fetch("php/get_solicitudes_veterinarios.php")
+        .then(res => res.json())
+        .then(solicitudes => {
+            if (!solicitudes.length) {
+                cont.innerHTML = `<p style="color:var(--texto-suave);font-size:.9rem;">No hay solicitudes pendientes.</p>`;
+                return;
+            }
+
+            cont.innerHTML = solicitudes.map(s => `
+                <div class="card" style="margin-bottom:12px;padding:16px;">
+                    <div style="display:flex;justify-content:space-between;gap:14px;align-items:flex-start;flex-wrap:wrap;">
+                        <div>
+                            <h4 style="margin:0 0 6px;">${s.nombre} ${s.apellido}</h4>
+                            <p style="margin:0;color:var(--texto-suave);font-size:.84rem;">${s.usuario}</p>
+                            <p style="margin:6px 0 0;font-size:.84rem;">
+                                <b>Especialidad:</b> ${s.especialidad || 'General'} - <b>Matricula:</b> ${s.matricula || 'Sin dato'}
+                            </p>
+                        </div>
+                        <div class="actions" style="margin-top:0;">
+                            <button onclick="actualizarSolicitudVeterinario(${s.id_solicitud}, 'aprobar')">
+                                <i class="fas fa-check"></i> Aprobar
+                            </button>
+                            <button onclick="actualizarSolicitudVeterinario(${s.id_solicitud}, 'rechazar')" style="background:var(--coral);">
+                                <i class="fas fa-times"></i> Rechazar
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            `).join("");
+        })
+        .catch(() => {
+            cont.innerHTML = `<p style="color:var(--coral);font-size:.9rem;">No se pudieron cargar las solicitudes.</p>`;
+        });
+}
+
+function actualizarSolicitudVeterinario(idSolicitud, accion) {
+    const texto = accion === "aprobar" ? "aprobar esta cuenta de veterinario" : "rechazar esta solicitud";
+    if (!confirm(`Seguro que deseas ${texto}?`)) return;
+
+    fetch("php/actualizar_solicitud_veterinario.php", {
+        method: "POST",
+        headers: { "Content-Type": "application/x-www-form-urlencoded" },
+        body: new URLSearchParams({ id_solicitud: idSolicitud, accion })
+    })
+    .then(res => res.text())
+    .then(data => {
+        if (data === "ok") {
+            alert("Solicitud actualizada correctamente.");
+            cargarSolicitudesVeterinarios();
+        } else {
+            alert(data);
+        }
+    });
+}
+
+document.addEventListener("DOMContentLoaded", cargarSolicitudesVeterinarios);

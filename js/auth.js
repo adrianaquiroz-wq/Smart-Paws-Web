@@ -9,11 +9,11 @@ function switchTab(tab) {
     if (tab === 'login') {
         loginSec.classList.remove('hidden');
         registroSec.classList.add('hidden');
-        event.currentTarget.classList.add('active');
+        document.querySelector(".tab-btn[onclick=\"switchTab('login')\"]")?.classList.add('active');
     } else {
         loginSec.classList.add('hidden');
         registroSec.classList.remove('hidden');
-        event.currentTarget.classList.add('active');
+        document.querySelector(".tab-btn[onclick=\"switchTab('registro')\"]")?.classList.add('active');
     }
 }
 
@@ -48,12 +48,38 @@ document.querySelector('#section-login form')?.addEventListener('submit', (e) =>
         else if (data === "no_rol") {
             alert("No tienes ese rol asignado");
         } 
+        else if (data === "pendiente") {
+            alert("Tu solicitud de veterinario todavia esta pendiente de aprobacion.");
+        }
         else {
             alert("Datos incorrectos");
         }
 
     });
 });
+
+// =========================
+// SELECTOR DE TIPO DE CUENTA
+// =========================
+const regRolSelect = document.getElementById('reg-rol');
+const camposVeterinario = document.getElementById('campos-veterinario');
+const registroAyuda = document.getElementById('registro-ayuda');
+
+function actualizarRegistroPorRol() {
+    if (!regRolSelect || !camposVeterinario || !registroAyuda) return;
+
+    const esVeterinario = regRolSelect.value === "veterinario";
+    camposVeterinario.classList.toggle("hidden", !esVeterinario);
+    document.getElementById('reg-especialidad')?.toggleAttribute("required", esVeterinario);
+    document.getElementById('reg-matricula')?.toggleAttribute("required", esVeterinario);
+
+    registroAyuda.textContent = esVeterinario
+        ? "Tu cuenta sera revisada antes de habilitar el acceso al panel veterinario."
+        : "Como cliente podras iniciar sesion despues de crear tu cuenta.";
+}
+
+regRolSelect?.addEventListener("change", actualizarRegistroPorRol);
+actualizarRegistroPorRol();
 
 
 // =========================
@@ -68,18 +94,36 @@ document.getElementById('form-registro')?.addEventListener('submit', (e) => {
     const correo = document.getElementById('reg-correo').value;
     const password = document.getElementById('reg-pass').value;
     const rol = document.getElementById('reg-rol').value;
+    const celular = document.getElementById('reg-celular').value;
+    const direccion = document.getElementById('reg-direccion').value;
+    const especialidad = document.getElementById('reg-especialidad')?.value || "";
+    const matricula = document.getElementById('reg-matricula')?.value || "";
 
     fetch("php/registro.php", {
         method: "POST",
         headers: {
             "Content-Type": "application/x-www-form-urlencoded"
         },
-        body: `carnet=${carnet}&nombre=${nombre}&apellido=${apellido}&correo=${correo}&password=${password}&rol=${rol}`
+        body: new URLSearchParams({
+            carnet,
+            nombre,
+            apellido,
+            correo,
+            password,
+            rol,
+            celular,
+            direccion,
+            especialidad,
+            matricula
+        })
     })
     .then(res => res.text())
     .then(data => {
         if (data === "ok") {
-            alert("Registro exitoso");
+            alert("Registro exitoso. Ya puedes iniciar sesion.");
+            switchTab('login');
+        } else if (data === "pendiente") {
+            alert("Solicitud enviada. Un administrador debe aprobar tu cuenta de veterinario.");
             switchTab('login');
         } else {
             alert(data);

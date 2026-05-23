@@ -37,7 +37,18 @@ if ($resultado->num_rows > 0) {
             $_SESSION['rol'] = "veterinario";
             echo "veterinario";
         } else {
-            echo "no_rol";
+            $conexion->query("CREATE TABLE IF NOT EXISTS solicitudes_veterinarios (
+                id_solicitud INT AUTO_INCREMENT PRIMARY KEY,
+                carnetVet INT NOT NULL,
+                especialidad VARCHAR(80) DEFAULT NULL,
+                matricula VARCHAR(60) DEFAULT NULL,
+                estado ENUM('Pendiente','Aprobada','Rechazada') DEFAULT 'Pendiente',
+                fecha_solicitud TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+                UNIQUE KEY unique_solicitud_vet (carnetVet)
+            ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4");
+
+            $pendiente = $conexion->query("SELECT * FROM solicitudes_veterinarios WHERE carnetVet = $carnet AND estado = 'Pendiente'");
+            echo ($pendiente && $pendiente->num_rows > 0) ? "pendiente" : "no_rol";
         }
     }
 
