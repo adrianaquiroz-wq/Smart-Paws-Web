@@ -1,4 +1,5 @@
 <?php
+/*get_mascotas.php */
 include("conexion.php");
 
 header('Content-Type: application/json');

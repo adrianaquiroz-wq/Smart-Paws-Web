@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: 127.0.0.1
--- Tiempo de generación: 20-05-2026 a las 05:39:59
+-- Tiempo de generación: 23-05-2026 a las 06:19:10
 -- Versión del servidor: 10.4.32-MariaDB
 -- Versión de PHP: 8.2.12
 
@@ -47,6 +47,14 @@ CREATE TABLE `atenciones` (
   `hora_fin` time NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
+--
+-- Volcado de datos para la tabla `atenciones`
+--
+
+INSERT INTO `atenciones` (`id_atencion`, `id_cita`, `fecha`, `diagnostico`, `prox_fecha`, `carnetVet`, `asistente_nombre`, `asistente_relacion`, `peso_kg`, `temperatura`, `frecuencia_cardiaca`, `tratamiento`, `observaciones`, `id_mascota`, `tipo_atencion`, `hora_inicio`, `hora_fin`) VALUES
+(13, 10, '2026-05-22', 'Está con sobrepeso y tiene estrés.', '2026-05-29', 9244226, 'Teresa Paredes', 'Familiar', 23.00, 23.0, 120, '0', 'Puede que muera si no sigue las indicaciones.', 17, 'Consulta', '22:46:00', '22:46:00'),
+(14, 10, '2026-05-22', 'Está con sobrepeso y tiene estrés.', '2026-05-29', 9244226, 'Teresa Paredes', 'Familiar', 23.00, 23.0, 120, '0', 'Puede que muera si no sigue las indicaciones.', 17, 'Consulta', '22:46:00', '22:46:00');
+
 -- --------------------------------------------------------
 
 --
@@ -60,7 +68,7 @@ CREATE TABLE `citas` (
   `fecha` date NOT NULL,
   `hora` time NOT NULL,
   `motivo` varchar(100) DEFAULT NULL,
-  `estado` enum('Pendiente','Confirmada','Cancelada','Atendida') DEFAULT 'Pendiente',
+  `estado` enum('Pendiente','Cancelada','Atendida','Ausente') DEFAULT NULL,
   `carnetVet` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
@@ -76,8 +84,11 @@ INSERT INTO `citas` (`id_cita`, `id_mascota`, `carnetDue`, `fecha`, `hora`, `mot
 (5, 17, 55555, '2026-05-20', '09:00:00', 'Limpieza bucal.', 'Cancelada', 9244226),
 (6, 17, 55555, '2026-05-21', '14:00:00', 'Corte de pelo.', 'Pendiente', 9244226),
 (7, 17, 55555, '2026-05-19', '20:30:00', 'Dolor de barriga.', 'Pendiente', 9244226),
-(8, 17, 55555, '2026-05-19', '23:30:00', 'Revisión de ojos.', 'Pendiente', 9244226),
-(9, 17, 55555, '2026-05-19', '23:45:00', 'blsbla', 'Pendiente', 9244226);
+(8, 17, 55555, '2026-05-19', '23:30:00', 'Revisión de ojos.', 'Cancelada', 9244226),
+(9, 17, 55555, '2026-05-19', '23:45:00', 'blsbla', 'Pendiente', 9244226),
+(10, 17, 55555, '2026-05-22', '23:45:00', 'Bañito.', 'Atendida', 9244226),
+(11, 17, 55555, '2026-05-22', '23:45:00', 'Boquita.', 'Pendiente', 9244226),
+(12, 17, 55555, '2026-05-23', '17:00:00', 'Pelitos cortar.', 'Pendiente', 9244226);
 
 -- --------------------------------------------------------
 
@@ -276,7 +287,7 @@ INSERT INTO `personas` (`carnet`, `nombre`, `apellido`, `celular`, `direccion`, 
 (555666, 'Juanita', 'Ponce Armadil', '', '', 'juanita@gmail.com', '72546984'),
 (666999, 'Clarita', 'Suárez', NULL, 'Av. san pablo', 'clarita2010@gmail.com', '9dae3690'),
 (777888, 'Pedro', 'Canon Picaro', NULL, 'Av. Colombia', 'pedrito2000@gmailcom', '6d4e8def'),
-(9244226, 'Adriana', 'Quiroz', '', '', 'adriqy2005@gmail.com', '72062766'),
+(9244226, 'Adriana', 'Quiroz', '', '', 'adriqy2005@gmail.com', '72546984fmycga?'),
 (9258589, 'Martha', 'Yujra', NULL, 'Av. America', 'mys@gmail.com', 'cf0d1451'),
 (333555777, 'Rafael', 'De La Gueto', NULL, 'Calle wirma', 'rafita@gmail.com', 'aaf1d469'),
 (654654654, 'Fabricio', 'Cardenas', NULL, 'Calle Pajsi #123', 'fabrixxx@gmail.com', '0b4d0439'),
@@ -466,13 +477,13 @@ ALTER TABLE `veterinarios`
 -- AUTO_INCREMENT de la tabla `atenciones`
 --
 ALTER TABLE `atenciones`
-  MODIFY `id_atencion` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id_atencion` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=15;
 
 --
 -- AUTO_INCREMENT de la tabla `citas`
 --
 ALTER TABLE `citas`
-  MODIFY `id_cita` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
+  MODIFY `id_cita` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=13;
 
 --
 -- AUTO_INCREMENT de la tabla `clientes_mascotas`
