@@ -378,6 +378,23 @@ INSERT INTO `veterinarios` (`carnetVet`, `especialidad`) VALUES
 (555666, 'General'),
 (9244226, 'General');
 
+-- --------------------------------------------------------
+
+--
+-- Estructura de tabla para solicitudes pendientes de veterinarios
+--
+
+CREATE TABLE `solicitudes_veterinarios` (
+  `id_solicitud` int(11) NOT NULL AUTO_INCREMENT,
+  `carnetVet` int(11) NOT NULL,
+  `especialidad` varchar(80) DEFAULT NULL,
+  `matricula` varchar(60) DEFAULT NULL,
+  `estado` enum('Pendiente','Aprobada','Rechazada') DEFAULT 'Pendiente',
+  `fecha_solicitud` timestamp NOT NULL DEFAULT current_timestamp(),
+  PRIMARY KEY (`id_solicitud`),
+  UNIQUE KEY `unique_solicitud_vet` (`carnetVet`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
 --
 -- Índices para tablas volcadas
 --

@@ -6,6 +6,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Smart Paws — Acceso</title>
   <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="css/chatbot.css">
   <link rel="stylesheet" href="css/theme.css">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 </head>
@@ -117,13 +118,27 @@
         <!-- REGISTRO -->
         <div id="section-registro" class="hidden">
           <form class="input-group" id="form-registro">
+            <select id="reg-rol">
+              <option value="cliente">Crear cuenta de Cliente</option>
+              <option value="veterinario">Solicitar cuenta de Veterinario</option>
+            </select>
             <input type="number" id="reg-carnet" placeholder="Carnet de Identidad" required>
             <input type="text" id="reg-nombre" placeholder="Nombres" required>
             <input type="text" id="reg-apellido" placeholder="Apellidos" required>
             <input type="email" id="reg-correo" placeholder="Correo electrónico" required>
             <input type="password" id="reg-pass" placeholder="Crear contraseña" required>
-            <input type="hidden" id="reg-rol" value="veterinario">
-            <p style="font-size:.8rem;color:var(--texto-suave);text-align:center;">Registro habilitado solo para veterinarios.</p>
+            <input type="tel" id="reg-celular" placeholder="Celular">
+            <input type="text" id="reg-direccion" placeholder="Direccion">
+            <div id="campos-veterinario" class="hidden">
+              <input type="text" id="reg-especialidad" placeholder="Especialidad veterinaria">
+              <input type="text" id="reg-matricula" placeholder="Matricula profesional">
+              <p style="font-size:.78rem;color:var(--texto-suave);text-align:center;line-height:1.5;">
+                Las cuentas de veterinario quedan pendientes hasta que la administracion las apruebe.
+              </p>
+            </div>
+            <p id="registro-ayuda" style="font-size:.8rem;color:var(--texto-suave);text-align:center;">
+              Selecciona el tipo de cuenta que deseas crear.
+            </p>
             <button type="submit" class="btn-principal">Crear cuenta</button>
           </form>
         </div>
@@ -132,6 +147,7 @@
   </div>
 
   <script src="js/auth.js"></script>
-<script src="js/theme.js"></script>
+  <script src="js/chatbot.js"></script>
+  <script src="js/theme.js"></script>
 </body>
 </html>

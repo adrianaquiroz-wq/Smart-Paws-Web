@@ -7,9 +7,9 @@
   <title>Smart Paws — Panel Veterinario</title>
 
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
-  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="css/style.css?v=menu-toggle">
   <link rel="stylesheet" href="css/inventario.css">
-  <link rel="stylesheet" href="css/calendario.css">
+  <link rel="stylesheet" href="css/calendario.css?v=responsive-calendar">
   <link rel="stylesheet" href="css/chatbot.css">
   <link rel="stylesheet" href="css/theme.css">
   <script src='https://cdn.jsdelivr.net/npm/fullcalendar@6.1.11/index.global.min.js'></script>
@@ -86,6 +86,10 @@
 
     <div class="content-header">
       <div style="display:flex;align-items:center;gap:14px;">
+        <button id="menu-toggle" class="menu-toggle" type="button" aria-label="Mostrar u ocultar opciones" aria-expanded="true">
+          <i class="fas fa-bars"></i>
+        </button>
+
         <div>
           <h1>Panel Principal</h1>
           <p style="font-size:.8rem;color:var(--texto-suave);margin-top:2px;">
@@ -94,6 +98,19 @@
         </div>
       </div>
       <span class="header-date" id="fecha-hoy"></span>
+    </div>
+
+    <!-- SOLICITUDES DE VETERINARIOS -->
+    <div class="block" id="solicitudes-vet-section">
+      <h3>
+        <i class="fas fa-user-md" style="color:var(--verde-vivo)"></i>
+        Solicitudes de veterinarios
+      </h3>
+      <div id="lista-solicitudes-vet">
+        <p style="color:var(--texto-suave);font-size:.9rem;">
+          Cargando solicitudes pendientes...
+        </p>
+      </div>
     </div>
 
     <!-- CALENDARIO -->
@@ -329,32 +346,77 @@
 <script src="js/panel-vet.js"></script>
 <script src="js/inventario.js"></script>
 <script src="js/chatbot.js"></script>
+<script src="js/theme.js"></script>
 
 <script>
-  // Hamburguesa
+  const toggleBtn = document.getElementById('menu-toggle');
   const hamburgerBtn = document.getElementById('hamburger-btn');
   const sidebar = document.getElementById('sidebar');
   const overlay = document.getElementById('sidebar-overlay');
+  const vetPage = document.querySelector('.vet-page');
 
-  function toggleSidebar() {
-    sidebar.classList.toggle('active');
-    overlay.classList.toggle('active');
+  function esMovil() {
+    return window.innerWidth <= 768;
   }
 
-  hamburgerBtn?.addEventListener('click', toggleSidebar);
-  overlay?.addEventListener('click', toggleSidebar);
+  function actualizarBotonMenu(abierto) {
+    if (!toggleBtn) return;
+    toggleBtn.setAttribute('aria-expanded', abierto ? 'true' : 'false');
+    toggleBtn.querySelector('i').className = abierto ? 'fas fa-times' : 'fas fa-bars';
+  }
 
-  // Cerrar sidebar al hacer click en un enlace del nav (en móvil)
+  function reajustarCalendario() {
+    [60, 180, 340].forEach(delay => {
+      setTimeout(() => {
+        window.dispatchEvent(new Event('resize'));
+        if (window.smartPawsCalendar) {
+          window.smartPawsCalendar.updateSize();
+        }
+      }, delay);
+    });
+  }
+
+  function abrirCerrarSidebar() {
+    sidebar?.classList.toggle('active');
+    overlay?.classList.toggle('active');
+    actualizarBotonMenu(sidebar?.classList.contains('active'));
+    reajustarCalendario();
+  }
+
+  hamburgerBtn?.addEventListener('click', abrirCerrarSidebar);
+  overlay?.addEventListener('click', abrirCerrarSidebar);
+
+  toggleBtn?.addEventListener('click', () => {
+    if (esMovil()) {
+      abrirCerrarSidebar();
+    } else {
+      const colapsado = vetPage?.classList.toggle('sidebar-collapsed');
+      actualizarBotonMenu(!colapsado);
+      reajustarCalendario();
+    }
+  });
+
   document.querySelectorAll('.side-nav a').forEach(link => {
     link.addEventListener('click', () => {
       if (window.innerWidth <= 768) {
-        sidebar.classList.remove('active');
-        overlay.classList.remove('active');
+        sidebar?.classList.remove('active');
+        overlay?.classList.remove('active');
+        actualizarBotonMenu(false);
       }
     });
   });
 
-  // Fecha
+  window.addEventListener('resize', () => {
+    sidebar?.classList.remove('active');
+    overlay?.classList.remove('active');
+    if (esMovil()) {
+      actualizarBotonMenu(false);
+    } else {
+      actualizarBotonMenu(!vetPage?.classList.contains('sidebar-collapsed'));
+    }
+    reajustarCalendario();
+  });
+
   const fechaEl = document.getElementById('fecha-hoy');
   if (fechaEl) {
     fechaEl.textContent = new Date().toLocaleDateString('es-BO', {
@@ -362,7 +424,5 @@
     });
   }
 </script>
-
-<script src="js/theme.js"></script>
 </body>
 </html>
