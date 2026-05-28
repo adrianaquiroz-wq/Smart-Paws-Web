@@ -349,10 +349,11 @@
 <script src="js/theme.js"></script>
 
 <script>
-  const toggleBtn = document.getElementById('menu-toggle');
-  const hamburgerBtn = document.getElementById('hamburger-btn');
-  const sidebar = document.getElementById('sidebar');
-  const overlay = document.getElementById('sidebar-overlay');
+  // 🛠️ CORRECCIÓN: Buscamos por clase (.) o por ID (#) según corresponda con tu HTML/CSS
+  const toggleBtn = document.querySelector('.menu-toggle');
+  const hamburgerBtn = document.querySelector('.hamburger-btn'); 
+  const sidebar = document.querySelector('.sidebar');
+  const overlay = document.querySelector('.sidebar-overlay');
   const vetPage = document.querySelector('.vet-page');
 
   function esMovil() {
@@ -361,8 +362,11 @@
 
   function actualizarBotonMenu(abierto) {
     if (!toggleBtn) return;
+    const icono = toggleBtn.querySelector('i');
+    if (icono) {
+      icono.className = abierto ? 'fas fa-times' : 'fas fa-bars';
+    }
     toggleBtn.setAttribute('aria-expanded', abierto ? 'true' : 'false');
-    toggleBtn.querySelector('i').className = abierto ? 'fas fa-times' : 'fas fa-bars';
   }
 
   function reajustarCalendario() {
@@ -383,6 +387,7 @@
     reajustarCalendario();
   }
 
+  // Asignación de eventos limpia y segura
   hamburgerBtn?.addEventListener('click', abrirCerrarSidebar);
   overlay?.addEventListener('click', abrirCerrarSidebar);
 
@@ -407,11 +412,10 @@
   });
 
   window.addEventListener('resize', () => {
-    sidebar?.classList.remove('active');
-    overlay?.classList.remove('active');
-    if (esMovil()) {
-      actualizarBotonMenu(false);
-    } else {
+    // Solo cerramos el menú móvil si la pantalla pasa a ser de escritorio
+    if (!esMovil()) {
+      sidebar?.classList.remove('active');
+      overlay?.classList.remove('active');
       actualizarBotonMenu(!vetPage?.classList.contains('sidebar-collapsed'));
     }
     reajustarCalendario();

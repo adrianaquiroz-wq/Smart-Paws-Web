@@ -148,23 +148,24 @@ a{color:inherit;text-decoration:none;}
 .content-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:28px;padding-bottom:22px;border-bottom:1px solid var(--arena);}
 .content-header h1{font-size:1.5rem;letter-spacing:-.02em;}
 .header-date{font-size:.78rem;color:var(--texto-suave);background:var(--blanco);padding:7px 16px;border-radius:var(--radio-pill);border:1px solid var(--arena);}
-.menu-toggle{
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  width:42px;
-  height:42px;
-  background:var(--blanco);
-  border:1px solid var(--arena);
-  border-radius:var(--radio-sm);
-  box-shadow:var(--sombra-sm);
-  font-size:1.2rem;
-  cursor:pointer;
-  color:var(--verde-oscuro);
-  transition:var(--transicion);
+.menu-toggle {
+  display: none; /* Oculto por defecto en computadoras */
+  align-items: center;
+  justify-content: center;
+  width: 42px;
+  height: 42px;
+  background: var(--blanco);
+  border: 1px solid var(--arena);
+  border-radius: var(--radio-sm);
+  box-shadow: var(--sombra-sm);
+  font-size: 1.2rem;
+  cursor: pointer;
+  color: var(--verde-oscuro);
+  transition: var(--transicion);
 }
-
-.menu-toggle:hover{background:var(--verde-oscuro);color:var(--blanco);}
+.menu-toggle:hover { 
+  background: var(--verde-oscuro);
+   color: var(--blanco); }
 .vet-page.sidebar-collapsed .sidebar{margin-left:-264px;}
 
 .mobile-topbar {
@@ -172,14 +173,16 @@ a{color:inherit;text-decoration:none;}
 }
 
 @media(max-width:768px){
-  .sidebar{
+  .sidebar {
     position: fixed;
     top: 0;
     left: 0;
     width: 260px;
     height: 100vh;
-    transform: translateX(-100%);
-    margin-left: 0;
+    background: var(--negro);
+    /* 🛠️ Esto lo mantiene oculto a la izquierda por defecto */
+    transform: translateX(-100%); 
+    transition: transform 0.3s cubic-bezier(.4,0,.2,1);
     z-index: 9999;
   }
   .sidebar.active{
@@ -211,14 +214,15 @@ a{color:inherit;text-decoration:none;}
     font-family: 'Playfair Display', serif;
   }
   .hamburger-btn {
+    display: flex !important; 
     background: none;
     border: none;
     cursor: pointer;
-    display: flex;
     flex-direction: column;
     gap: 5px;
     padding: 4px;
   }
+  
   .hamburger-btn span {
     display: block;
     width: 24px;
@@ -232,7 +236,8 @@ a{color:inherit;text-decoration:none;}
     position: fixed;
     inset: 0;
     background: rgba(0,0,0,.5);
-    z-index: 998;
+    backdrop-filter: blur(2px);
+    z-index: 9998;
   }
   .sidebar-overlay.active {
     display: block;
