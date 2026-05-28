@@ -29,22 +29,31 @@
         </div>
 
         <!-- LOGIN -->
-        <div id="section-login">
-          <form class="input-group">
-            <input type="text" id="login-usuario" name="usuario" placeholder="Correo electrónico" required>
-            <input type="password" id="login-pass" name="contrasena" placeholder="Contraseña" required>
-            <select id="rol-login">
-              <option value="cliente">🐾 Soy Cliente</option>
-              <option value="veterinario">🩺 Soy Veterinario</option>
-            </select>
-            <button type="submit" class="btn-principal">Entrar</button>
-          </form>
-          <p style="text-align:center;margin-top:14px;">
-            <a href="#" id="link-olvide" style="color:var(--verde-medio);font-size:.85rem;font-weight:600;">
-              <i class="fas fa-key"></i> ¿Olvidaste tu contraseña?
-            </a>
-          </p>
-        </div>
+        <!-- LOGIN -->
+<div id="section-login">
+  <form class="input-group" action="login.php" method="POST">
+    <input type="text" id="login-usuario" name="usuario" placeholder="Correo electrónico" required>
+    <input type="password" id="login-pass" name="contrasena" placeholder="Contraseña" required>
+    
+    <select id="rol-login" name="rol" onchange="toggleCamposLoginVet(this.value)">
+      <option value="cliente">🐾 Soy Cliente</option>
+      <option value="veterinario">🩺 Soy Veterinario</option>
+    </select>
+
+    <!-- Campos dinámicos para cuando un usuario quiera activar su perfil de veterinario -->
+    <div id="login-campos-vet" style="display: none; flex-direction: column; gap: inherit; width: 100%;">
+      <input type="text" id="login-especialidad" name="especialidad" placeholder="Especialidad veterinaria">
+      <input type="text" id="login-matricula" name="matricula" placeholder="Matrícula profesional">
+    </div>
+
+    <button type="submit" class="btn-principal">Entrar</button>
+  </form>
+  <p style="text-align:center;margin-top:14px;">
+    <a href="#" id="link-olvide" style="color:var(--verde-medio);font-size:.85rem;font-weight:600;">
+      <i class="fas fa-key"></i> ¿Olvidaste tu contraseña?
+    </a>
+  </p>
+</div>
 
         <!-- RECUPERAR CONTRASEÑA — PASO 1: Ingresar correo + CAPTCHA -->
         <div id="section-recuperar" class="hidden">
@@ -149,5 +158,22 @@
   <script src="js/auth.js"></script>
   <script src="js/chatbot.js"></script>
   <script src="js/theme.js"></script>
+  <script>
+    function toggleCamposLoginVet(rol) {
+  const camposVet = document.getElementById('login-campos-vet');
+  const esp = document.getElementById('login-especialidad');
+  const mat = document.getElementById('login-matricula');
+  
+  if (rol === 'veterinario') {
+    camposVet.style.display = 'flex';
+    esp.required = true;
+    mat.required = true;
+  } else {
+    camposVet.style.display = 'none';
+    esp.required = false;
+    mat.required = false;
+  }
+}
+  </script>
 </body>
 </html>
