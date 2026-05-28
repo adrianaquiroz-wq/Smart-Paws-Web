@@ -222,3 +222,40 @@ img{
   max-width:100%;
   display:block;
 }
+
+/* ── RESPONSIVE ADDITIONS ──────────────────────────────── */
+@media(max-width:768px){
+  /* Sección padding general reducido */
+  .section-padding{ padding:64px 0; }
+
+  /* Footer top flex: apilar en columna */
+  .footer-top-flex{ flex-direction:column; gap:14px; text-align:center; }
+  .footer-links-top a{ margin:0 8px; }
+  .footer-social{ justify-content:center; }
+
+  /* Footer grid: de 2 columnas a 1 */
+  .footer-grid-custom{ grid-template-columns:1fr; gap:36px; }
+
+  /* Newsletter form: apilar input y botón */
+  .newsletter-form{ flex-direction:column; }
+  .newsletter-form input{ width:100%; }
+
+  /* Hero badges: ajustar posición para que no se salgan */
+  .hero-badge{ left:8px; bottom:-14px; padding:10px 14px; }
+  .hero-badge-2{ right:4px; top:-10px; padding:9px 12px; }
+
+  /* CTA band: reducir padding */
+  .cta-band{ padding:56px 0; }
+}
+
+@media(max-width:480px){
+  .section-padding{ padding:48px 0; }
+
+  /* Cada stat del hero ocupa ancho completo en móvil muy pequeño */
+  .hero-stats .stat{ min-width:100%; border-right:none; border-bottom:1px solid rgba(255,255,255,.08); }
+  .hero-stats .stat:last-child{ border-bottom:none; }
+
+  /* Botones hero: apilar */
+  .hero-actions{ flex-direction:column; }
+  .btn-primary,.btn-outline{ width:100%; justify-content:center; }
+}
