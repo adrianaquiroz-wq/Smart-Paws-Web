@@ -291,3 +291,46 @@ a{color:inherit;text-decoration:none;}
 .btn-volver:hover{background:var(--verde-medio);color:var(--blanco);}
 #codigo-input{font-family:monospace;}
 
+/* ── RESPONSIVE ADDITIONS ──────────────────────────────── */
+
+/* Auth / Login: reducir padding en pantallas chicas */
+@media(max-width:480px){
+  .auth-page{ padding:24px 12px; }
+  .auth-card{ padding:28px 22px 32px; }
+  .auth-logo h2{ font-size:1.5rem; }
+  .auth-back{ top:12px; right:12px; padding:7px 12px; font-size:.78rem; }
+}
+
+/* Modal: ajustar en pantallas chicas */
+@media(max-width:540px){
+  .modal-content{ padding:32px 22px; margin:12px; max-width:calc(100vw - 24px); }
+  .modal-content h3{ font-size:1.2rem; }
+}
+
+/* Form pages (registrar_cliente, registrar_mascota, completar_mascota) */
+@media(max-width:600px){
+  .form-card{ padding:28px 20px; }
+  .form-topbar{ padding:14px 4%; }
+  .form-topbar h3{ font-size:.92rem; }
+  .form-topbar a span{ display:none; } /* ocultar texto del link, mantener icono */
+}
+
+/* Panel / Dashboard interior */
+@media(max-width:600px){
+  /* Search box apilado */
+  .search-box{ flex-direction:column; }
+  .search-box button{ width:100%; justify-content:center; }
+
+  /* Content header: wrap para que no se solape */
+  .content-header{ flex-wrap:wrap; gap:10px; }
+  .content-header h1{ font-size:1.2rem; }
+
+  /* Blocks y cards: reducir padding interior */
+  .block{ padding:18px 16px; }
+  .card{ padding:18px 16px; }
+  .search-section{ padding:18px 16px; }
+
+  /* Stats cards: números más compactos */
+  .stat-card .stat-num{ font-size:1.6rem; }
+}
+
