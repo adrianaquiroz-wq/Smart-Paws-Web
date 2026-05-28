@@ -55,3 +55,23 @@ function cerrarModal(){
     }
 
 }
+
+// Agrega esto al final de tu archivo registro_dueno.js
+
+document.addEventListener("DOMContentLoaded", () => {
+    const inputNombre = document.getElementById("cli-nombre");
+    const inputApellido = document.getElementById("cli-apellido");
+
+    // Función que remueve cualquier cosa que no sea letra o espacio
+    const filtrarSoloLetras = (e) => {
+        e.target.value = e.target.value.replace(/[^a-zA-ZáéíóúÁÉÍÓÚñÑ\s]/g, "");
+    };
+
+    if (inputNombre) {
+        inputNombre.addEventListener("input", filtrarSoloLetras);
+    }
+    
+    if (inputApellido) {
+        inputApellido.addEventListener("input", filtrarSoloLetras);
+    }
+});

@@ -27,16 +27,30 @@
           <label>Carnet de identidad</label>
           <input type="number" name="carnetDue" id="cli-carnet" placeholder="Ej: 12345678" required>
         </div>
+
         <div class="field-row">
-          <div class="field">
-            <label>Nombre</label>
-            <input type="text" name="nombre" id="cli-nombre" placeholder="Juan" required>
-          </div>
-          <div class="field">
-            <label>Apellido</label>
-            <input type="text" name="apellido" id="cli-apellido" placeholder="Pérez" required>
-          </div>
-        </div>
+  <div class="field">
+    <label>Nombre</label>
+    <input type="text" 
+           name="nombre" 
+           id="cli-nombre" 
+           placeholder="Juan" 
+           pattern="^[a-zA-ZáéíóúÁÉÍÓÚñÑ\s]+$" 
+           title="El nombre solo debe contener letras y espacios." 
+           required>
+  </div>
+  <div class="field">
+    <label>Apellido</label>
+    <input type="text" 
+           name="apellido" 
+           id="cli-apellido" 
+           placeholder="Pérez" 
+           pattern="^[a-zA-ZáéíóúÁÉÍÓÚñÑ\s]+$" 
+           title="El apellido solo debe contener letras y espacios." 
+           required>
+  </div>
+</div>
+
         <div class="field">
           <label>Correo electrónico</label>
           <input type="email" name="usuario" id="cli-usuario" placeholder="juan@correo.com" required>
