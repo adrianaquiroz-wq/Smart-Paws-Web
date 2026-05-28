@@ -1,21 +1,202 @@
-<!--atenciones.html-->
 <!DOCTYPE html>
 <html lang="es">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Smart Paws — Módulo de Atenciones</title>
-
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
   <link rel="stylesheet" href="css/style.css">
   <link rel="stylesheet" href="css/atenciones.css">
   <link rel="stylesheet" href="css/chatbot.css">
   <link rel="stylesheet" href="css/theme.css">
+  <style>
+    /* ── Sección sin dueño ── */
+    .seccion-sin-dueno { margin-top: 40px; }
+    .seccion-sin-dueno h3 {
+      display: flex; align-items: center; gap: 10px;
+      font-size: 1rem; font-weight: 700; color: #5c0a12; margin-bottom: 16px;
+    }
+    .card-sin-dueno {
+      background: #fff; border: 1.5px solid #f5c6cb; border-radius: 12px;
+      padding: 18px 20px; margin-bottom: 14px;
+      display: flex; align-items: center; justify-content: space-between;
+      gap: 16px; flex-wrap: wrap;
+      box-shadow: 0 2px 8px rgba(230,57,70,.08); transition: box-shadow .2s;
+    }
+    .card-sin-dueno:hover { box-shadow: 0 4px 16px rgba(230,57,70,.15); }
+    .card-sin-dueno .pet-info { display: flex; align-items: center; gap: 14px; flex: 1; min-width: 180px; }
+    .card-sin-dueno .pet-avatar {
+      width: 52px; height: 52px; border-radius: 50%; object-fit: cover;
+      border: 2px solid #e63946; flex-shrink: 0;
+    }
+    .card-sin-dueno .pet-avatar-icon {
+      width: 52px; height: 52px; border-radius: 50%;
+      background: #fff0f1; border: 2px solid #e63946;
+      display: flex; align-items: center; justify-content: center;
+      color: #e63946; font-size: 1.4rem; flex-shrink: 0;
+    }
+    .card-sin-dueno .pet-nombre { font-weight: 700; color: #1a3a2e; font-size: .98rem; }
+    .card-sin-dueno .pet-meta   { font-size: .8rem; color: #666; margin-top: 2px; }
+    .card-sin-dueno .atencion-info { font-size: .82rem; color: #555; flex: 1; min-width: 160px; }
+    .card-sin-dueno .atencion-info strong { color: #1a3a2e; }
+    .badge-sin-dueno {
+      background: #e63946; color: #fff; font-size: .68rem; font-weight: 700;
+      padding: 2px 9px; border-radius: 999px; text-transform: uppercase;
+      letter-spacing: .05em; white-space: nowrap;
+    }
+    .btn-completar {
+      background: #0f5132; color: #fff; border: none;
+      padding: 9px 18px; border-radius: 8px; cursor: pointer;
+      font-size: .88rem; font-weight: 700;
+      display: inline-flex; align-items: center; gap: 6px;
+      transition: opacity .2s, transform .1s; white-space: nowrap;
+    }
+    .btn-completar:hover { opacity: .88; transform: translateY(-1px); }
+    .empty-sin-dueno { text-align: center; padding: 30px; color: var(--texto-suave); font-size: .9rem; }
+
+    /* ── Modal base ── */
+    .modal-overlay {
+      position: fixed; inset: 0; background: rgba(0,0,0,.55);
+      display: flex; align-items: center; justify-content: center;
+      z-index: 1000; padding: 16px;
+    }
+    .modal-overlay.hidden { display: none; }
+    .modal-box {
+      background: #fff; border-radius: 16px; padding: 32px;
+      width: 100%; max-width: 580px; max-height: 90vh; overflow-y: auto;
+      box-shadow: 0 8px 40px rgba(0,0,0,.25); animation: modalIn .2s ease;
+    }
+    @keyframes modalIn { from { transform: scale(.94); opacity: 0; } to { transform: scale(1); opacity: 1; } }
+    .modal-box h2 { font-size: 1.1rem; font-weight: 800; color: #0f5132; margin-bottom: 4px; display: flex; align-items: center; gap: 10px; }
+    .modal-sub { color: #666; font-size: .83rem; margin-bottom: 20px; }
+    .modal-section-title {
+      font-size: .9rem; font-weight: 700; color: #1a3a2e;
+      margin: 18px 0 10px; display: flex; align-items: center; gap: 7px;
+    }
+    .modal-section-title i { color: #2dc97e; }
+    .form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+    .form-grid .full-width { grid-column: 1 / -1; }
+    .form-group { display: flex; flex-direction: column; gap: 4px; }
+    .form-group label { font-size: .8rem; font-weight: 600; color: #444; }
+    .form-group input, .form-group select {
+      padding: 8px 12px; border: 1.5px solid #d0d7de; border-radius: 8px;
+      font-size: .9rem; background: #fafbfc; transition: border-color .2s;
+    }
+    .form-group input:focus, .form-group select:focus { outline: none; border-color: #2dc97e; background: #fff; }
+    .modal-footer { display: flex; gap: 12px; justify-content: flex-end; margin-top: 24px; }
+    .btn-atencion {
+      display: inline-flex; align-items: center; gap: 7px;
+      padding: 10px 20px; border-radius: 9px; font-size: .9rem;
+      font-weight: 700; border: none; cursor: pointer;
+      transition: opacity .2s, transform .1s;
+    }
+    .btn-atencion:hover { opacity: .88; transform: translateY(-1px); }
+    .btn-atencion:disabled { opacity: .5; cursor: not-allowed; transform: none; }
+    .btn-normal { background: #0f5132; color: #fff; }
+    .btn-gris   { background: #6c757d; color: #fff; }
+
+    /* ── Toast ── */
+    .panel-toast {
+      position: fixed; bottom: 28px; left: 50%; transform: translateX(-50%) translateY(30px);
+      background: #1a3a2e; color: #fff; padding: 12px 28px; border-radius: 999px;
+      font-size: .92rem; font-weight: 600; opacity: 0;
+      transition: opacity .3s, transform .3s; pointer-events: none; z-index: 9999;
+    }
+    .panel-toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
+
+    /* ── Tarjeta resumen mascota ── */
+    .resumen-mascota-card {
+      background: #f0faf5; border: 1.5px solid #b7e4c7; border-radius: 10px;
+      padding: 12px 16px; margin-bottom: 16px;
+      display: flex; align-items: center; justify-content: space-between;
+      gap: 12px; flex-wrap: wrap;
+    }
+    .resumen-mascota-card .rm-info { display: flex; align-items: center; gap: 12px; flex: 1; }
+    .resumen-mascota-card .rm-avatar {
+      width: 46px; height: 46px; border-radius: 50%;
+      object-fit: cover; border: 2px solid #2dc97e; flex-shrink: 0;
+    }
+    .resumen-mascota-card .rm-avatar-icon {
+      width: 46px; height: 46px; border-radius: 50%;
+      background: #d8f3e6; border: 2px solid #2dc97e;
+      display: flex; align-items: center; justify-content: center;
+      color: #0f5132; font-size: 1.3rem; flex-shrink: 0;
+    }
+    .resumen-mascota-card .rm-nombre { font-weight: 700; color: #0f5132; font-size: .97rem; }
+    .resumen-mascota-card .rm-meta   { font-size: .78rem; color: #555; margin-top: 2px; }
+
+    /* ── Botón editar animal ── */
+    .btn-editar-animal {
+      background: none; border: 1.5px solid #0f5132; color: #0f5132;
+      padding: 6px 14px; border-radius: 7px; font-size: .8rem; font-weight: 700;
+      cursor: pointer; display: inline-flex; align-items: center; gap: 6px;
+      transition: background .18s, color .18s; white-space: nowrap; flex-shrink: 0;
+    }
+    .btn-editar-animal:hover, .btn-editar-animal.activo { background: #0f5132; color: #fff; }
+
+    /* ── Panel colapsable editar animal ── */
+    .panel-editar-animal {
+      overflow: hidden; max-height: 0; opacity: 0;
+      transition: max-height .38s ease, opacity .3s ease, margin .3s ease;
+      margin-bottom: 0;
+    }
+    .panel-editar-animal.abierto { max-height: 1000px; opacity: 1; margin-bottom: 8px; }
+    .panel-editar-inner {
+      background: #fafffe; border: 1.5px dashed #b7e4c7;
+      border-radius: 10px; padding: 18px 16px 14px;
+    }
+    .ea-titulo {
+      font-size: .82rem; font-weight: 700; color: #0f5132;
+      margin-bottom: 14px; display: flex; align-items: center; gap: 7px;
+    }
+    .ea-titulo i { color: #2dc97e; }
+    .ea-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+    .ea-grid .full { grid-column: 1 / -1; }
+    .ea-group { display: flex; flex-direction: column; gap: 3px; }
+    .ea-group label { font-size: .75rem; font-weight: 600; color: #444; }
+    .ea-group input, .ea-group select, .ea-group textarea {
+      padding: 7px 11px; border: 1.5px solid #d0d7de; border-radius: 7px;
+      font-size: .87rem; background: #fff; transition: border-color .2s; font-family: inherit;
+    }
+    .ea-group input:focus, .ea-group select:focus, .ea-group textarea:focus {
+      outline: none; border-color: #2dc97e;
+    }
+    .ea-group textarea { resize: vertical; min-height: 54px; }
+    .ea-foto-row { display: flex; align-items: center; gap: 14px; }
+    .ea-foto-preview {
+      width: 64px; height: 64px; border-radius: 10px;
+      object-fit: cover; border: 2px solid #b7e4c7; flex-shrink: 0;
+    }
+    .ea-foto-input { flex: 1; }
+    .btn-guardar-animal {
+      margin-top: 14px; width: 100%; padding: 9px;
+      background: #2dc97e; color: #fff; border: none;
+      border-radius: 8px; font-size: .88rem; font-weight: 700;
+      cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 7px;
+      transition: opacity .2s, transform .1s;
+    }
+    .btn-guardar-animal:hover { opacity: .88; transform: translateY(-1px); }
+    .btn-guardar-animal:disabled { opacity: .5; cursor: not-allowed; transform: none; }
+    .ea-msg {
+      font-size: .8rem; font-weight: 600; text-align: center;
+      padding: 6px; border-radius: 6px; margin-top: 8px; display: none;
+    }
+    .ea-msg.ok  { background: #d8f3e6; color: #0f5132; }
+    .ea-msg.err { background: #ffe0e3; color: #9b1b2a; }
+
+    @media (max-width: 600px) {
+      .form-grid, .ea-grid { grid-template-columns: 1fr; }
+      .modal-box { padding: 20px 16px; }
+      .card-sin-dueno { flex-direction: column; align-items: flex-start; }
+      .resumen-mascota-card { flex-direction: column; align-items: flex-start; }
+      .btn-editar-animal { width: 100%; justify-content: center; }
+    }
+  </style>
+
   
+
 </head>
-
 <body>
-
 <div class="vet-page">
 
   <aside class="sidebar" id="sidebar">
@@ -24,7 +205,6 @@
       <h3>Dr. Veterinario</h3>
       <span class="sidebar-tag">Veterinario</span>
     </div>
-
     <nav class="side-nav">
       <a href="panel-vet.html"><i class="fas fa-home"></i> Panel principal</a>
       <a href="panel-vet.html#buscar-section"><i class="fas fa-search"></i> Buscar paciente</a>
@@ -41,7 +221,6 @@
 
     <div class="content-header">
       <div style="display:flex;align-items:center;gap:14px;">
-        <button id="menu-toggle" class="menu-toggle"><i class="fas fa-bars"></i></button>
         <div>
           <h1>Control de Atenciones</h1>
           <p style="font-size:.8rem;color:var(--texto-suave);margin-top:2px;">Historial clínico y consultas en vivo</p>
@@ -50,8 +229,8 @@
       <span class="header-date" id="fecha-hoy"></span>
     </div>
 
-    <div id="vista-tablero" class="block">
-      
+    <div id="vista-tablero">
+
       <div class="atenciones-actions">
         <button class="btn-atencion btn-normal" onclick="abrirAtencionDirecta()">
           <i class="fas fa-plus"></i> Nueva Atención Directa
@@ -62,194 +241,185 @@
       </div>
 
       <h3><i class="fas fa-clock" style="color:var(--ambar)"></i> Pacientes en Espera de Consulta</h3>
-      
       <div class="inv-table-wrap">
         <table class="tabla-atenciones">
-    <thead>
-        <tr>
-            <th>Hora Cita</th>
-            <th>Mascota</th>
-            <th>Propietario</th>
-            <th>Acciones</th>
-        </tr>
-    </thead>
-    <tbody id="tabla-espera-tbody">
-        </tbody>
-</table>
+          <thead>
+            <tr>
+              <th>Hora Cita</th><th>Mascota</th><th>Propietario</th><th>Motivo</th><th>Acciones</th>
+            </tr>
+          </thead>
+          <tbody id="tabla-espera-tbody"></tbody>
+        </table>
       </div>
-    </div>
 
-    <div id="vista-formulario" class="block hidden">
-      
-      <div id="pet-card" class="pet-card-header">
-        <div class="pet-avatar-frame">
-          <img id="clinical-pet-foto" src="img/huella.png" alt="Mascota">
-        </div>
-        <div class="pet-header-info">
-          <div style="display:flex; align-items:center; gap:10px;">
-            <h2 id="clinical-pet-name">Paciente de Emergencia</h2>
-            <span id="badge-tipo-consulta" class="badge-alert hidden">Emergencia Crítica</span>
-          </div>
-          <p id="clinical-pet-meta">Especie: -- | Raza: -- | Edad: Calculando...</p>
-          <p style="font-size:0.85rem; opacity:0.9;"><i class="far fa-clock"></i> Hora de Inicio: <span id="clinical-hora-inicio">00:00</span></p>
+      <div class="seccion-sin-dueno">
+        <h3>
+          <i class="fas fa-user-clock"></i>
+          Casos pendientes de registro
+          <span id="badge-sin-dueno-count" style="background:#e63946;color:#fff;font-size:.7rem;padding:2px 9px;border-radius:999px;font-weight:700;"></span>
+        </h3>
+        <p style="font-size:.83rem;color:var(--texto-suave);margin-bottom:14px;">
+          Animales atendidos en emergencia sin dueño registrado. Completá sus datos o registrá al propietario.
+        </p>
+        <div id="lista-sin-dueno">
+          <div class="empty-sin-dueno"><i class="fas fa-spinner fa-spin"></i> Cargando...</div>
         </div>
       </div>
 
-      <div id="wrapper-buscador-directo" class="card hidden" style="margin-bottom:20px; background:#f8f9fa;">
-        <label style="font-weight:bold; display:block; margin-bottom:8px;">Buscar Paciente Registrado:</label>
-        <div style="display:flex; gap:10px;">
-          <input type="text" id="input-buscar-paciente" placeholder="Escribe el nombre de la mascota...">
-          <button type="button" class="btn-atencion btn-normal" onclick="buscarMascotaDirecta()"><i class="fas fa-search"></i> Buscar</button>
-        </div>
-        <div id="resultado-busqueda-directa" style="margin-top:10px;"></div>
-      </div>
-
-      <form id="form-registro-clinico" onsubmit="procesarBotonContinuar(event)">
-        
-        <h3><i class="fas fa-user-check"></i> Datos del Acompañante</h3>
-        <div class="form-grid">
-          <div class="form-group">
-            <label for="asistente_nombre">Nombre completo de quien lo trae:</label>
-            <input type="text" id="asistente_nombre" placeholder="Ej. Juan Pérez" required>
-          </div>
-          <div class="form-group">
-            <label for="asistente_relacion">Relación / Parentesco con el dueño:</label>
-            <select id="asistente_relacion" required>
-              <option value="Titular">Es el Propietario Titular</option>
-              <option value="Familiar">Familiar (Hijo/Hermano/Pareja)</option>
-              <option value="Paseador">Paseador / Tercero</option>
-              <option value="Rescatista">Rescatista (Caso callejero)</option>
-            </select>
-          </div>
-        </div>
-
-        <h3><i class="fas fa-heartbeat"></i> Signos Vitales</h3>
-        <div class="form-grid">
-          <div class="form-group">
-            <label for="peso_kg">Peso (Kg):</label>
-            <input type="number" step="0.01" id="peso_kg" placeholder="0.00" required>
-          </div>
-          <div class="form-group">
-            <label for="temperatura">Temperatura (°C):</label>
-            <input type="number" step="0.1" id="temperatura" placeholder="38.5" required>
-          </div>
-          <div class="form-group">
-            <label for="frecuencia_cardiaca">Frecuencia Cardíaca (LPM):</label>
-            <input type="number" id="frecuencia_cardiaca" placeholder="120" required>
-          </div>
-        </div>
-
-        <h3><i class="fas fa-file-medical"></i> Evaluación y Tratamiento</h3>
-        <div class="form-grid">
-          <div class="form-group full-width">
-            <label for="diagnostico">Diagnóstico Clínico:</label>
-            <textarea id="diagnostico" placeholder="Describa los síntomas observados y dictamen médico..." required></textarea>
-          </div>
-          <div class="form-group full-width">
-            <label for="tratamiento">Tratamiento e Indicaciones (Receta):</label>
-            <textarea id="tratamiento" placeholder="Medicamentos, dosis aplicadas y tratamiento ambulatorio..." required></textarea>
-          </div>
-          <div class="form-group full-width">
-            <label for="observaciones">Observaciones Internas:</label>
-            <textarea id="observaciones" placeholder="Notas adicionales o recordatorios confidenciales..."></textarea>
-          </div>
-          <div class="form-group">
-            <label for="prox_fecha">Fecha de Próximo Control (Opcional):</label>
-            <input type="date" id="prox_fecha">
-          </div>
-        </div>
-
-        <div style="display:flex; gap:15px; justify-content:flex-end;">
-          <button type="button" class="btn-atencion" style="background-color:#6c757d; color:white;" onclick="cancelarFlujoAtencion()">
-            Cancelar Consulta
-          </button>
-          <button type="submit" class="btn-atencion btn-normal" id="btn-submit-clinico">
-            <i class="fas fa-arrow-right"></i> Continuar al Registro
-          </button>
-        </div>
-      </form>
     </div>
-
-    <div id="vista-registro-secuencial" class="block hidden">
-      <h2 style="color:#e63946;"><i class="fas fa-user-shield"></i> Fase Final: Registro de Cliente y Mascota Nueva</h2>
-      <p style="margin-bottom:20px; color:var(--texto-suave);">La atención médica se ha guardado en la memoria. Ingrese los datos obligatorios para sincronizar la información.</p>
-      
-      <form id="form-secuencial-completo" onsubmit="guardarTodoFlujoPuff(event)">
-        <h3><i class="fas fa-id-card"></i> Datos del Nuevo Propietario</h3>
-        <div class="form-grid">
-          <div class="form-group">
-            <label>Carnet de Identidad (CI):</label>
-            <input type="number" id="sec_dueño_ci" required>
-          </div>
-          <div class="form-group">
-            <label>Nombre:</label>
-            <input type="text" id="sec_dueño_nombre" required>
-          </div>
-          <div class="form-group">
-            <label>Apellido:</label>
-            <input type="text" id="sec_dueño_apellido" required>
-          </div>
-          <div class="form-group">
-            <label>Teléfono/Celular:</label>
-            <input type="number" id="sec_dueño_telefono" required>
-          </div>
-        </div>
-
-        <h3><i class="fas fa-dog"></i> Datos de la Mascota</h3>
-        <div class="form-grid">
-          <div class="form-group">
-            <label>Nombre de la Mascota:</label>
-            <input type="text" id="sec_mascota_nombre" required>
-          </div>
-          <div class="form-group">
-            <label>Especie:</label>
-            <select id="sec_mascota_especie" required>
-              <option value="Canino">Canino</option>
-              <option value="Felino">Felino</option>
-              <option value="Ave">Ave</option>
-              <option value="Exótico">Exótico</option>
-            </select>
-          </div>
-          <div class="form-group">
-            <label>Raza:</label>
-            <input type="text" id="sec_mascota_raza" placeholder="Ej. Criollo, Poodle..." required>
-          </div>
-          <div class="form-group">
-            <label>Fecha de Nacimiento:</label>
-            <input type="date" id="sec_mascota_nacimiento" required>
-          </div>
-        </div>
-
-        <div style="display:flex; gap:15px; justify-content:flex-end; margin-top:25px;">
-          <button type="submit" class="btn-atencion btn-emergencia" style="font-size:1.1rem; padding:15px 30px;">
-            <i class="fas fa-save"></i> ¡Finalizar Registro y Guardar Todo!
-          </button>
-        </div>
-      </form>
-    </div>
-
   </main>
+</div>
+
+<!-- ══════════ MODAL COMPLETAR REGISTRO ══════════ -->
+<div id="modal-completar" class="modal-overlay hidden">
+  <div class="modal-box">
+    <h2><i class="fas fa-user-check"></i> Completar Registro del Paciente</h2>
+    <p class="modal-sub">
+      Ingresa los datos del propietario para vincular la mascota y activar su registro completo.
+    </p>
+
+    <!-- Tarjeta resumen mascota + botón Editar animal -->
+    <div class="resumen-mascota-card" id="modal-resumen-mascota"></div>
+
+    <!-- Panel colapsable: datos del animal -->
+    <div class="panel-editar-animal" id="panel-editar-animal">
+      <div class="panel-editar-inner">
+        <p class="ea-titulo"><i class="fas fa-paw"></i> Datos del animal</p>
+        <div class="ea-grid">
+          <div class="ea-group">
+            <label>Especie</label>
+            <select id="ea-especie" onchange="eaCargarRazas()">
+              <option value="">Seleccione...</option>
+              <option value="1">Perro</option>
+              <option value="2">Gato</option>
+              <option value="3">Conejo</option>
+              <option value="4">Ave</option>
+              <option value="5">Reptil</option>
+            </select>
+          </div>
+          <div class="ea-group">
+            <label>Raza</label>
+            <select id="ea-raza" name="id_raza">
+              <option value="">Elige especie primero</option>
+            </select>
+          </div>
+          <div class="ea-group">
+            <label>Color</label>
+            <select id="ea-color">
+              <option value="">Seleccione...</option>
+              <option value="1">Negro</option>
+              <option value="2">Blanco</option>
+              <option value="3">Marrón</option>
+              <option value="5">Naranja</option>
+              <option value="6">Café</option>
+              <option value="7">Rojo</option>
+              <option value="8">Azul</option>
+              <option value="9">Amarillo</option>
+              <option value="10">Celeste</option>
+              <option value="11">Verde</option>
+              <option value="12">Rosa</option>
+              <option value="13">Gris</option>
+            </select>
+          </div>
+          <div class="ea-group">
+            <label>Tamaño</label>
+            <select id="ea-tamano">
+              <option value="">Seleccione...</option>
+              <option value="Pequeño">Pequeño</option>
+              <option value="Mediano">Mediano</option>
+              <option value="Grande">Grande</option>
+            </select>
+          </div>
+          <div class="ea-group">
+            <label>Fecha de nacimiento</label>
+            <input type="date" id="ea-fecha-nac">
+          </div>
+          <div class="ea-group">
+            <label>Alergias</label>
+            <input type="text" id="ea-alergias" placeholder="Ninguna / detallar...">
+          </div>
+          <div class="ea-group full">
+            <label>Descripción / observaciones</label>
+            <textarea id="ea-descripcion" placeholder="Características relevantes..."></textarea>
+          </div>
+          <div class="ea-group full">
+            <label>Foto de la mascota</label>
+            <div class="ea-foto-row">
+              <img id="ea-foto-preview" src="img/default.png" alt="preview" class="ea-foto-preview">
+              <div class="ea-foto-input">
+                <input type="file" id="ea-foto" accept="image/*" onchange="eaPreviewFoto(event)">
+                <p style="font-size:.72rem;color:#888;margin-top:5px;">JPG, PNG o WEBP</p>
+              </div>
+            </div>
+          </div>
+        </div>
+        <button type="button" class="btn-guardar-animal" id="btn-guardar-animal" onclick="guardarDatosAnimal()">
+          <i class="fas fa-save"></i> Guardar datos del animal
+        </button>
+        <p class="ea-msg" id="ea-msg"></p>
+      </div>
+    </div>
+
+    <!-- Formulario dueño -->
+    <form id="form-completar-registro">
+      <input type="hidden" id="comp_id_mascota">
+      <p class="modal-section-title"><i class="fas fa-id-card"></i> Datos del Propietario</p>
+      <div class="form-grid">
+        <div class="form-group">
+          <label>Carnet de Identidad (CI) <span style="color:#e63946">*</span></label>
+          <input type="number" id="comp_ci" placeholder="Ej. 12345678" required>
+        </div>
+        <div class="form-group">
+          <label>Celular <span style="color:#e63946">*</span></label>
+          <input type="text" id="comp_celular" placeholder="Ej. 77712345" required>
+        </div>
+        <div class="form-group">
+          <label>Nombre <span style="color:#e63946">*</span></label>
+          <input type="text" id="comp_nombre" placeholder="Nombre" required>
+        </div>
+        <div class="form-group">
+          <label>Apellido <span style="color:#e63946">*</span></label>
+          <input type="text" id="comp_apellido" placeholder="Apellido" required>
+        </div>
+        <div class="form-group full-width">
+          <label>Dirección</label>
+          <input type="text" id="comp_direccion" placeholder="Ej. Av. América #456">
+        </div>
+        <div class="form-group full-width">
+          <label>Usuario (correo) <span style="color:#e63946">*</span></label>
+          <input type="email" id="comp_usuario" placeholder="correo@ejemplo.com" required>
+          <span style="font-size:.76rem;color:#888;margin-top:3px;">
+            <i class="fas fa-info-circle"></i> La contraseña se genera automáticamente y se mostrará al guardar.
+          </span>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn-atencion btn-gris" onclick="cerrarModalCompletar()">
+          <i class="fas fa-times"></i> Cancelar
+        </button>
+        <button type="submit" class="btn-atencion btn-normal" id="btn-guardar-completar">
+          <i class="fas fa-save"></i> Guardar y Activar Mascota
+        </button>
+      </div>
+    </form>
+  </div>
 </div>
 
 <div class="panel-toast" id="panel-toast"></div>
 
 <script src="js/atenciones.js"></script>
+
 <script src="js/chatbot.js"></script>
 <script src="js/theme.js"></script>
 <script>
-  // Control básico de barra lateral e inicialización de fecha
-  const toggleBtn = document.getElementById('menu-toggle');
-  const sidebar = document.getElementById('sidebar');
-  if(toggleBtn && sidebar) {
-    toggleBtn.addEventListener('click', () => sidebar.classList.toggle('active'));
-  }
-  
+  document.getElementById('menu-toggle')?.addEventListener('click', () => {
+    document.getElementById('sidebar')?.classList.toggle('active');
+  });
   const fechaEl = document.getElementById('fecha-hoy');
-  if (fechaEl) {
-    fechaEl.textContent = new Date().toLocaleDateString('es-BO', {
-      weekday: 'long', year: 'numeric', month: 'long', day: 'numeric'
-    });
-  }
+  if (fechaEl) fechaEl.textContent = new Date().toLocaleDateString('es-BO', {
+    weekday: 'long', year: 'numeric', month: 'long', day: 'numeric'
+  });
 </script>
+
 </body>
 </html>

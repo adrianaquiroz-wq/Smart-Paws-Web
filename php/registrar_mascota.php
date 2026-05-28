@@ -1,4 +1,5 @@
 <?php
+/*registrar_mascota.php*/
 include("conexion.php");
 
 header('Content-Type: text/plain');

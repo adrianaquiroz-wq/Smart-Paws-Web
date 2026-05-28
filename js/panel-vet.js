@@ -1,5 +1,6 @@
-/*panel_vet.js */
-/* --- CARGAR LISTA DE MASCOTAS RECIENTES --- */
+/* panel_vet.js */
+
+/* --- CARGAR LISTA DE MASCOTAS RECIENTES (DISEÑO EN FILAS Y COLUMNAS) --- */
 function cargarMascotasRecientes() {
     // Esta función llena la sección de "Mascotas registradas recientemente"
     fetch("php/get_mascotas.php")
@@ -8,20 +9,25 @@ function cargarMascotasRecientes() {
         let cont = document.getElementById("lista-mascotas");
         if (!cont) return;
         
+        // Limpiamos y preparamos el contenedor como una grilla fluida de CSS
         cont.innerHTML = "";
+        cont.style.display = "grid";
+        cont.style.gridTemplateColumns = "repeat(auto-fill, minmax(220px, 1fr))";
+        cont.style.gap = "15px";
+        cont.style.padding = "5px 0";
+        
         mascotas.forEach(m => {
             cont.innerHTML += `
-                <div class="card" style="margin-bottom: 10px; padding: 10px;">
-                    <div style="display:flex;gap:10px;align-items:center;">
-                        <img src="${m.foto || 'img/default.png'}" style="width:50px;height:50px;border-radius:50%;object-fit:cover;">
+                <div class="card" style="margin-bottom: 0; padding: 15px; display: flex; flex-direction: column; justify-content: space-between; border-radius: var(--radio-sm, 8px);">
+                    <div style="display:flex; gap:12px; align-items:center;">
+                        <img src="${m.foto || 'img/default.png'}" style="width:55px; height:55px; border-radius:50%; object-fit:cover; border: 2px solid var(--verde-claro);">
                         <div>
-                            <b>${m.nombre}</b><br>
-                            <small>${m.raza || 'Sin raza'}</small>
+                            <b style="font-size: 0.95rem; display: block; margin-bottom: 2px;">${m.nombre}</b>
+                            <small style="color: var(--texto-suave); display: block;">${m.raza || 'Sin raza'}</small>
                         </div>
                     </div>
-                    <div class="actions" style="margin-top:10px;">
-                        <button class="btn-sm" onclick="historial(${m.id_mascota})">Historial</button>
-                        <button class="btn-sm" onclick="nuevaAtencion(${m.id_mascota})">Atención</button>
+                    <div class="actions" style="margin-top: 15px; display: flex; gap: 5px;">
+                        <button class="btn-sm" onclick="historial(${m.id_mascota})" style="width: 100%; padding: 8px; font-size: 0.82rem;">Historial</button>
                     </div>
                 </div>`;
         });
@@ -29,7 +35,7 @@ function cargarMascotasRecientes() {
     .catch(err => console.error("Error al cargar mascotas:", err));
 }
 
-/* --- BUSCADOR POR CARNET --- */
+/* --- BUSCADOR POR CARNET (DISEÑO EN FILAS Y COLUMNAS) --- */
 function buscarPacientes(){
     let ci = document.getElementById("busca-ci").value;
 
@@ -42,26 +48,32 @@ function buscarPacientes(){
     .then(res => res.json())
     .then(data => {
         let cont = document.getElementById("resultado-busqueda");
+        if (!cont) return;
+        
         cont.innerHTML = "";
+        // Convertimos también el buscador a diseño de grilla
+        cont.style.display = "grid";
+        cont.style.gridTemplateColumns = "repeat(auto-fill, minmax(220px, 1fr))";
+        cont.style.gap = "15px";
 
         if(data.length == 0){
+            cont.style.display = "block"; // Reset para el mensaje de error
             cont.innerHTML = `<p style="margin-top:10px;color:red;">No se encontraron mascotas para este dueño</p>`;
             return;
         }
 
         data.forEach(m => {
             cont.innerHTML += `
-            <div class="card" style="margin-top:15px;">
-                <div style="display:flex;align-items:center;gap:15px;">
-                    <img src="${m.foto || 'img/default.png'}" style="width:80px;height:80px;border-radius:50%;object-fit:cover;">
+            <div class="card" style="margin-top: 0; padding: 15px; display: flex; flex-direction: column; justify-content: space-between; border-radius: var(--radio-sm, 8px);">
+                <div style="display:flex; align-items:center; gap:12px;">
+                    <img src="${m.foto || 'img/default.png'}" style="width:55px; height:55px; border-radius:50%; object-fit:cover; border: 2px solid var(--verde-claro);">
                     <div>
-                        <h4 style="margin:0;">${m.nombre}</h4>
-                        <small>${m.raza}</small>
+                        <b style="font-size: 0.95rem; display: block; margin-bottom: 2px;">${m.nombre}</b>
+                        <small style="color: var(--texto-suave); display: block;">${m.raza || 'Sin raza'}</small>
                     </div>
                 </div>
-                <div class="actions">
-                    <button onclick="historial(${m.id_mascota})">Historial</button>
-                    <button onclick="nuevaAtencion(${m.id_mascota})">Atención</button>
+                <div class="actions" style="margin-top: 15px; display: flex; gap: 5px;">
+                    <button onclick="historial(${m.id_mascota})" style="width: 100%; padding: 8px; font-size: 0.82rem;">Historial</button>
                 </div>
             </div>`;
         });
@@ -69,8 +81,8 @@ function buscarPacientes(){
 }
 
 /* --- FUNCIONES DE NAVEGACIÓN --- */
-function historial(id){
-    alert("Cargando historial clínico de la mascota ID: " + id);
+function historial(id) {
+    window.location.href = "historial.html?id=" + id;
 }
 
 function nuevaAtencion(id){
@@ -79,7 +91,7 @@ function nuevaAtencion(id){
 
 /* --- INICIALIZACIÓN DE CALENDARIO Y DASHBOARD --- */
 document.addEventListener('DOMContentLoaded', function() {
-    // 1. Cargamos las mascotas primero
+    // 1. Cargamos los componentes del dashboard
     cargarMascotasRecientes();
     cargarStatsDashboard();
     cargarProximasCitasLista();
@@ -93,24 +105,28 @@ document.addEventListener('DOMContentLoaded', function() {
     if (calendarEl) {
         var calendar = new FullCalendar.Calendar(calendarEl, {
             initialView: 'dayGridMonth',
-            locale: 'es', // Todo en español para que se vea bonito
+            locale: 'es', 
             headerToolbar: {
                 left: 'prev,next today',
                 center: 'title',
                 right: 'dayGridMonth,timeGridWeek,listWeek'
             },
-            displayEventTime: true, // Para que salga "10:25" antes del nombre
-    
-    // Personalización de cómo se ve el evento en la lista
-    eventDidMount: function(info) {
-        if (info.view.type === 'listWeek') {
-            // Añade el motivo al lado del nombre solo en la vista de lista
-            let titleEl = info.el.querySelector('.fc-list-event-title');
-            if (titleEl && info.event.extendedProps.description) {
-                titleEl.innerHTML += ` <small style="color:gray;">(${info.event.extendedProps.description})</small>`;
-            }
-        }
-    },
+            displayEventTime: true,
+            
+            // ── SOLUCIÓN DE CONFINAMIENTO DE EVENTO EN SU CUADRO ──
+            eventDisplay: 'block',          
+            nextDayThreshold: '00:00:00',   
+            forceEventDuration: true,       
+            
+            // Personalización de cómo se ve el evento en la lista
+            eventDidMount: function(info) {
+                if (info.view.type === 'listWeek') {
+                    let titleEl = info.el.querySelector('.fc-list-event-title');
+                    if (titleEl && info.event.extendedProps.description) {
+                        titleEl.innerHTML += ` <small style="color:gray;">(${info.event.extendedProps.description})</small>`;
+                    }
+                }
+            },
             
             // CONEXIÓN A TU API DE CITAS (MySQL)
             events: 'php/get_citas_vet.php', 
@@ -136,13 +152,11 @@ function cargarStatsDashboard() {
     fetch('php/get_dashboard_stats.php')
         .then(res => res.json())
         .then(data => {
-            // Actualizar números
             document.getElementById('stat-mascotas-hoy').textContent = data.mascotas_hoy;
             document.getElementById('stat-citas-pendientes').textContent = data.citas_pendientes;
             document.getElementById('stat-total-clientes').textContent = data.total_clientes;
             document.getElementById('stat-total-animales').textContent = data.total_animales;
             
-            // Actualizar la hora de la próxima cita
             const labelProxima = document.getElementById('label-proxima-cita');
             if(labelProxima) labelProxima.textContent = `Próxima: ${data.proxima_cita}`;
         })
@@ -203,7 +217,7 @@ function cargarProximasCitasLista() {
         });
 }
 
-/* --- AUMENTADO: CARGAR NOTIFICACIONES DE CITAS CANCELADAS --- */
+/* --- CARGAR NOTIFICACIONES DE CITAS CANCELADAS --- */
 function cargarNotificacionesCanceladas() {
     const contenedor = document.getElementById("contenedor-notificaciones");
     if (!contenedor) return;
@@ -212,10 +226,9 @@ function cargarNotificacionesCanceladas() {
     .then(res => res.json())
     .then(response => {
         if (response.success && response.data.length > 0) {
-            contenedor.innerHTML = ""; // Limpiamos el texto "Cargando avisos del sistema..."
+            contenedor.innerHTML = ""; 
             
             response.data.forEach(noti => {
-                // Formateamos la fecha de la cita cancelada de forma más legible
                 const fechaPartes = noti.fecha.split('-');
                 const fechaFormateada = `${fechaPartes[2]}/${fechaPartes[1]}/${fechaPartes[0]}`;
 
@@ -243,7 +256,6 @@ function cargarNotificacionesCanceladas() {
                     </div>`;
             });
         } else {
-            // Si el backend responde sin datos o success es false
             contenedor.innerHTML = `
                 <div style="text-align: center; padding: 20px; color: var(--texto-suave);">
                     <i class="fas fa-bell-slash" style="font-size: 1.5rem; margin-bottom: 8px; color: #ccc;"></i>

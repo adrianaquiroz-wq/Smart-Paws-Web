@@ -15,6 +15,18 @@
 
 <div class="vet-page">
 
+  <div class="mobile-topbar">
+    <span class="brand">🐾 Smart Paws</span>
+    <button class="hamburger-btn" id="hamburger-btn" aria-label="Abrir menú">
+      <span></span>
+      <span></span>
+      <span></span>
+    </button>
+  </div>
+  <div class="sidebar-overlay" id="sidebar-overlay"></div>
+
+  
+  
   <aside class="sidebar" id="sidebar">
     <div class="vet-info">
       <img src="img/dueno.jpg" alt="Usuario" class="avatar">
@@ -34,10 +46,7 @@
   <main class="main-content">
     
     <div class="content-header">
-      <div class="header-titulo-agrupado"> 
-        <button id="menu-toggle" class="menu-toggle">
-          <i class="fas fa-bars"></i>
-        </button>
+      <div class="header-titulo-agrupado">
         <div>
           <h1 id="saludo-dueno">¡Hola!</h1>
           <p class="subtitulo-dashboard">Gestiona la salud de tus peluditos desde aquí.</p>
@@ -138,6 +147,19 @@
       weekday: 'long', year: 'numeric', month: 'long', day: 'numeric'
     });
   }
+</script>
+<script>
+  const hamburgerBtn = document.getElementById('hamburger-btn');
+  const sidebar = document.getElementById('sidebar');
+  const overlay = document.getElementById('sidebar-overlay');
+
+  function toggleSidebar() {
+    sidebar.classList.toggle('active');
+    overlay.classList.toggle('active');
+  }
+
+  hamburgerBtn?.addEventListener('click', toggleSidebar);
+  overlay?.addEventListener('click', toggleSidebar);
 </script>
 </body>
 </html>

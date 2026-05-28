@@ -1,6 +1,4 @@
-// ==========================
-// CARGAR ESPECIES
-// ==========================
+/*mascota.js */
 document.addEventListener("DOMContentLoaded", () => {
     cargarEspecies();
 });

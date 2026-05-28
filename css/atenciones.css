@@ -41,12 +41,10 @@
 .btn-emergencia { background-color: var(--emergencia); color: white; }
 .btn-emergencia:hover { background-color: #c92a36; transform: translateY(-2px); }
 
-/* ==========================================================================
-   VISTA DE ESCRITORIO / LAPTOP: TABLA REDISEÑADA COMPLETA
-   ========================================================================== */
+
 .inv-table-wrap {
   width: 100%;
-  overflow-x: auto; /* Permite scroll horizontal interno si el espacio es muy corto */
+  overflow-x: auto;
   background: var(--bg-cards);
   border-radius: 12px;
   box-shadow: 0 4px 12px rgba(0,0,0,0.02);
@@ -56,7 +54,7 @@
 .tabla-atenciones {
   width: 100%;
   border-collapse: collapse;
-  white-space: nowrap; /* Evita que los textos como 'Animal — Criollo' salten de línea */
+  white-space: nowrap;
 }
 
 .tabla-atenciones th {
@@ -126,9 +124,7 @@
   width: 100%; padding: 12px; border-radius: 8px; border: 1px solid #ced4da; box-sizing: border-box;
 }
 
-/* ==========================================================================
-   📱 RESPONSIVO SÓLO PARA CELULARES REALES (PANTALLAS MENORES A 580PX)
-   ========================================================================== */
+
 @media (max-width: 580px) {
   .atenciones-actions .btn-atencion {
     flex: 1 1 100%;

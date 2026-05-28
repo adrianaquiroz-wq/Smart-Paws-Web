@@ -1,7 +1,4 @@
-/* ============================================================
-   SMART PAWS — TIENDA JS
-   Maneja: productos, carrito, lista de deseos, modal QR
-   ============================================================ */
+/* tienda.js*/
 
 // ── Datos locales de respaldo (mientras no hay BD real) ──────
 const PRODUCTOS_LOCAL = [

@@ -6,11 +6,12 @@
   <title>Smart Paws — Tienda</title>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
   <link rel="stylesheet" href="css/style.css">
-  <link rel="stylesheet" href="css/tienda.css"> 
+  <link rel="stylesheet" href="css/tienda.css">
   <link rel="stylesheet" href="css/chatbot.css">
   <link rel="stylesheet" href="css/theme.css">
 </head>
 <body>
+
 <!-- ── HEADER ── -->
 <header class="tienda-header">
   <div class="container header-flex">
@@ -18,15 +19,14 @@
       <img src="img/veterinaria.png" alt="Smart Paws">
       Smart <em style="font-style:italic;color:var(--verde-vivo)">Paws</em>
     </div>
-    <button class="tienda-menu-toggle" id="tienda-mobile-menu">
-      <i class="fas fa-bars"></i>
-    </button>
+    <button class="tienda-menu-toggle" id="tienda-mobile-menu"><i class="fas fa-bars"></i></button>
     <nav class="tienda-nav" id="tienda-nav-menu">
       <ul>
         <li><a href="index.html">Inicio</a></li>
         <li><a href="index.html#servicios">Servicios</a></li>
-        <li><a href="tienda.html" class="active" style="color:#fff;background:rgba(255,255,255,.08);border-radius:999px;padding:8px 16px;">Tienda</a></li>
-        <li><a href="javascript:void(0)" onclick="history.back();" class="btn-nav"><i class="fas fa-arrow-left"></i> Volver</a></li>      </ul>
+        <li><a href="tienda.html" class="active" style="color:#fff;background:rgba(255,255,255,.08);border-radius:999px;padding:6px 14px;">Tienda</a></li>
+        <li><a href="javascript:void(0)" onclick="history.back();" class="btn-nav"><i class="fas fa-arrow-left"></i> Volver</a></li>
+      </ul>
     </nav>
   </div>
 </header>
@@ -43,7 +43,6 @@
         <span class="hero-badge"><i class="fas fa-qrcode"></i> Pago con QR</span>
       </div>
     </div>
-    <div id="carrito-resumen-hero" style="display:none;"></div>
   </div>
 </section>
 
@@ -57,7 +56,6 @@
       <button class="pill" data-cat="Juguetes"><i class="fas fa-football-ball"></i> Juguetes</button>
       <button class="pill" data-cat="Accesorios"><i class="fas fa-tag"></i> Accesorios</button>
       <button class="pill" data-cat="Camas"><i class="fas fa-bed"></i> Camas</button>
-      
     </div>
     <div class="busqueda-wrap">
       <input type="text" id="input-busqueda" placeholder="🔍 Buscar producto…">
@@ -69,33 +67,26 @@
 <!-- ── CONTENIDO PRINCIPAL ── -->
 <main class="tienda-main">
   <div class="container">
-
-    <!-- Contador y grid -->
     <div class="productos-header">
       <h2>Productos</h2>
       <span class="productos-count" id="count-label">Cargando…</span>
     </div>
     <div class="productos-grid" id="contenedor-productos">
-      <!-- Skeletons mientras carga -->
-      <div style="height:320px;border-radius:var(--radio-lg);" class="skeleton"></div>
-      <div style="height:320px;border-radius:var(--radio-lg);" class="skeleton"></div>
-      <div style="height:320px;border-radius:var(--radio-lg);" class="skeleton"></div>
-      <div style="height:320px;border-radius:var(--radio-lg);" class="skeleton"></div>
+      <div style="height:280px;border-radius:var(--radio-lg);" class="skeleton"></div>
+      <div style="height:280px;border-radius:var(--radio-lg);" class="skeleton"></div>
+      <div style="height:280px;border-radius:var(--radio-lg);" class="skeleton"></div>
+      <div style="height:280px;border-radius:var(--radio-lg);" class="skeleton"></div>
     </div>
-
-    <!-- Lista de deseos -->
     <div class="deseos-section" id="deseos-section" style="display:none;">
       <h3><i class="fas fa-heart" style="color:var(--coral);margin-right:8px;"></i> Mi lista de deseos</h3>
       <div class="deseos-grid" id="deseos-grid"></div>
     </div>
-
   </div>
 </main>
 
 <!-- ── FAB CARRITO ── -->
 <button class="carrito-fab" id="btn-abrir-carrito" style="display:none;">
-  <i class="fas fa-shopping-cart"></i>
-  Mi carrito
+  <i class="fas fa-shopping-cart"></i> Mi carrito
   <span class="badge" id="carrito-badge">0</span>
 </button>
 
@@ -123,37 +114,75 @@
   </div>
 </div>
 
-<!-- ── MODAL PAGO QR ── -->
+<!-- ══════════════════════════════════════════════════════════
+     MODAL PAGO QR — 2 PASOS
+     ══════════════════════════════════════════════════════════ -->
 <div class="modal-overlay" id="modal-pago">
   <div class="modal-pago">
-    <h2>Pago con <span style="color:var(--ambar)">QR</span></h2>
-    <p class="modal-sub">Escanea el código con tu app bancaria</p>
 
-    <div class="modal-total-box">
-      <span>Total</span>
-      <strong id="modal-total-monto">Bs. 0.00</strong>
+    <!-- Indicador de pasos -->
+    <div class="modal-steps">
+      <div class="step-dot active" id="dot-1">1</div>
+      <div class="step-line"></div>
+      <div class="step-dot" id="dot-2">2</div>
     </div>
 
-    <div class="qr-wrap">
-      <img id="qr-img" src="" alt="QR de pago">
-      <div class="qr-cuenta" id="qr-cuenta">Cuenta: 1-234567-890</div>
-      <span class="qr-label"><i class="fas fa-university" style="margin-right:5px;"></i>Banco Unión · Smart Paws S.R.L.</span>
+    <!-- ─ PASO 1: QR ─ -->
+    <div id="paso-qr">
+      <h2>Pago con <span style="color:var(--ambar)">QR</span></h2>
+      <p class="modal-sub">Escanea el código con tu app bancaria</p>
+      <div class="modal-total-box">
+        <span>Total</span>
+        <strong id="modal-total-monto">Bs. 0.00</strong>
+      </div>
+      <div class="qr-wrap">
+        <img id="qr-img" src="" alt="QR de pago">
+        <div class="qr-cuenta" id="qr-cuenta">Cuenta: 1-234567-890</div>
+        <span class="qr-label"><i class="fas fa-university" style="margin-right:5px;"></i>Banco Unión · Smart Paws S.R.L.</span>
+      </div>
+      <div class="modal-instruc">
+        <strong>Pasos:</strong><br>
+        1. Abre tu app bancaria (BNB, Unión, BCP, etc.)<br>
+        2. Selecciona <strong>Pagar con QR</strong><br>
+        3. Escanea el código y confirma el monto<br>
+        4. Toca <strong>"Ya pagué"</strong> para adjuntar tu captura
+      </div>
+      <div class="modal-acciones">
+        <button class="btn-cancelar-modal" id="btn-cancelar-modal">Cancelar</button>
+        <button class="btn-confirmar" id="btn-ya-pague">
+          <i class="fas fa-check"></i> Ya pagué
+        </button>
+      </div>
     </div>
 
-    <div class="modal-instruc">
-      <strong>Pasos:</strong><br>
-      1. Abre tu app bancaria (BNB, Unión, BCP, etc.)<br>
-      2. Selecciona <strong>Pagar con QR</strong><br>
-      3. Escanea el código y confirma el monto<br>
-      4. Toca <strong>"Ya pagué"</strong> para finalizar tu pedido
+    <!-- ─ PASO 2: Captura ─ -->
+    <div id="paso-captura" style="display:none;">
+      <h2><i class="fas fa-camera" style="color:var(--verde-vivo);margin-right:8px;"></i>Adjunta tu comprobante</h2>
+      <p class="modal-sub">Sube la captura de pantalla de tu pago bancario para confirmar tu pedido</p>
+
+      <div class="captura-zone" id="captura-zone" onclick="document.getElementById('input-captura').click()">
+        <i class="fas fa-cloud-upload-alt"></i>
+        <p>Toca aquí para subir la captura</p>
+        <span>JPG, PNG o WebP · Máx. 10MB</span>
+        <input type="file" id="input-captura" accept="image/*" style="display:none;">
+      </div>
+
+      <img id="preview-captura" src="" alt="Vista previa" style="display:none;" class="captura-preview">
+
+      <div class="captura-check" id="captura-check" style="display:none;">
+        <i class="fas fa-check-circle"></i> Captura lista para enviar
+      </div>
+
+      <div class="modal-acciones" style="margin-top:16px;">
+        <button class="btn-cancelar-modal" id="btn-volver-qr">
+          <i class="fas fa-arrow-left"></i> Volver
+        </button>
+        <button class="btn-confirmar" id="btn-enviar-compra" disabled>
+          <i class="fas fa-paper-plane"></i> Enviar pedido
+        </button>
+      </div>
     </div>
 
-    <div class="modal-acciones">
-      <button class="btn-cancelar-modal" id="btn-cancelar-modal">Cancelar</button>
-      <button class="btn-confirmar" id="btn-confirmar-pago">
-        <i class="fas fa-check"></i> Ya pagué
-      </button>
-    </div>
   </div>
 </div>
 
@@ -164,24 +193,15 @@
 <script src="js/chatbot.js"></script>
 <script src="js/theme.js"></script>
 <script>
-  // Control de menú interactivo para la tienda móvil
+  // Menú móvil
   const tiendaMenuBtn = document.getElementById('tienda-mobile-menu');
-  const tiendaNav = document.getElementById('tienda-nav-menu');
-
+  const tiendaNav     = document.getElementById('tienda-nav-menu');
   if (tiendaMenuBtn && tiendaNav) {
     tiendaMenuBtn.addEventListener('click', () => {
       tiendaNav.classList.toggle('active');
-      
-      // Cambiar dinámicamente el icono entre barras (☰) y equis (✕)
       const icono = tiendaMenuBtn.querySelector('i');
-      if (tiendaNav.classList.contains('active')) {
-        icono.className = 'fas fa-times';
-      } else {
-        icono.className = 'fas fa-bars';
-      }
+      icono.className = tiendaNav.classList.contains('active') ? 'fas fa-times' : 'fas fa-bars';
     });
-
-    // Cerrar automáticamente el menú al presionar un enlace
     document.querySelectorAll('.tienda-nav a').forEach(link => {
       link.addEventListener('click', () => {
         tiendaNav.classList.remove('active');
@@ -189,6 +209,26 @@
       });
     });
   }
+
+  // Actualizar dots de pasos según paso visible
+  const origMostrar = mostrarPasoModal;
+  window.mostrarPasoModal = function(paso) {
+    origMostrar(paso);
+    document.getElementById('dot-1').classList.toggle('active', paso >= 1);
+    document.getElementById('dot-2').classList.toggle('active', paso >= 2);
+    // Mostrar check de captura al seleccionar
+    const check = document.getElementById('captura-check');
+  };
+
+  // Mostrar check al seleccionar captura
+  document.addEventListener('change', e => {
+    if (e.target.id === 'input-captura' && e.target.files.length) {
+      setTimeout(() => {
+        const check = document.getElementById('captura-check');
+        if (check) check.style.display = 'flex';
+      }, 200);
+    }
+  });
 </script>
 </body>
 </html>

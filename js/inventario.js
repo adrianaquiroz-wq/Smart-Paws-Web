@@ -1,7 +1,4 @@
-/* ============================================================
-   SMART PAWS — INVENTARIO JS (panel-vet)
-   Carga, filtra y permite editar el stock de productos
-   ============================================================ */
+/**inventario.js */
 
 // Datos de respaldo por si no hay servidor
 const INV_LOCAL = [

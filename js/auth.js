@@ -18,7 +18,7 @@ function switchTab(tab) {
 }
 
 // =========================
-// 🔐 LOGIN CON BD REAL
+// LOGIN CON BD REAL
 // =========================
 document.querySelector('#section-login form')?.addEventListener('submit', (e) => {
     e.preventDefault();
@@ -83,7 +83,7 @@ actualizarRegistroPorRol();
 
 
 // =========================
-// 📝 REGISTRO CON BD REAL
+// REGISTRO CON BD REAL
 // =========================
 document.getElementById('form-registro')?.addEventListener('submit', (e) => {
     e.preventDefault();
@@ -132,7 +132,7 @@ document.getElementById('form-registro')?.addEventListener('submit', (e) => {
 });
 
 // =========================
-// 🔢 CAPTCHA MATEMÁTICO LOCAL
+// CAPTCHA MATEMÁTICO LOCAL
 // =========================
 let _captchaRespuesta = 0;
 
@@ -149,7 +149,7 @@ function generarCaptcha() {
 }
 
 // =========================
-// 🔑 RECUPERAR CONTRASEÑA
+// RECUPERAR CONTRASEÑA
 // =========================
 
 // ── Helpers de navegación entre secciones ──────────────────────────────────

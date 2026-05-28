@@ -30,14 +30,13 @@
 }
 
 
-/* ===== MODALIDAD MÓVIL (PANTALLAS CHICAS) ===== */
+/* ===== MODALIDAD MÓVIL (PANTALLAS CHICAa) ===== */
 @media (max-width: 768px) {
 
     #calendario {
         width: 100% ;
         max-width: 100% ;
         padding: 10px;
-        /* Forzamos a que el contenedor principal corte el contenido extra y muestre el scroll */
         overflow-x: auto ; 
         overflow-y: visible ; 
         -webkit-overflow-scrolling: touch; 
@@ -72,9 +71,8 @@
     }
 
     /* ===== FORZAR ESTILOS DE LA BARRA (CORREDIZO) ===== */
-    /* Usamos 'body' y selectores directos para asegurarnos de que el navegador no los ignore */
     #calendario::-webkit-scrollbar {
-        height: 10px ; /* Un poco más gruesa para que se note */
+        height: 10px ;
         display: block ;
     }
 
@@ -84,7 +82,7 @@
     }
     
     #calendario::-webkit-scrollbar-thumb {
-        background: #888 ; /* Más oscura para que resalte en el fondo claro */
+        background: #888 ;
         border-radius: 10px ;
     }
 

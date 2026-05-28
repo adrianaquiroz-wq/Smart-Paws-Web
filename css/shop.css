@@ -1,6 +1,5 @@
-/* =========================================================
-   MINI TIENDA HOME
-========================================================= */
+/* 
+   MINI TIENDA HOME*/
 
 .shop-preview{
     background:#f6efe4;
@@ -212,9 +211,6 @@
 
 @media(max-width:768px){
 
-    /*.product-grid{
-        grid-template-columns:1fr;
-    }*/
 
     .prod-img-wrap{
         height:220px;
