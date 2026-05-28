@@ -1,3 +1,4 @@
+<!--historial.html-->
 <!DOCTYPE html>
 <html lang="es">
 <head>
@@ -227,7 +228,7 @@
   <div class="historial-container">
     
     <!-- BOTÓN VOLVER -->
-    <a href="panel-vet.html" class="btn-volver">
+    <a href="javascript:void(0);" onclick="window.history.back();" class="btn-volver">
       <i class="fas fa-arrow-left"></i> Volver al Panel Principal
     </a>
 
@@ -260,5 +261,22 @@
 
   <!-- Tus scripts controladores -->
   <script src="js/historial.js"></script>
+  <script>
+  document.addEventListener("DOMContentLoaded", () => {
+      // Leer los parámetros de la URL actual
+      const params = new URLSearchParams(window.location.search);
+      const origen = params.get("origen");
+      const btnVolver = document.querySelector(".btn-volver");
+
+      if (btnVolver) {
+          // Si el origen indica que es un cliente, cambiamos el destino
+          if (origen === "cliente") {
+              btnVolver.setAttribute("href", "panel-cliente.html"); // Pon aquí el nombre exacto de tu archivo cliente
+          } else {
+              btnVolver.setAttribute("href", "panel-vet.html");
+          }
+      }
+  });
+</script>
 </body>
 </html>

@@ -2,7 +2,7 @@
 
 // Redirige a la página de historial de la mascota
 function verHistorial(id) { 
-    window.location.href = `historial-cliente.html?id=${id}`; 
+    window.location.href = `historial.html?id=${id}&origen=cliente`; 
 }
 
 function enfocarYSeleccionarMascota(idMascota) {
