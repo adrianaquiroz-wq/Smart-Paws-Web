@@ -5,6 +5,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Smart Paws — Veterinaria Digital · La Paz</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
   <link rel="stylesheet" href="css/style.css">
   <link rel="stylesheet" href="css/home.css">
   <link rel="stylesheet" href="css/shop.css">
@@ -268,12 +269,25 @@
           <a href="#">Contacto</a>
           <a href="#">Política de privacidad</a>
         </div>
-        <div class="footer-social">
-          <a href="#"><i class="fab fa-facebook-f"></i></a>
-          <a href="#"><i class="fab fa-instagram"></i></a>
-          <a href="#"><i class="fab fa-youtube"></i></a>
-          <a href="#"><i class="fab fa-whatsapp"></i></a>
-        </div>
+       <div class="footer-social">
+
+  <a href="#" target="_blank">
+      <i class="fab fa-facebook-f"></i>
+  </a>
+
+  <a href="https://instagram.com/smartpawsveterinaria" target="_blank">
+      <i class="fab fa-instagram"></i>
+  </a>
+
+  <a href="#" target="_blank">
+      <i class="fab fa-youtube"></i>
+  </a>
+
+  <a href="https://wa.me/591720627766" target="_blank">
+      <i class="fab fa-whatsapp"></i>
+  </a>
+
+</div>
       </div>
     </div>
     <div class="footer-main">
@@ -284,17 +298,24 @@
           <p>Tel. +591 2 2222222 | WhatsApp +591 70000000</p>
           <a href="mailto:contacto@smartpaws.com.bo">contacto@smartpaws.com.bo</a>
         </div>
-
         <div class="footer-newsletter">
           <h3>Suscríbete al boletín</h3>
           <p style="font-size:.85rem;margin-bottom:12px;opacity:.6;">Consejos de salud animal y novedades de Smart Paws.</p>
-          <form class="newsletter-form" id="newsletter-form">
-            <input type="email" id="newsletter-email" placeholder="su@correo.com" required>
-            <button type="submit">Suscribirse</button>
-          </form>
-          <p class="newsletter-status" id="newsletter-status" role="status" aria-live="polite"></p>
-        </div>
+         <form class="newsletter-form" action="php/suscribirse.php" method="POST">
 
+  <input
+    type="email"
+    name="correo"
+    placeholder="su@correo.com"
+    required
+  >
+
+  <button type="submit">
+    Suscribirse
+  </button>
+
+</form>
+        </div>
       </div>
     </div>
     <div class="back-to-top">
@@ -348,38 +369,9 @@
     }, { threshold: 0.5 });
     const heroStats = document.querySelector('.hero-stats');
     if (heroStats) statsObserver.observe(heroStats);
-    // Código de Miguel para hacer funcional la suscripción
-    const newsletterForm = document.getElementById('newsletter-form');
-    const newsletterEmail = document.getElementById('newsletter-email');
-    const newsletterStatus = document.getElementById('newsletter-status');
-
-    newsletterForm?.addEventListener('submit', (event) => {
-      event.preventDefault();
-
-      const email = newsletterEmail.value.trim().toLowerCase();
-      const esCorreoValido = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
-
-      if (!esCorreoValido) {
-        newsletterStatus.textContent = 'Ingresa un correo válido.';
-        newsletterStatus.className = 'newsletter-status error';
-        return;
-      }
-
-      const suscriptores = JSON.parse(localStorage.getItem('smartPawsNewsletter')) || [];
-
-      if (suscriptores.includes(email)) {
-        newsletterStatus.textContent = 'Este correo ya está suscrito.';
-        newsletterStatus.className = 'newsletter-status error';
-        return;
-      }
-
-      suscriptores.push(email);
-      localStorage.setItem('smartPawsNewsletter', JSON.stringify(suscriptores));
-      newsletterStatus.textContent = 'Suscripción registrada correctamente.';
-      newsletterStatus.className = 'newsletter-status success';
-      newsletterForm.reset();
-    });
   </script>
   <script src="js/chatbot.js"></script>
+
+  
 </body>
 </html>
