@@ -1,3 +1,5 @@
+/**home.css
+/
 /* HEADER */
 /* CABECERA */
 .main-header{background:rgba(15,36,25,.97);backdrop-filter:blur(20px);position:sticky;top:0;z-index:1000;border-bottom:1px solid rgba(255,255,255,.06);}
@@ -195,6 +197,12 @@
 .newsletter-form input:focus{border-color:var(--verde-vivo);}
 .newsletter-form button{padding:12px 22px;background:var(--ambar);border:none;color:var(--blanco);font-family:inherit;font-weight:700;font-size:.82rem;border-radius:var(--radio-sm);cursor:pointer;transition:var(--transicion);white-space:nowrap;}
 .newsletter-form button:hover{background:#c96b2b;}
+/* AUMENTAR AQUÍ EL CÓDIGO DE MIGUEL */
+.newsletter-status{min-height:20px;margin-top:10px;font-size:.82rem;font-weight:700;}
+.newsletter-status.success{color:var(--verde-vivo);}
+.newsletter-status.error{color:#ff9b8f;}
+
+
 .back-to-top{background:rgba(255,255,255,.04);text-align:right;padding:12px 5%;}
 .back-to-top a{color:rgba(255,255,255,.28);}
 
@@ -206,7 +214,8 @@
 
 
 /* RESPONSIVE HOME */
-@media(max-width:768px){.pasos-grid{grid-template-columns:1fr;gap:18px;}}
+@media(max-width:768px){
+  .pasos-grid{grid-template-columns:1fr;gap:18px;}}
 
 
 html,
@@ -239,6 +248,7 @@ img{
   /* Newsletter form: apilar input y botón */
   .newsletter-form{ flex-direction:column; }
   .newsletter-form input{ width:100%; }
+  .newsletter-form button{ width:100%; }
 
   /* Hero badges: ajustar posición para que no se salgan */
   .hero-badge{ left:8px; bottom:-14px; padding:10px 14px; }
