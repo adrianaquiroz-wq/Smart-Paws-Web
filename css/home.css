@@ -176,26 +176,26 @@
 
 
 /* FOOTER */
-.main-footer{background:var(--negro);color:rgba(255,255,255,.72);}
-.footer-top{border-bottom:1px solid rgba(255,255,255,.07);padding:20px 0;}
+.main-footer{background:var(--blanco);color:var(--texto);}
+.footer-top{border-bottom:1px solid var(--arena);padding:20px 0;}
 .footer-top-flex{display:flex;justify-content:space-between;align-items:center;}
-.footer-links-top a{color:rgba(255,255,255,.42);font-size:.74rem;margin-right:24px;letter-spacing:.8px;text-transform:uppercase;transition:var(--transicion);}
-.footer-links-top a:hover{color:var(--blanco);}
+.footer-links-top a{color:var(--texto-suave);font-size:.74rem;margin-right:24px;letter-spacing:.8px;text-transform:uppercase;transition:var(--transicion);}
+.footer-links-top a:hover{color:var(--verde-medio);}
 .footer-social{display:flex;gap:6px;}
-.footer-social a{width:36px;height:36px;border-radius:50%;background:rgba(255,255,255,.06);display:flex;align-items:center;justify-content:center;color:rgba(255,255,255,.42);font-size:.88rem;transition:var(--transicion);}
-.footer-social a:hover{background:var(--verde-vivo);color:var(--blanco);}
+.footer-social a{width:36px;height:36px;border-radius:50%;background:var(--arena);display:flex;align-items:center;justify-content:center;color:var(--texto-suave);font-size:.88rem;transition:var(--transicion);}
+.footer-social a:hover{background:var(--verde-vivo);color:#ffffff;}
 .footer-main{padding:56px 0 40px;}
 .footer-grid-custom{display:grid;grid-template-columns:1.5fr 1.4fr;gap:56px;}
-.footer-info h3,.footer-newsletter h3{font-family:'Playfair Display',serif;font-size:1.1rem;font-weight:700;color:var(--blanco);margin-bottom:20px;}
+.footer-info h3,.footer-newsletter h3{font-family:'Playfair Display',serif;font-size:1.1rem;font-weight:700;color:var(--verde-oscuro);margin-bottom:20px;}
 .city-title{font-weight:700;color:var(--verde-vivo);margin-bottom:6px;font-size:.88rem;}
-.footer-info p{font-size:.84rem;margin-bottom:5px;opacity:.62;}
-.footer-info a{color:rgba(255,255,255,.42);font-size:.84rem;transition:var(--transicion);}
-.footer-info a:hover{color:var(--blanco);}
+.footer-info p{font-size:.84rem;margin-bottom:5px;color:var(--texto-suave);}
+.footer-info a{color:var(--verde-medio);font-size:.84rem;transition:var(--transicion);}
+.footer-info a:hover{color:var(--verde-oscuro);}
 .newsletter-form{display:flex;gap:8px;margin-top:12px;}
-.newsletter-form input{flex:1;padding:12px 18px;background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.11);border-radius:var(--radio-sm);color:var(--blanco);font-family:inherit;font-size:.88rem;outline:none;transition:var(--transicion);}
-.newsletter-form input::placeholder{color:rgba(255,255,255,.25);}
+.newsletter-form input{flex:1;padding:12px 18px;background:var(--crema);border:1.5px solid var(--arena);border-radius:var(--radio-sm);color:var(--texto);font-family:inherit;font-size:.88rem;outline:none;transition:var(--transicion);}
+.newsletter-form input::placeholder{color:var(--texto-suave);}
 .newsletter-form input:focus{border-color:var(--verde-vivo);}
-.newsletter-form button{padding:12px 22px;background:var(--ambar);border:none;color:var(--blanco);font-family:inherit;font-weight:700;font-size:.82rem;border-radius:var(--radio-sm);cursor:pointer;transition:var(--transicion);white-space:nowrap;}
+.newsletter-form button{padding:12px 22px;background:var(--ambar);border:none;color:#ffffff;font-family:inherit;font-weight:700;font-size:.82rem;border-radius:var(--radio-sm);cursor:pointer;transition:var(--transicion);white-space:nowrap;}
 .newsletter-form button:hover{background:#c96b2b;}
 /* AUMENTAR AQUÍ EL CÓDIGO DE MIGUEL */
 .newsletter-status{min-height:20px;margin-top:10px;font-size:.82rem;font-weight:700;}
@@ -203,8 +203,21 @@
 .newsletter-status.error{color:#ff9b8f;}
 
 
-.back-to-top{background:rgba(255,255,255,.04);text-align:right;padding:12px 5%;}
-.back-to-top a{color:rgba(255,255,255,.28);}
+.back-to-top{background:var(--crema);text-align:right;padding:12px 5%;}
+.back-to-top a{color:var(--texto-suave);}
+
+/* ADDITIONAL BRAND STYLES */
+.main-header .logo {
+  color: #ffffff !important;
+}
+
+.shop-header .section-title {
+  color: #ffffff !important;
+}
+
+.shop-header .section-label {
+  color: var(--verde-vivo) !important;
+}
 
 /* SECCIONES BASE */
 .section-padding{padding:100px 0;}
