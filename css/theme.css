@@ -257,6 +257,10 @@ body.dark-mode .theme-toggle {
   border-color: #365340;
 }
 
+body.dark-mode .shop-preview {
+  background: var(--crema);
+}
+
 @media (max-width: 560px) {
   .theme-toggle {
     right: 16px;
