@@ -287,10 +287,11 @@
         <div class="footer-newsletter">
           <h3>Suscríbete al boletín</h3>
           <p style="font-size:.85rem;margin-bottom:12px;opacity:.6;">Consejos de salud animal y novedades de Smart Paws.</p>
-          <div class="newsletter-form">
-            <input type="email" placeholder="su@correo.com">
-            <button type="button">Suscribirse</button>
-          </div>
+          <form class="newsletter-form" id="newsletter-form">
+            <input type="email" id="newsletter-email" placeholder="su@correo.com" required>
+            <button type="submit">Suscribirse</button>
+          </form>
+          <p class="newsletter-status" id="newsletter-status" role="status" aria-live="polite"></p>
         </div>
       </div>
     </div>
@@ -345,6 +346,37 @@
     }, { threshold: 0.5 });
     const heroStats = document.querySelector('.hero-stats');
     if (heroStats) statsObserver.observe(heroStats);
+
+    const newsletterForm = document.getElementById('newsletter-form');
+    const newsletterEmail = document.getElementById('newsletter-email');
+    const newsletterStatus = document.getElementById('newsletter-status');
+
+    newsletterForm?.addEventListener('submit', (event) => {
+      event.preventDefault();
+
+      const email = newsletterEmail.value.trim().toLowerCase();
+      const esCorreoValido = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+
+      if (!esCorreoValido) {
+        newsletterStatus.textContent = 'Ingresa un correo válido.';
+        newsletterStatus.className = 'newsletter-status error';
+        return;
+      }
+
+      const suscriptores = JSON.parse(localStorage.getItem('smartPawsNewsletter') || '[]');
+
+      if (suscriptores.includes(email)) {
+        newsletterStatus.textContent = 'Este correo ya está suscrito.';
+        newsletterStatus.className = 'newsletter-status error';
+        return;
+      }
+
+      suscriptores.push(email);
+      localStorage.setItem('smartPawsNewsletter', JSON.stringify(suscriptores));
+      newsletterStatus.textContent = 'Suscripción registrada correctamente.';
+      newsletterStatus.className = 'newsletter-status success';
+      newsletterForm.reset();
+    });
   </script>
   <script src="js/chatbot.js"></script>
 </body>

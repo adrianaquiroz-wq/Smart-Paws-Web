@@ -195,6 +195,9 @@
 .newsletter-form input:focus{border-color:var(--verde-vivo);}
 .newsletter-form button{padding:12px 22px;background:var(--ambar);border:none;color:var(--blanco);font-family:inherit;font-weight:700;font-size:.82rem;border-radius:var(--radio-sm);cursor:pointer;transition:var(--transicion);white-space:nowrap;}
 .newsletter-form button:hover{background:#c96b2b;}
+.newsletter-status{min-height:20px;margin-top:10px;font-size:.82rem;font-weight:700;}
+.newsletter-status.success{color:var(--verde-vivo);}
+.newsletter-status.error{color:#ff9b8f;}
 .back-to-top{background:rgba(255,255,255,.04);text-align:right;padding:12px 5%;}
 .back-to-top a{color:rgba(255,255,255,.28);}
 
