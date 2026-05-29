@@ -43,10 +43,8 @@ if (!$st->execute()) {
     $st->close();
     exit;
 }
-
 $id_mascota = $conexion->insert_id;
 $st->close();
-
 // Devolvemos el id_mascota para que el JS lo pase a guardar_atencion.php
 echo json_encode([
     'status'     => 'success',
