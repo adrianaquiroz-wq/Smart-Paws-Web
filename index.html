@@ -1,11 +1,11 @@
 <!--index.html-->
 <!DOCTYPE html>
 <html lang="es">
+
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Smart Paws — Veterinaria Digital · La Paz</title>
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
   <link rel="stylesheet" href="css/style.css">
   <link rel="stylesheet" href="css/home.css">
   <link rel="stylesheet" href="css/shop.css">
@@ -13,7 +13,9 @@
   <link rel="stylesheet" href="css/theme.css">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
   <script src="js/theme.js"></script>
+  <script src="js/translation.js"></script>
 </head>
+
 <body>
 
   <header class="main-header" id="main-header">
@@ -25,12 +27,12 @@
       </div>
       <nav class="nav-menu" id="nav-menu">
         <ul>
-          <li><a href="index.html">Inicio</a></li>
-          <li><a href="#como">¿Cómo funciona?</a></li>
-          <li><a href="#especialidad">Especialidades</a></li>
-          <li><a href="#nosotros">Nosotros</a></li>
-          <li><a href="#tienda">Tienda</a></li>
-          <li><a href="login.html" class="btn-nav"><i class="fas fa-sign-in-alt"></i> Ingresar</a></li>
+          <li><a href="index.html" data-translate="nav-home">Inicio</a></li>
+          <li><a href="#como" data-translate="nav-how">¿Cómo funciona?</a></li>
+          <li><a href="#especialidad" data-translate="nav-spec">Especialidades</a></li>
+          <li><a href="#nosotros" data-translate="nav-about">Nosotros</a></li>
+          <li><a href="#tienda" data-translate="nav-shop">Tienda</a></li>
+          <li><a href="login.html" class="btn-nav" data-translate="nav-login"><i class="fas fa-sign-in-alt"></i> Ingresar</a></li>
         </ul>
       </nav>
     </div>
@@ -46,17 +48,17 @@
     </div>
     <div class="container hero-inner">
       <div class="hero-text">
-        <span class="eyebrow"><i class="fas fa-paw"></i> Veterinaria Digital · La Paz, Bolivia</span>
-        <h1>El mejor cuidado<br>que tu <em>mascota</em><br>merece</h1>
-        <p>En Smart Paws digitalizamos la salud animal. Gestiona consultas, historial y atenciones desde cualquier lugar con tecnología de punta.</p>
+        <span class="eyebrow" data-translate="hero-eyebrow"><i class="fas fa-paw"></i> Veterinaria Digital · La Paz, Bolivia</span>
+        <h1 data-translate="hero-title">El mejor cuidado<br>que tu <em>mascota</em><br>merece</h1>
+        <p data-translate="hero-desc">En Smart Paws digitalizamos la salud animal. Gestiona consultas, historial y atenciones desde cualquier lugar con tecnología de punta.</p>
         <div class="hero-actions">
-          <a href="login.html" class="btn-primary"><i class="fas fa-user-circle"></i> Área de clientes</a>
-          <a href="#como" class="btn-outline"><i class="fas fa-play-circle"></i> Cómo funciona</a>
+          <a href="login.html" class="btn-primary" data-translate="hero-btn-client"><i class="fas fa-user-circle"></i> Área de clientes</a>
+          <a href="#como" class="btn-outline" data-translate="hero-btn-how"><i class="fas fa-play-circle"></i> Cómo funciona</a>
         </div>
         <div class="hero-stats">
-          <div class="stat"><span>+500</span><small>Mascotas</small></div>
-          <div class="stat"><span>8+</span><small>Especialidades</small></div>
-          <div class="stat"><span>100%</span><small>Digital</small></div>
+          <div class="stat"><span>+500</span><small data-translate="hero-stat-pets">Mascotas</small></div>
+          <div class="stat"><span>8+</span><small data-translate="hero-stat-spec">Especialidades</small></div>
+          <div class="stat"><span>100%</span><small data-translate="hero-stat-dig">Digital</small></div>
         </div>
       </div>
       <div class="hero-image">
@@ -66,13 +68,13 @@
           <div class="hero-badge">
             <div class="badge-icon">🐾</div>
             <div class="badge-text">
-              <strong>Atención inmediata</strong>
-              <span>Lun — Sáb · 8am a 7pm</span>
+              <strong data-translate="hero-badge-title">Atención inmediata</strong>
+              <span data-translate="hero-badge-schedule">Lun — Sáb · 8am a 7pm</span>
             </div>
           </div>
           <div class="hero-badge-2">
             <div class="pulse-dot"></div>
-            <span>Sistema en línea</span>
+            <span data-translate="hero-badge-online">Sistema en línea</span>
           </div>
         </div>
       </div>
@@ -83,28 +85,28 @@
   <section id="como" class="como-bg section-padding">
     <div class="container">
       <div class="como-header fade-up">
-        <span class="section-label">Simple y rápido</span>
-        <h2 class="section-title">¿Cómo funciona?</h2>
-        <p>Tres pasos para digitalizar la salud de tu mascota desde cualquier dispositivo.</p>
+        <span class="section-label" data-translate="how-label">Simple y rápido</span>
+        <h2 class="section-title" data-translate="how-title">¿Cómo funciona?</h2>
+        <p data-translate="how-desc">Tres pasos para digitalizar la salud de tu mascota desde cualquier dispositivo.</p>
       </div>
       <div class="pasos-grid">
         <div class="paso fade-up">
           <div class="paso-num">01</div>
           <div class="paso-icon"><i class="fas fa-user-plus"></i></div>
-          <h3>Regístrate como cliente</h3>
-          <p>Crea tu cuenta en minutos. El veterinario registra tu perfil y el de tu mascota con toda la información clínica necesaria.</p>
+          <h3 data-translate="how-step1-title">Regístrate como cliente</h3>
+          <p data-translate="how-step1-desc">Crea tu cuenta en minutos. El veterinario registra tu perfil y el de tu mascota con toda la información clínica necesaria.</p>
         </div>
         <div class="paso fade-up">
           <div class="paso-num">02</div>
           <div class="paso-icon"><i class="fas fa-calendar-check"></i></div>
-          <h3>Agenda tu cita</h3>
-          <p>Programa consultas, controles o vacunas directamente desde el panel. Recibe recordatorios automáticos para no olvidar nada.</p>
+          <h3 data-translate="how-step2-title">Agenda tu cita</h3>
+          <p data-translate="how-step2-desc">Programa consultas, controles o vacunas directamente desde el panel. Recibe recordatorios automáticos para no olvidar nada.</p>
         </div>
         <div class="paso fade-up">
           <div class="paso-num">03</div>
           <div class="paso-icon"><i class="fas fa-notes-medical"></i></div>
-          <h3>Accede al historial</h3>
-          <p>Consulta en tiempo real el historial clínico completo de tu mascota: diagnósticos, tratamientos, vacunas y recetas.</p>
+          <h3 data-translate="how-step3-title">Accede al historial</h3>
+          <p data-translate="how-step3-desc">Consulta en tiempo real el historial clínico completo de tu mascota: diagnósticos, tratamientos, vacunas y recetas.</p>
         </div>
       </div>
     </div>
@@ -114,40 +116,40 @@
   <section id="especialidad" class="section-padding especialidades-bg">
     <div class="container">
       <div class="especialidades-header fade-up">
-        <span class="section-label">Lo que hacemos</span>
-        <h2 class="section-title">Nuestras Especialidades</h2>
-        <p style="color:var(--texto-suave);max-width:460px;margin:0 auto;font-size:.95rem;">Atención veterinaria completa con médicos colegiados y tecnología de primer nivel.</p>
+        <span class="section-label" data-translate="spec-label">Lo que hacemos</span>
+        <h2 class="section-title" data-translate="spec-title">Nuestras Especialidades</h2>
+        <p style="color:var(--texto-suave);max-width:460px;margin:0 auto;font-size:.95rem;" data-translate="spec-desc">Atención veterinaria completa con médicos colegiados y tecnología de primer nivel.</p>
       </div>
       <div class="grid-especialidades">
         <div class="card-especialidad fade-up">
           <div class="card-icon"><i class="fas fa-stethoscope"></i></div>
-          <h3>Cirugía General</h3>
-          <p>Médicos colegiados con amplia experiencia quirúrgica y equipamiento moderno.</p>
+          <h3 data-translate="spec-card1-title">Cirugía General</h3>
+          <p data-translate="spec-card1-desc">Médicos colegiados con amplia experiencia quirúrgica y equipamiento moderno.</p>
         </div>
         <div class="card-especialidad fade-up">
           <div class="card-icon"><i class="fas fa-bone"></i></div>
-          <h3>Traumatología</h3>
-          <p>Cuidado especializado para el sistema óseo y articular de tu mascota.</p>
+          <h3 data-translate="spec-card2-title">Traumatología</h3>
+          <p data-translate="spec-card2-desc">Cuidado especializado para el sistema óseo y articular de tu mascota.</p>
         </div>
         <div class="card-especialidad fade-up">
           <div class="card-icon"><i class="fas fa-microscope"></i></div>
-          <h3>Laboratorio</h3>
-          <p>Análisis clínicos inmediatos con resultados digitales en tu historial.</p>
+          <h3 data-translate="spec-card3-title">Laboratorio</h3>
+          <p data-translate="spec-card3-desc">Análisis clínicos inmediatos con resultados digitales en tu historial.</p>
         </div>
         <div class="card-especialidad fade-up">
           <div class="card-icon"><i class="fas fa-syringe"></i></div>
-          <h3>Vacunación</h3>
-          <p>Calendario de vacunas personalizado por especie, edad y estilo de vida.</p>
+          <h3 data-translate="spec-card4-title">Vacunación</h3>
+          <p data-translate="spec-card4-desc">Calendario de vacunas personalizado por especie, edad y estilo de vida.</p>
         </div>
         <div class="card-especialidad fade-up">
           <div class="card-icon"><i class="fas fa-heartbeat"></i></div>
-          <h3>Cardiología</h3>
-          <p>Diagnóstico y tratamiento cardiovascular avanzado con ecocardiografía.</p>
+          <h3 data-translate="spec-card5-title">Cardiología</h3>
+          <p data-translate="spec-card5-desc">Diagnóstico y tratamiento cardiovascular avanzado con ecocardiografía.</p>
         </div>
         <div class="card-especialidad fade-up">
           <div class="card-icon"><i class="fas fa-tooth"></i></div>
-          <h3>Odontología</h3>
-          <p>Limpieza dental profesional y tratamiento de patologías bucales.</p>
+          <h3 data-translate="spec-card6-title">Odontología</h3>
+          <p data-translate="spec-card6-desc">Limpieza dental profesional y tratamiento de patologías bucales.</p>
         </div>
       </div>
     </div>
@@ -159,15 +161,22 @@
       <div class="text-content fade-up">
         <span class="section-label">Quiénes somos</span>
         <h2 class="section-title">Nuestra Historia</h2>
-        <p>Smart Paws nació con la idea de digitalizar la salud animal en La Paz, facilitando la vida de los dueños y el trabajo de los médicos veterinarios.</p>
-        <p>Creemos que cada mascota merece el mejor cuidado, y que la tecnología es la herramienta para lograrlo de forma eficiente y humana.</p>
+        <p>Smart Paws nació con la idea de digitalizar la salud animal en La Paz, facilitando la vida de los dueños y el
+          trabajo de los médicos veterinarios.</p>
+        <p>Creemos que cada mascota merece el mejor cuidado, y que la tecnología es la herramienta para lograrlo de
+          forma eficiente y humana.</p>
         <div class="feature-list">
-          <div class="feature-item"><i class="fas fa-check-circle"></i><span>Historial clínico 100% digital y accesible</span></div>
-          <div class="feature-item"><i class="fas fa-check-circle"></i><span>Veterinarios certificados y especializados</span></div>
-          <div class="feature-item"><i class="fas fa-check-circle"></i><span>Atención personalizada para cada especie</span></div>
-          <div class="feature-item"><i class="fas fa-check-circle"></i><span>Tienda de productos de alta calidad</span></div>
+          <div class="feature-item"><i class="fas fa-check-circle"></i><span>Historial clínico 100% digital y
+              accesible</span></div>
+          <div class="feature-item"><i class="fas fa-check-circle"></i><span>Veterinarios certificados y
+              especializados</span></div>
+          <div class="feature-item"><i class="fas fa-check-circle"></i><span>Atención personalizada para cada
+              especie</span></div>
+          <div class="feature-item"><i class="fas fa-check-circle"></i><span>Tienda de productos de alta calidad</span>
+          </div>
         </div>
-        <a href="login.html" class="btn-primary" style="margin-top:10px;display:inline-flex;"><i class="fas fa-paw"></i> Registra a tu mascota</a>
+        <a href="login.html" class="btn-primary" style="margin-top:10px;display:inline-flex;"><i class="fas fa-paw"></i>
+          Registra a tu mascota</a>
       </div>
       <div class="image-content fade-up">
         <img src="img/veterinaria.png" alt="Equipo Smart Paws">
@@ -181,14 +190,17 @@
       <div class="testimonios-header fade-up">
         <span class="section-label">Opiniones</span>
         <h2 class="section-title">Lo que dicen nuestros clientes</h2>
-        <p style="color:var(--texto-suave);max-width:480px;margin:0 auto;font-size:.95rem;">Familias paceñas que confían en Smart Paws para el bienestar de sus mascotas.</p>
+        <p style="color:var(--texto-suave);max-width:480px;margin:0 auto;font-size:.95rem;">Familias paceñas que confían
+          en Smart Paws para el bienestar de sus mascotas.</p>
       </div>
       <div class="testimonios-grid">
         <div class="testimonio fade-up">
           <div class="testimonio-stars">
-            <i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i>
+            <i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i
+              class="fas fa-star"></i><i class="fas fa-star"></i>
           </div>
-          <p>El sistema es increíble. Puedo ver el historial completo de Max desde mi celular y agendar citas sin llamar. La atención del veterinario fue excelente.</p>
+          <p>El sistema es increíble. Puedo ver el historial completo de Max desde mi celular y agendar citas sin
+            llamar. La atención del veterinario fue excelente.</p>
           <div class="testimonio-autor">
             <div class="autor-avatar">C</div>
             <div class="autor-info">
@@ -200,9 +212,11 @@
         </div>
         <div class="testimonio fade-up">
           <div class="testimonio-stars">
-            <i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i>
+            <i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i
+              class="fas fa-star"></i><i class="fas fa-star"></i>
           </div>
-          <p>Mi gata Luna recibió la mejor atención. Me encanta que todo queda registrado digitalmente: vacunas, diagnósticos, todo en un solo lugar. Lo recomiendo.</p>
+          <p>Mi gata Luna recibió la mejor atención. Me encanta que todo queda registrado digitalmente: vacunas,
+            diagnósticos, todo en un solo lugar. Lo recomiendo.</p>
           <div class="testimonio-autor">
             <div class="autor-avatar">R</div>
             <div class="autor-info">
@@ -214,9 +228,11 @@
         </div>
         <div class="testimonio fade-up">
           <div class="testimonio-stars">
-            <i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star-half-alt"></i>
+            <i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i
+              class="fas fa-star"></i><i class="fas fa-star-half-alt"></i>
           </div>
-          <p>Llevé a mi perro Toby a cirugía y el equipo fue muy profesional. Recibí actualizaciones en tiempo real y el post-operatorio quedó documentado perfectamente.</p>
+          <p>Llevé a mi perro Toby a cirugía y el equipo fue muy profesional. Recibí actualizaciones en tiempo real y el
+            post-operatorio quedó documentado perfectamente.</p>
           <div class="testimonio-autor">
             <div class="autor-avatar">A</div>
             <div class="autor-info">
@@ -234,95 +250,87 @@
   <section class="cta-band">
     <div class="container cta-inner">
       <div class="cta-text fade-up">
-        <h2>¿Tu mascota aún no tiene su perfil digital?</h2>
-        <p>Únete a cientos de familias en La Paz que ya gestionan la salud de sus mascotas con Smart Paws.</p>
+        <h2 data-translate="cta-title">¿Tu mascota aún no tiene su perfil digital?</h2>
+        <p data-translate="cta-desc">Únete a cientos de familias en La Paz que ya gestionan la salud de sus mascotas con Smart Paws.</p>
       </div>
       <div class="cta-actions fade-up">
-        <a href="login.html" class="btn-primary"><i class="fas fa-paw"></i> Registrarse gratis</a>
+        <a href="login.html" class="btn-primary" data-translate="cta-btn"><i class="fas fa-paw"></i> Registrarse gratis</a>
       </div>
     </div>
   </section>
-
+ 
   <!-- TIENDA -->
   <section id="tienda" class="shop-preview section-padding">
     <div class="container">
       <div class="shop-header fade-up">
-        <span class="section-label">Productos</span>
-        <h2 class="section-title">Tienda Smart Paws</h2>
+        <span class="section-label" data-translate="shop-label">Productos</span>
+        <h2 class="section-title" data-translate="shop-title">Tienda Smart Paws</h2>
       </div>
-      <p class="info-text"><i class="fas fa-lock"></i> Inicia sesión para realizar compras.</p>
+      <p class="info-text" data-translate="shop-info-text"><i class="fas fa-lock"></i> Inicia sesión para realizar compras.</p>
       <div class="search-container">
-        <input type="text" id="input-busqueda" placeholder="Buscar producto (ej. Alimento para perro)...">
-        <button id="btn-buscar"><i class="fas fa-search"></i> Buscar</button>
+        <input type="text" id="input-busqueda" data-translate-placeholder="input-search-home" placeholder="Buscar producto (ej. Alimento para perro)...">
+        <button id="btn-buscar" data-translate="shop-search-btn"><i class="fas fa-search"></i> Buscar</button>
       </div>
       <div class="product-grid" id="contenedor-productos">
-        <p style="color:var(--texto-suave);">Cargando productos...</p>
+        <p style="color:var(--texto-suave);" data-translate="shop-loading">Cargando productos...</p>
       </div>
     </div>
   </section>
-
+ 
   <!-- FOOTER -->
   <footer class="main-footer">
     <div class="footer-top">
       <div class="container footer-top-flex">
         <div class="footer-links-top">
-          <a href="#">Contacto</a>
-          <a href="#">Política de privacidad</a>
+          <a href="#" data-translate="footer-contacto">Contacto</a>
+          <a href="#" data-translate="footer-privacidad">Política de privacidad</a>
         </div>
-       <div class="footer-social">
+        <div class="footer-social">
+          <a href="https://facebook.com/TU_PAGINA" target="_blank">
+            <i class="fab fa-facebook-f"></i>
+          </a>
 
-  <a href="https://www.facebook.com/natalia.quirozyujra" target="_blank">
-      <i class="fab fa-facebook-f"></i>
-  </a>
+          <a href="https://instagram.com/smartpawsveterinaria" target="_blank">
+            <i class="fab fa-instagram"></i>
+          </a>
 
-  <a href="https://instagram.com/smartpawsveterinaria" target="_blank">
-      <i class="fab fa-instagram"></i>
-  </a>
+          <a href="https://youtube.com/@smartpaws" target="_blank">
+            <i class="fab fa-youtube"></i>
+          </a>
 
-  <a href="https://www.youtube.com/@adrianaquirozyujra338" target="_blank">
-      <i class="fab fa-youtube"></i>
-  </a>
+          <a href="https://wa.me/59172062766?text=Hola,%20quiero%20agendar%20una%20cita%20🐾" target="_blank">
+            <i class="fab fa-whatsapp"></i>
+          </a>
 
-  <a href="https://wa.me/591720627766" target="_blank">
-      <i class="fab fa-whatsapp"></i>
-  </a>
-
-</div>
+        </div>
       </div>
     </div>
     <div class="footer-main">
       <div class="container footer-grid-custom">
         <div class="footer-info">
-          <h3>Smart Paws Veterinaria</h3>
-          <p class="city-title">Sede Central — La Paz</p>
+          <h3 data-translate="footer-contact-title">Smart Paws Veterinaria</h3>
+          <p class="city-title" data-translate="footer-city">Sede Central — La Paz</p>
           <p>Tel. +591 2 794095 | WhatsApp +591 72062766</p>
-          <a href="mailto:contacto@smartpaws.com.bo">admin@gmail.com</a>
+          <a href="mailto:contacto@smartpaws.com.bo">contacto@smartpaws.com.bo</a>
         </div>
+ 
         <div class="footer-newsletter">
-          <h3>Suscríbete al boletín</h3>
-          <p style="font-size:.85rem;margin-bottom:12px;opacity:.6;">Consejos de salud animal y novedades de Smart Paws.</p>
-         <form class="newsletter-form" action="php/suscribirse.php" method="POST">
-
-  <input
-    type="email"
-    name="correo"
-    placeholder="su@correo.com"
-    required
-  >
-
-  <button type="submit">
-    Suscribirse
-  </button>
-
-</form>
+          <h3 data-translate="footer-newsletter-title">Suscríbete al boletín</h3>
+          <p style="font-size:.85rem;margin-bottom:12px;opacity:.6;" data-translate="footer-newsletter-desc">Consejos de salud animal y novedades de Smart Paws.</p>
+          <form class="newsletter-form" id="newsletter-form">
+            <input type="email" id="newsletter-email" data-translate-placeholder="newsletter-email" placeholder="su@correo.com" required>
+            <button type="submit" data-translate="footer-newsletter-btn">Suscribirse</button>
+          </form>
+          <p class="newsletter-status" id="newsletter-status" role="status" aria-live="polite"></p>
         </div>
+ 
       </div>
     </div>
     <div class="back-to-top">
-      <a href="#">Volver arriba <i class="fas fa-arrow-up"></i></a>
+      <a href="#" data-translate="footer-back-to-top">Volver arriba <i class="fas fa-arrow-up"></i></a>
     </div>
   </footer>
-
+ 
   <script src="js/main.js"></script>
   <script src="js/tienda-preview.js"></script>
   <script>
@@ -344,7 +352,7 @@
     });*/
 
     // Animated counters
-    function animateCounter(el, target, suffix='') {
+    function animateCounter(el, target, suffix = '') {
       let count = 0;
       const step = Math.ceil(target / 60);
       const timer = setInterval(() => {
@@ -369,9 +377,39 @@
     }, { threshold: 0.5 });
     const heroStats = document.querySelector('.hero-stats');
     if (heroStats) statsObserver.observe(heroStats);
+    // Código de Miguel para hacer funcional la suscripción
+    const newsletterForm = document.getElementById('newsletter-form');
+    const newsletterEmail = document.getElementById('newsletter-email');
+    const newsletterStatus = document.getElementById('newsletter-status');
+
+    newsletterForm?.addEventListener('submit', (event) => {
+      event.preventDefault();
+
+      const email = newsletterEmail.value.trim().toLowerCase();
+      const esCorreoValido = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+
+      if (!esCorreoValido) {
+        newsletterStatus.textContent = 'Ingresa un correo válido.';
+        newsletterStatus.className = 'newsletter-status error';
+        return;
+      }
+
+      const suscriptores = JSON.parse(localStorage.getItem('smartPawsNewsletter')) || [];
+
+      if (suscriptores.includes(email)) {
+        newsletterStatus.textContent = 'Este correo ya está suscrito.';
+        newsletterStatus.className = 'newsletter-status error';
+        return;
+      }
+
+      suscriptores.push(email);
+      localStorage.setItem('smartPawsNewsletter', JSON.stringify(suscriptores));
+      newsletterStatus.textContent = 'Suscripción registrada correctamente.';
+      newsletterStatus.className = 'newsletter-status success';
+      newsletterForm.reset();
+    });
   </script>
   <script src="js/chatbot.js"></script>
-
-  
 </body>
+
 </html>
