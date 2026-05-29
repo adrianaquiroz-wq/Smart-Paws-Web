@@ -9,6 +9,8 @@
   <link rel="stylesheet" href="css/tienda.css">
   <link rel="stylesheet" href="css/chatbot.css">
   <link rel="stylesheet" href="css/theme.css">
+  <script src="js/theme.js"></script>
+  <script src="js/translation.js"></script>
 </head>
 <body>
 
@@ -22,10 +24,10 @@
     <button class="tienda-menu-toggle" id="tienda-mobile-menu"><i class="fas fa-bars"></i></button>
     <nav class="tienda-nav" id="tienda-nav-menu">
       <ul>
-        <li><a href="index.html">Inicio</a></li>
-        <li><a href="index.html#servicios">Servicios</a></li>
-        <li><a href="tienda.html" class="active" style="color:#fff;background:rgba(255,255,255,.08);border-radius:999px;padding:6px 14px;">Tienda</a></li>
-        <li><a href="javascript:void(0)" onclick="history.back();" class="btn-nav"><i class="fas fa-arrow-left"></i> Volver</a></li>
+        <li><a href="index.html" data-translate="nav-home">Inicio</a></li>
+        <li><a href="index.html#servicios" data-translate="nav-how">Servicios</a></li>
+        <li><a href="tienda.html" class="active" style="color:#fff;background:rgba(255,255,255,.08);border-radius:999px;padding:6px 14px;" data-translate="nav-shop">Tienda</a></li>
+        <li><a href="javascript:void(0)" onclick="history.back();" class="btn-nav" data-translate="nav-back"><i class="fas fa-arrow-left"></i> Volver</a></li>
       </ul>
     </nav>
   </div>
@@ -35,12 +37,12 @@
 <section class="tienda-hero">
   <div class="container tienda-hero-inner">
     <div>
-      <h1>Nuestra <em>Tienda</em></h1>
-      <p>Productos seleccionados para el bienestar de tu mascota</p>
+      <h1 data-translate="shop-hero-title">Nuestra <em>Tienda</em></h1>
+      <p data-translate="shop-hero-desc">Productos seleccionados para el bienestar de tu mascota</p>
       <div class="tienda-hero-badges">
-        <span class="hero-badge"><i class="fas fa-truck"></i> Envío a domicilio</span>
-        <span class="hero-badge"><i class="fas fa-shield-alt"></i> Garantía de calidad</span>
-        <span class="hero-badge"><i class="fas fa-qrcode"></i> Pago con QR</span>
+        <span class="hero-badge" data-translate="shop-badge-shipping"><i class="fas fa-truck"></i> Envío a domicilio</span>
+        <span class="hero-badge" data-translate="shop-badge-quality"><i class="fas fa-shield-alt"></i> Garantía de calidad</span>
+        <span class="hero-badge" data-translate="shop-badge-qr"><i class="fas fa-qrcode"></i> Pago con QR</span>
       </div>
     </div>
   </div>
@@ -50,16 +52,16 @@
 <div class="tienda-toolbar">
   <div class="container toolbar-inner">
     <div class="categoria-pills" id="pills-categorias">
-      <button class="pill active" data-cat="todos">Todos</button>
-      <button class="pill" data-cat="Alimento"><i class="fas fa-bone"></i> Alimento</button>
-      <button class="pill" data-cat="Higiene"><i class="fas fa-soap"></i> Higiene</button>
-      <button class="pill" data-cat="Juguetes"><i class="fas fa-football-ball"></i> Juguetes</button>
-      <button class="pill" data-cat="Accesorios"><i class="fas fa-tag"></i> Accesorios</button>
-      <button class="pill" data-cat="Camas"><i class="fas fa-bed"></i> Camas</button>
+      <button class="pill active" data-cat="todos" data-translate="shop-cat-todos">Todos</button>
+      <button class="pill" data-cat="Alimento" data-translate="shop-cat-alimento"><i class="fas fa-bone"></i> Alimento</button>
+      <button class="pill" data-cat="Higiene" data-translate="shop-cat-higiene"><i class="fas fa-soap"></i> Higiene</button>
+      <button class="pill" data-cat="Juguetes" data-translate="shop-cat-juguetes"><i class="fas fa-football-ball"></i> Juguetes</button>
+      <button class="pill" data-cat="Accesorios" data-translate="shop-cat-accesorios"><i class="fas fa-tag"></i> Accesorios</button>
+      <button class="pill" data-cat="Camas" data-translate="shop-cat-camas"><i class="fas fa-bed"></i> Camas</button>
     </div>
     <div class="busqueda-wrap">
-      <input type="text" id="input-busqueda" placeholder="🔍 Buscar producto…">
-      <button id="btn-buscar">Buscar</button>
+      <input type="text" id="input-busqueda" data-translate-placeholder="input-search-shop" placeholder="🔍 Buscar producto…">
+      <button id="btn-buscar" data-translate="shop-toolbar-search-btn">Buscar</button>
     </div>
   </div>
 </div>
@@ -68,7 +70,7 @@
 <main class="tienda-main">
   <div class="container">
     <div class="productos-header">
-      <h2>Productos</h2>
+      <h2 data-translate="shop-products-heading">Productos</h2>
       <span class="productos-count" id="count-label">Cargando…</span>
     </div>
     <div class="productos-grid" id="contenedor-productos">
@@ -85,7 +87,7 @@
 </main>
 
 <!-- ── FAB CARRITO ── -->
-<button class="carrito-fab" id="btn-abrir-carrito" style="display:none;">
+<button class="carrito-fab" id="btn-abrir-carrito" style="display:none;" data-translate="shop-cart-fab">
   <i class="fas fa-shopping-cart"></i> Mi carrito
   <span class="badge" id="carrito-badge">0</span>
 </button>
@@ -94,21 +96,21 @@
 <div class="carrito-overlay" id="carrito-overlay"></div>
 <div class="carrito-drawer" id="carrito-drawer">
   <div class="drawer-head">
-    <h3><i class="fas fa-shopping-cart" style="margin-right:10px;opacity:.7;"></i> Mi Carrito</h3>
+    <h3 data-translate="shop-drawer-title"><i class="fas fa-shopping-cart" style="margin-right:10px;opacity:.7;"></i> Mi Carrito</h3>
     <button class="drawer-close" id="btn-cerrar-carrito"><i class="fas fa-times"></i></button>
   </div>
   <div class="drawer-items" id="drawer-items">
     <div class="drawer-vacio" id="drawer-vacio">
       <i class="fas fa-shopping-basket"></i>
-      <p>Tu carrito está vacío</p>
+      <p data-translate="shop-drawer-empty">Tu carrito está vacío</p>
     </div>
   </div>
   <div class="drawer-foot">
     <div class="drawer-total">
-      <span>Total a pagar</span>
+      <span data-translate="shop-drawer-total-label">Total a pagar</span>
       <strong id="drawer-total">Bs. 0.00</strong>
     </div>
-    <button class="btn-pagar" id="btn-pagar" disabled>
+    <button class="btn-pagar" id="btn-pagar" disabled data-translate="shop-drawer-pay-btn">
       <i class="fas fa-qrcode"></i> Pagar con QR
     </button>
   </div>
@@ -129,18 +131,18 @@
 
     <!-- ─ PASO 1: QR ─ -->
     <div id="paso-qr">
-      <h2>Pago con <span style="color:var(--ambar)">QR</span></h2>
-      <p class="modal-sub">Escanea el código con tu app bancaria</p>
+      <h2 data-translate="qr-modal-title">Pago con <span style="color:var(--ambar)">QR</span></h2>
+      <p class="modal-sub" data-translate="qr-modal-sub">Escanea el código con tu app bancaria</p>
       <div class="modal-total-box">
-        <span>Total</span>
+        <span data-translate="qr-modal-total">Total</span>
         <strong id="modal-total-monto">Bs. 0.00</strong>
       </div>
       <div class="qr-wrap">
         <img id="qr-img" src="" alt="QR de pago">
         <div class="qr-cuenta" id="qr-cuenta">Cuenta: 1-234567-890</div>
-        <span class="qr-label"><i class="fas fa-university" style="margin-right:5px;"></i>Banco Unión · Smart Paws S.R.L.</span>
+        <span class="qr-label" data-translate="qr-modal-bank"><i class="fas fa-university" style="margin-right:5px;"></i>Banco Unión · Smart Paws S.R.L.</span>
       </div>
-      <div class="modal-instruc">
+      <div class="modal-instruc" data-translate="qr-modal-steps-desc">
         <strong>Pasos:</strong><br>
         1. Abre tu app bancaria (BNB, Unión, BCP, etc.)<br>
         2. Selecciona <strong>Pagar con QR</strong><br>
@@ -148,8 +150,8 @@
         4. Toca <strong>"Ya pagué"</strong> para adjuntar tu captura
       </div>
       <div class="modal-acciones">
-        <button class="btn-cancelar-modal" id="btn-cancelar-modal">Cancelar</button>
-        <button class="btn-confirmar" id="btn-ya-pague">
+        <button class="btn-cancelar-modal" id="btn-cancelar-modal" data-translate="qr-modal-cancel">Cancelar</button>
+        <button class="btn-confirmar" id="btn-ya-pague" data-translate="qr-modal-confirm">
           <i class="fas fa-check"></i> Ya pagué
         </button>
       </div>
@@ -157,27 +159,27 @@
 
     <!-- ─ PASO 2: Captura ─ -->
     <div id="paso-captura" style="display:none;">
-      <h2><i class="fas fa-camera" style="color:var(--verde-vivo);margin-right:8px;"></i>Adjunta tu comprobante</h2>
-      <p class="modal-sub">Sube la captura de pantalla de tu pago bancario para confirmar tu pedido</p>
+      <h2 data-translate="qr-modal-upload-title"><i class="fas fa-camera" style="color:var(--verde-vivo);margin-right:8px;"></i>Adjunta tu comprobante</h2>
+      <p class="modal-sub" data-translate="qr-modal-upload-sub">Sube la captura de pantalla de tu pago bancario para confirmar tu pedido</p>
 
       <div class="captura-zone" id="captura-zone" onclick="document.getElementById('input-captura').click()">
         <i class="fas fa-cloud-upload-alt"></i>
-        <p>Toca aquí para subir la captura</p>
-        <span>JPG, PNG o WebP · Máx. 10MB</span>
+        <p data-translate="qr-modal-upload-zone-p">Toca aquí para subir la captura</p>
+        <span data-translate="qr-modal-upload-zone-span">JPG, PNG o WebP · Máx. 10MB</span>
         <input type="file" id="input-captura" accept="image/*" style="display:none;">
       </div>
 
       <img id="preview-captura" src="" alt="Vista previa" style="display:none;" class="captura-preview">
 
-      <div class="captura-check" id="captura-check" style="display:none;">
+      <div class="captura-check" id="captura-check" style="display:none;" data-translate="qr-modal-upload-ready">
         <i class="fas fa-check-circle"></i> Captura lista para enviar
       </div>
 
       <div class="modal-acciones" style="margin-top:16px;">
-        <button class="btn-cancelar-modal" id="btn-volver-qr">
+        <button class="btn-cancelar-modal" id="btn-volver-qr" data-translate="qr-modal-back">
           <i class="fas fa-arrow-left"></i> Volver
         </button>
-        <button class="btn-confirmar" id="btn-enviar-compra" disabled>
+        <button class="btn-confirmar" id="btn-enviar-compra" disabled data-translate="qr-modal-send-order">
           <i class="fas fa-paper-plane"></i> Enviar pedido
         </button>
       </div>
