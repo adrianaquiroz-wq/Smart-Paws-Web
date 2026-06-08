@@ -17,7 +17,7 @@ function cargarMascotasRecientes() {
                         <div>
                             <b>${m.nombre}</b><br>
                             <small>${m.raza || 'Sin raza'}</small>
-                        </div>
+                        </div> 
                     </div>
                     <div class="actions" style="margin-top:10px;">
                         <button class="btn-sm" onclick="historial(${m.id_mascota})">Historial</button>
@@ -70,7 +70,7 @@ function buscarPacientes(){
 
 /* --- FUNCIONES DE NAVEGACIÓN --- */
 function historial(id){
-    alert("Cargando historial clínico de la mascota ID: " + id);
+    window.location.href = "historial.html?id=" + id;
 }
 
 function nuevaAtencion(id){

@@ -110,6 +110,6 @@ function previewImg(event) {
 // ==========================
 // BUSCAR CLIENTE (placeholder)
 // ==========================
-function buscarCliente() {
+/*function buscarCliente() {
     alert("Aquí luego conectamos búsqueda de cliente por CI 😎");
-}
+}*/

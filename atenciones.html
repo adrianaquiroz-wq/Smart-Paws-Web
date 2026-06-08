@@ -9,195 +9,23 @@
   <link rel="stylesheet" href="css/atenciones.css">
   <link rel="stylesheet" href="css/chatbot.css">
   <link rel="stylesheet" href="css/theme.css">
-  <style>
-    /* ── Sección sin dueño ── */
-    .seccion-sin-dueno { margin-top: 40px; }
-    .seccion-sin-dueno h3 {
-      display: flex; align-items: center; gap: 10px;
-      font-size: 1rem; font-weight: 700; color: #5c0a12; margin-bottom: 16px;
-    }
-    .card-sin-dueno {
-      background: #fff; border: 1.5px solid #f5c6cb; border-radius: 12px;
-      padding: 18px 20px; margin-bottom: 14px;
-      display: flex; align-items: center; justify-content: space-between;
-      gap: 16px; flex-wrap: wrap;
-      box-shadow: 0 2px 8px rgba(230,57,70,.08); transition: box-shadow .2s;
-    }
-    .card-sin-dueno:hover { box-shadow: 0 4px 16px rgba(230,57,70,.15); }
-    .card-sin-dueno .pet-info { display: flex; align-items: center; gap: 14px; flex: 1; min-width: 180px; }
-    .card-sin-dueno .pet-avatar {
-      width: 52px; height: 52px; border-radius: 50%; object-fit: cover;
-      border: 2px solid #e63946; flex-shrink: 0;
-    }
-    .card-sin-dueno .pet-avatar-icon {
-      width: 52px; height: 52px; border-radius: 50%;
-      background: #fff0f1; border: 2px solid #e63946;
-      display: flex; align-items: center; justify-content: center;
-      color: #e63946; font-size: 1.4rem; flex-shrink: 0;
-    }
-    .card-sin-dueno .pet-nombre { font-weight: 700; color: #1a3a2e; font-size: .98rem; }
-    .card-sin-dueno .pet-meta   { font-size: .8rem; color: #666; margin-top: 2px; }
-    .card-sin-dueno .atencion-info { font-size: .82rem; color: #555; flex: 1; min-width: 160px; }
-    .card-sin-dueno .atencion-info strong { color: #1a3a2e; }
-    .badge-sin-dueno {
-      background: #e63946; color: #fff; font-size: .68rem; font-weight: 700;
-      padding: 2px 9px; border-radius: 999px; text-transform: uppercase;
-      letter-spacing: .05em; white-space: nowrap;
-    }
-    .btn-completar {
-      background: #0f5132; color: #fff; border: none;
-      padding: 9px 18px; border-radius: 8px; cursor: pointer;
-      font-size: .88rem; font-weight: 700;
-      display: inline-flex; align-items: center; gap: 6px;
-      transition: opacity .2s, transform .1s; white-space: nowrap;
-    }
-    .btn-completar:hover { opacity: .88; transform: translateY(-1px); }
-    .empty-sin-dueno { text-align: center; padding: 30px; color: var(--texto-suave); font-size: .9rem; }
-
-    /* ── Modal base ── */
-    .modal-overlay {
-      position: fixed; inset: 0; background: rgba(0,0,0,.55);
-      display: flex; align-items: center; justify-content: center;
-      z-index: 1000; padding: 16px;
-    }
-    .modal-overlay.hidden { display: none; }
-    .modal-box {
-      background: #fff; border-radius: 16px; padding: 32px;
-      width: 100%; max-width: 580px; max-height: 90vh; overflow-y: auto;
-      box-shadow: 0 8px 40px rgba(0,0,0,.25); animation: modalIn .2s ease;
-    }
-    @keyframes modalIn { from { transform: scale(.94); opacity: 0; } to { transform: scale(1); opacity: 1; } }
-    .modal-box h2 { font-size: 1.1rem; font-weight: 800; color: #0f5132; margin-bottom: 4px; display: flex; align-items: center; gap: 10px; }
-    .modal-sub { color: #666; font-size: .83rem; margin-bottom: 20px; }
-    .modal-section-title {
-      font-size: .9rem; font-weight: 700; color: #1a3a2e;
-      margin: 18px 0 10px; display: flex; align-items: center; gap: 7px;
-    }
-    .modal-section-title i { color: #2dc97e; }
-    .form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
-    .form-grid .full-width { grid-column: 1 / -1; }
-    .form-group { display: flex; flex-direction: column; gap: 4px; }
-    .form-group label { font-size: .8rem; font-weight: 600; color: #444; }
-    .form-group input, .form-group select {
-      padding: 8px 12px; border: 1.5px solid #d0d7de; border-radius: 8px;
-      font-size: .9rem; background: #fafbfc; transition: border-color .2s;
-    }
-    .form-group input:focus, .form-group select:focus { outline: none; border-color: #2dc97e; background: #fff; }
-    .modal-footer { display: flex; gap: 12px; justify-content: flex-end; margin-top: 24px; }
-    .btn-atencion {
-      display: inline-flex; align-items: center; gap: 7px;
-      padding: 10px 20px; border-radius: 9px; font-size: .9rem;
-      font-weight: 700; border: none; cursor: pointer;
-      transition: opacity .2s, transform .1s;
-    }
-    .btn-atencion:hover { opacity: .88; transform: translateY(-1px); }
-    .btn-atencion:disabled { opacity: .5; cursor: not-allowed; transform: none; }
-    .btn-normal { background: #0f5132; color: #fff; }
-    .btn-gris   { background: #6c757d; color: #fff; }
-
-    /* ── Toast ── */
-    .panel-toast {
-      position: fixed; bottom: 28px; left: 50%; transform: translateX(-50%) translateY(30px);
-      background: #1a3a2e; color: #fff; padding: 12px 28px; border-radius: 999px;
-      font-size: .92rem; font-weight: 600; opacity: 0;
-      transition: opacity .3s, transform .3s; pointer-events: none; z-index: 9999;
-    }
-    .panel-toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
-
-    /* ── Tarjeta resumen mascota ── */
-    .resumen-mascota-card {
-      background: #f0faf5; border: 1.5px solid #b7e4c7; border-radius: 10px;
-      padding: 12px 16px; margin-bottom: 16px;
-      display: flex; align-items: center; justify-content: space-between;
-      gap: 12px; flex-wrap: wrap;
-    }
-    .resumen-mascota-card .rm-info { display: flex; align-items: center; gap: 12px; flex: 1; }
-    .resumen-mascota-card .rm-avatar {
-      width: 46px; height: 46px; border-radius: 50%;
-      object-fit: cover; border: 2px solid #2dc97e; flex-shrink: 0;
-    }
-    .resumen-mascota-card .rm-avatar-icon {
-      width: 46px; height: 46px; border-radius: 50%;
-      background: #d8f3e6; border: 2px solid #2dc97e;
-      display: flex; align-items: center; justify-content: center;
-      color: #0f5132; font-size: 1.3rem; flex-shrink: 0;
-    }
-    .resumen-mascota-card .rm-nombre { font-weight: 700; color: #0f5132; font-size: .97rem; }
-    .resumen-mascota-card .rm-meta   { font-size: .78rem; color: #555; margin-top: 2px; }
-
-    /* ── Botón editar animal ── */
-    .btn-editar-animal {
-      background: none; border: 1.5px solid #0f5132; color: #0f5132;
-      padding: 6px 14px; border-radius: 7px; font-size: .8rem; font-weight: 700;
-      cursor: pointer; display: inline-flex; align-items: center; gap: 6px;
-      transition: background .18s, color .18s; white-space: nowrap; flex-shrink: 0;
-    }
-    .btn-editar-animal:hover, .btn-editar-animal.activo { background: #0f5132; color: #fff; }
-
-    /* ── Panel colapsable editar animal ── */
-    .panel-editar-animal {
-      overflow: hidden; max-height: 0; opacity: 0;
-      transition: max-height .38s ease, opacity .3s ease, margin .3s ease;
-      margin-bottom: 0;
-    }
-    .panel-editar-animal.abierto { max-height: 1000px; opacity: 1; margin-bottom: 8px; }
-    .panel-editar-inner {
-      background: #fafffe; border: 1.5px dashed #b7e4c7;
-      border-radius: 10px; padding: 18px 16px 14px;
-    }
-    .ea-titulo {
-      font-size: .82rem; font-weight: 700; color: #0f5132;
-      margin-bottom: 14px; display: flex; align-items: center; gap: 7px;
-    }
-    .ea-titulo i { color: #2dc97e; }
-    .ea-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
-    .ea-grid .full { grid-column: 1 / -1; }
-    .ea-group { display: flex; flex-direction: column; gap: 3px; }
-    .ea-group label { font-size: .75rem; font-weight: 600; color: #444; }
-    .ea-group input, .ea-group select, .ea-group textarea {
-      padding: 7px 11px; border: 1.5px solid #d0d7de; border-radius: 7px;
-      font-size: .87rem; background: #fff; transition: border-color .2s; font-family: inherit;
-    }
-    .ea-group input:focus, .ea-group select:focus, .ea-group textarea:focus {
-      outline: none; border-color: #2dc97e;
-    }
-    .ea-group textarea { resize: vertical; min-height: 54px; }
-    .ea-foto-row { display: flex; align-items: center; gap: 14px; }
-    .ea-foto-preview {
-      width: 64px; height: 64px; border-radius: 10px;
-      object-fit: cover; border: 2px solid #b7e4c7; flex-shrink: 0;
-    }
-    .ea-foto-input { flex: 1; }
-    .btn-guardar-animal {
-      margin-top: 14px; width: 100%; padding: 9px;
-      background: #2dc97e; color: #fff; border: none;
-      border-radius: 8px; font-size: .88rem; font-weight: 700;
-      cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 7px;
-      transition: opacity .2s, transform .1s;
-    }
-    .btn-guardar-animal:hover { opacity: .88; transform: translateY(-1px); }
-    .btn-guardar-animal:disabled { opacity: .5; cursor: not-allowed; transform: none; }
-    .ea-msg {
-      font-size: .8rem; font-weight: 600; text-align: center;
-      padding: 6px; border-radius: 6px; margin-top: 8px; display: none;
-    }
-    .ea-msg.ok  { background: #d8f3e6; color: #0f5132; }
-    .ea-msg.err { background: #ffe0e3; color: #9b1b2a; }
-
-    @media (max-width: 600px) {
-      .form-grid, .ea-grid { grid-template-columns: 1fr; }
-      .modal-box { padding: 20px 16px; }
-      .card-sin-dueno { flex-direction: column; align-items: flex-start; }
-      .resumen-mascota-card { flex-direction: column; align-items: flex-start; }
-      .btn-editar-animal { width: 100%; justify-content: center; }
-    }
-  </style>
-
-  
-
+  <link rel="stylesheet" href="css/vista-aten.css">
 </head>
 <body>
 <div class="vet-page">
+
+  <!-- TOPBAR MÓVIL -->
+  <div class="mobile-topbar">
+    <img src="img/logo.jpg" alt="Smart Paws" class="logo-circle">
+    <span class="brand">Smart Paws</span>
+    <button class="hamburger-btn" id="hamburger-btn" aria-label="Abrir menú">
+      <span></span>
+      <span></span>
+      <span></span>
+    </button>
+  </div>
+  <div class="sidebar-overlay" id="sidebar-overlay"></div>
+
 
   <aside class="sidebar" id="sidebar">
     <div class="vet-info">
@@ -412,6 +240,7 @@
 <script src="js/chatbot.js"></script>
 <script src="js/theme.js"></script>
 <script>
+  
   document.getElementById('menu-toggle')?.addEventListener('click', () => {
     document.getElementById('sidebar')?.classList.toggle('active');
   });
@@ -419,6 +248,19 @@
   if (fechaEl) fechaEl.textContent = new Date().toLocaleDateString('es-BO', {
     weekday: 'long', year: 'numeric', month: 'long', day: 'numeric'
   });
+</script>
+<script>
+  const hamburgerBtn = document.getElementById('hamburger-btn');
+  const sidebar = document.getElementById('sidebar');
+  const overlay = document.getElementById('sidebar-overlay');
+
+  function toggleSidebar() {
+    sidebar.classList.toggle('active');
+    overlay.classList.toggle('active');
+  }
+
+  hamburgerBtn?.addEventListener('click', toggleSidebar);
+  overlay?.addEventListener('click', toggleSidebar);
 </script>
 
 </body>

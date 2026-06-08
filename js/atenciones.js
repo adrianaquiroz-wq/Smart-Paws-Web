@@ -448,8 +448,12 @@ function marcarAusente(idCita, nombreMascota) {
         .catch(err => console.error('Error al marcar ausente:', err));
 }
 
-function abrirAtencionDirecta()    { window.location.href = 'registrar_atencion.html?modo=Directa'; }
-function abrirAtencionEmergencia() { window.location.href = 'registrar_atencion.html?modo=Emergencia'; }
+function abrirAtencionDirecta(){ 
+    window.location.href = 'registrar_atencion.html?modo=Directa'; 
+}
+function abrirAtencionEmergencia() { 
+    window.location.href = 'registrar_atencion.html?modo=Emergencia';
+}
 
 function mostrarToast(mensaje) {
     const toast = document.getElementById('panel-toast');
