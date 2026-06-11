@@ -310,3 +310,141 @@ img{
   .hero-actions{ flex-direction:column; }
   .btn-primary,.btn-outline{ width:100%; justify-content:center; }
 }
+
+/* ============================================
+   ANIMALES SALTANDO EN EL HERO
+   ============================================ */
+
+.hero-pets-parade {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  overflow: hidden;
+  z-index: 0;
+}
+
+.pet-jumper {
+  position: absolute;
+  opacity: 0.92;
+  filter: drop-shadow(0 8px 18px rgba(0,0,0,0.28));
+  animation-timing-function: cubic-bezier(0.33, 0, 0.66, 0);
+  animation-iteration-count: infinite;
+  animation-fill-mode: both;
+}
+
+/* --- Posiciones y animaciones individuales --- */
+
+/* Perrito 1: esquina izquierda inferior, salta alto */
+.pet-dog-1 {
+  bottom: -10px;
+  left: 3%;
+  animation: jumpBounce1 3.2s ease-in-out infinite;
+  animation-delay: 0s;
+  transform-origin: bottom center;
+}
+
+/* Gatito 1: más al centro izq, salta con giro */
+.pet-cat-1 {
+  bottom: -10px;
+  left: 18%;
+  animation: jumpBounce2 2.8s ease-in-out infinite;
+  animation-delay: 0.7s;
+  transform-origin: bottom center;
+}
+
+/* Perrito 2 (grande): fondo izq, salta lento */
+.pet-dog-2 {
+  bottom: -12px;
+  left: 8%;
+  animation: jumpBounce3 4.0s ease-in-out infinite;
+  animation-delay: 1.4s;
+  transform-origin: bottom center;
+  opacity: 0.55;
+}
+
+/* Gatito 2 (gris): derecha del hero text */
+.pet-cat-2 {
+  bottom: -8px;
+  right: 52%;
+  animation: jumpBounce1 3.5s ease-in-out infinite;
+  animation-delay: 2.1s;
+  transform-origin: bottom center;
+}
+
+/* Perrito 3 (manchado): extremo derecho visible */
+.pet-dog-3 {
+  bottom: -8px;
+  right: 48%;
+  animation: jumpBounce2 2.6s ease-in-out infinite;
+  animation-delay: 0.4s;
+  transform-origin: bottom center;
+  opacity: 0.7;
+}
+
+/* Gatito 3 (naranja): junto al image frame */
+.pet-cat-3 {
+  bottom: -8px;
+  left: 28%;
+  animation: jumpBounce3 3.8s ease-in-out infinite;
+  animation-delay: 1.8s;
+  transform-origin: bottom center;
+}
+
+/* --- Keyframes de saltos --- */
+
+/* Salto suave con bounce */
+@keyframes jumpBounce1 {
+  0%   { transform: translateY(0) rotate(0deg) scaleX(1); }
+  8%   { transform: translateY(0) scaleX(1.15) scaleY(0.85); }
+  20%  { transform: translateY(-70px) rotate(-6deg) scaleX(0.92) scaleY(1.1); }
+  35%  { transform: translateY(-90px) rotate(0deg) scaleX(0.9) scaleY(1.12); }
+  50%  { transform: translateY(-70px) rotate(5deg) scaleX(0.93) scaleY(1.08); }
+  62%  { transform: translateY(-8px) scaleX(1.05) scaleY(0.95); }
+  68%  { transform: translateY(0) scaleX(1.18) scaleY(0.82); }
+  76%  { transform: translateY(-22px) scaleX(0.97) scaleY(1.03); }
+  84%  { transform: translateY(0) scaleX(1.08) scaleY(0.92); }
+  100% { transform: translateY(0) rotate(0deg) scaleX(1); }
+}
+
+/* Salto lateral con cabeceo */
+@keyframes jumpBounce2 {
+  0%   { transform: translateY(0) scaleX(1) scaleY(1); }
+  10%  { transform: translateY(0) scaleX(1.2) scaleY(0.8); }
+  25%  { transform: translateY(-80px) rotate(8deg) scaleX(0.88) scaleY(1.14); }
+  40%  { transform: translateY(-100px) rotate(0deg) scaleX(0.88) scaleY(1.15); }
+  55%  { transform: translateY(-75px) rotate(-7deg) scaleX(0.9) scaleY(1.1); }
+  68%  { transform: translateY(-5px) scaleX(1.1) scaleY(0.9); }
+  75%  { transform: translateY(0) scaleX(1.2) scaleY(0.8); }
+  82%  { transform: translateY(-18px) scaleX(0.96) scaleY(1.04); }
+  90%  { transform: translateY(0) scaleX(1.06) scaleY(0.94); }
+  100% { transform: translateY(0) scaleX(1) scaleY(1); }
+}
+
+/* Salto suave y lento */
+@keyframes jumpBounce3 {
+  0%   { transform: translateY(0) scaleX(1); }
+  12%  { transform: translateY(0) scaleX(1.12) scaleY(0.88); }
+  28%  { transform: translateY(-55px) rotate(-4deg) scaleX(0.94) scaleY(1.08); }
+  42%  { transform: translateY(-72px) rotate(0deg) scaleX(0.93) scaleY(1.1); }
+  56%  { transform: translateY(-50px) rotate(4deg) scaleX(0.95) scaleY(1.06); }
+  65%  { transform: translateY(-4px) scaleX(1.06) scaleY(0.94); }
+  72%  { transform: translateY(0) scaleX(1.14) scaleY(0.86); }
+  80%  { transform: translateY(-15px) scaleX(0.98) scaleY(1.02); }
+  88%  { transform: translateY(0) scaleX(1.04) scaleY(0.96); }
+  100% { transform: translateY(0) scaleX(1); }
+}
+
+/* En móvil solo se ven los 2-3 primeros */
+@media (max-width: 768px) {
+  .pet-dog-2 { display: none; }
+  .pet-cat-2 { right: 68%; }
+  .pet-dog-3 { right: 62%; }
+  .pet-cat-3 { left: 40%; }
+}
+
+@media (max-width: 480px) {
+  .pet-cat-2, .pet-dog-3, .pet-cat-3 { display: none; }
+  .pet-dog-1 { left: 1%; }
+  .pet-cat-1 { left: 30%; }
+}
+
