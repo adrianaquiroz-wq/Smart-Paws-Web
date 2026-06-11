@@ -1,0 +1,267 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Smart Paws — Módulo de Atenciones</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="css/atenciones.css">
+  <link rel="stylesheet" href="css/chatbot.css">
+  <link rel="stylesheet" href="css/theme.css">
+  <link rel="stylesheet" href="css/vista-aten.css">
+</head>
+<body>
+<div class="vet-page">
+
+  <!-- TOPBAR MÓVIL -->
+  <div class="mobile-topbar">
+    <img src="img/logo.jpg" alt="Smart Paws" class="logo-circle">
+    <span class="brand">Smart Paws</span>
+    <button class="hamburger-btn" id="hamburger-btn" aria-label="Abrir menú">
+      <span></span>
+      <span></span>
+      <span></span>
+    </button>
+  </div>
+  <div class="sidebar-overlay" id="sidebar-overlay"></div>
+
+
+  <aside class="sidebar" id="sidebar">
+    <div class="vet-info">
+      <img src="img/veterinaria.png" alt="Doctor" class="avatar">
+      <h3>Dr. Veterinario</h3>
+      <span class="sidebar-tag">Veterinario</span>
+    </div>
+    <nav class="side-nav">
+      <a href="panel-vet.html"><i class="fas fa-home"></i> Panel principal</a>
+      <a href="panel-vet.html#buscar-section"><i class="fas fa-search"></i> Buscar paciente</a>
+      <a href="panel-vet.html#calendario-section"><i class="fas fa-calendar-alt"></i> Citas del día</a>
+      <a href="atenciones.html" class="active"><i class="fas fa-notes-medical"></i> Atenciones</a>
+      <a href="registrar_cliente.html"><i class="fas fa-user-plus"></i> Registrar dueño</a>
+      <a href="registrar_mascota.html"><i class="fas fa-paw"></i> Registrar mascota</a>
+      <a href="panel-vet.html#inventario-section"><i class="fas fa-pills"></i> Inventario tienda</a>
+      <a href="login.html" class="logout"><i class="fas fa-sign-out-alt"></i> Cerrar sesión</a>
+    </nav>
+  </aside>
+
+  <main class="main-content">
+
+    <div class="content-header">
+      <div style="display:flex;align-items:center;gap:14px;">
+        <div>
+          <h1>Control de Atenciones</h1>
+          <p style="font-size:.8rem;color:var(--texto-suave);margin-top:2px;">Historial clínico y consultas en vivo</p>
+        </div>
+      </div>
+      <span class="header-date" id="fecha-hoy"></span>
+    </div>
+
+    <div id="vista-tablero">
+
+      <div class="atenciones-actions">
+        <button class="btn-atencion btn-normal" onclick="abrirAtencionDirecta()">
+          <i class="fas fa-plus"></i> Nueva Atención Directa
+        </button>
+        <button class="btn-atencion btn-emergencia" onclick="abrirAtencionEmergencia()">
+          <i class="fas fa-bolt"></i> Atención de Emergencia
+        </button>
+      </div>
+
+      <h3><i class="fas fa-clock" style="color:var(--ambar)"></i> Pacientes en Espera de Consulta</h3>
+      <div class="inv-table-wrap">
+        <table class="tabla-atenciones">
+          <thead>
+            <tr>
+              <th>Hora Cita</th><th>Mascota</th><th>Propietario</th><th>Motivo</th><th>Acciones</th>
+            </tr>
+          </thead>
+          <tbody id="tabla-espera-tbody"></tbody>
+        </table>
+      </div>
+
+      <div class="seccion-sin-dueno">
+        <h3>
+          <i class="fas fa-user-clock"></i>
+          Casos pendientes de registro
+          <span id="badge-sin-dueno-count" style="background:#e63946;color:#fff;font-size:.7rem;padding:2px 9px;border-radius:999px;font-weight:700;"></span>
+        </h3>
+        <p style="font-size:.83rem;color:var(--texto-suave);margin-bottom:14px;">
+          Animales atendidos en emergencia sin dueño registrado. Completá sus datos o registrá al propietario.
+        </p>
+        <div id="lista-sin-dueno">
+          <div class="empty-sin-dueno"><i class="fas fa-spinner fa-spin"></i> Cargando...</div>
+        </div>
+      </div>
+
+    </div>
+  </main>
+</div>
+
+<!-- ══════════ MODAL COMPLETAR REGISTRO ══════════ -->
+<div id="modal-completar" class="modal-overlay hidden">
+  <div class="modal-box">
+    <h2><i class="fas fa-user-check"></i> Completar Registro del Paciente</h2>
+    <p class="modal-sub">
+      Ingresa los datos del propietario para vincular la mascota y activar su registro completo.
+    </p>
+
+    <!-- Tarjeta resumen mascota + botón Editar animal -->
+    <div class="resumen-mascota-card" id="modal-resumen-mascota"></div>
+
+    <!-- Panel colapsable: datos del animal -->
+    <div class="panel-editar-animal" id="panel-editar-animal">
+      <div class="panel-editar-inner">
+        <p class="ea-titulo"><i class="fas fa-paw"></i> Datos del animal</p>
+        <div class="ea-grid">
+          <div class="ea-group">
+            <label>Especie</label>
+            <select id="ea-especie" onchange="eaCargarRazas()">
+              <option value="">Seleccione...</option>
+              <option value="1">Perro</option>
+              <option value="2">Gato</option>
+              <option value="3">Conejo</option>
+              <option value="4">Ave</option>
+              <option value="5">Reptil</option>
+            </select>
+          </div>
+          <div class="ea-group">
+            <label>Raza</label>
+            <select id="ea-raza" name="id_raza">
+              <option value="">Elige especie primero</option>
+            </select>
+          </div>
+          <div class="ea-group">
+            <label>Color</label>
+            <select id="ea-color">
+              <option value="">Seleccione...</option>
+              <option value="1">Negro</option>
+              <option value="2">Blanco</option>
+              <option value="3">Marrón</option>
+              <option value="5">Naranja</option>
+              <option value="6">Café</option>
+              <option value="7">Rojo</option>
+              <option value="8">Azul</option>
+              <option value="9">Amarillo</option>
+              <option value="10">Celeste</option>
+              <option value="11">Verde</option>
+              <option value="12">Rosa</option>
+              <option value="13">Gris</option>
+            </select>
+          </div>
+          <div class="ea-group">
+            <label>Tamaño</label>
+            <select id="ea-tamano">
+              <option value="">Seleccione...</option>
+              <option value="Pequeño">Pequeño</option>
+              <option value="Mediano">Mediano</option>
+              <option value="Grande">Grande</option>
+            </select>
+          </div>
+          <div class="ea-group">
+            <label>Fecha de nacimiento</label>
+            <input type="date" id="ea-fecha-nac">
+          </div>
+          <div class="ea-group">
+            <label>Alergias</label>
+            <input type="text" id="ea-alergias" placeholder="Ninguna / detallar...">
+          </div>
+          <div class="ea-group full">
+            <label>Descripción / observaciones</label>
+            <textarea id="ea-descripcion" placeholder="Características relevantes..."></textarea>
+          </div>
+          <div class="ea-group full">
+            <label>Foto de la mascota</label>
+            <div class="ea-foto-row">
+              <img id="ea-foto-preview" src="img/default.png" alt="preview" class="ea-foto-preview">
+              <div class="ea-foto-input">
+                <input type="file" id="ea-foto" accept="image/*" onchange="eaPreviewFoto(event)">
+                <p style="font-size:.72rem;color:#888;margin-top:5px;">JPG, PNG o WEBP</p>
+              </div>
+            </div>
+          </div>
+        </div>
+        <button type="button" class="btn-guardar-animal" id="btn-guardar-animal" onclick="guardarDatosAnimal()">
+          <i class="fas fa-save"></i> Guardar datos del animal
+        </button>
+        <p class="ea-msg" id="ea-msg"></p>
+      </div>
+    </div>
+
+    <!-- Formulario dueño -->
+    <form id="form-completar-registro">
+      <input type="hidden" id="comp_id_mascota">
+      <p class="modal-section-title"><i class="fas fa-id-card"></i> Datos del Propietario</p>
+      <div class="form-grid">
+        <div class="form-group">
+          <label>Carnet de Identidad (CI) <span style="color:#e63946">*</span></label>
+          <input type="number" id="comp_ci" placeholder="Ej. 12345678" required>
+        </div>
+        <div class="form-group">
+          <label>Celular <span style="color:#e63946">*</span></label>
+          <input type="text" id="comp_celular" placeholder="Ej. 77712345" required>
+        </div>
+        <div class="form-group">
+          <label>Nombre <span style="color:#e63946">*</span></label>
+          <input type="text" id="comp_nombre" placeholder="Nombre" required>
+        </div>
+        <div class="form-group">
+          <label>Apellido <span style="color:#e63946">*</span></label>
+          <input type="text" id="comp_apellido" placeholder="Apellido" required>
+        </div>
+        <div class="form-group full-width">
+          <label>Dirección</label>
+          <input type="text" id="comp_direccion" placeholder="Ej. Av. América #456">
+        </div>
+        <div class="form-group full-width">
+          <label>Usuario (correo) <span style="color:#e63946">*</span></label>
+          <input type="email" id="comp_usuario" placeholder="correo@ejemplo.com" required>
+          <span style="font-size:.76rem;color:#888;margin-top:3px;">
+            <i class="fas fa-info-circle"></i> La contraseña se genera automáticamente y se mostrará al guardar.
+          </span>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn-atencion btn-gris" onclick="cerrarModalCompletar()">
+          <i class="fas fa-times"></i> Cancelar
+        </button>
+        <button type="submit" class="btn-atencion btn-normal" id="btn-guardar-completar">
+          <i class="fas fa-save"></i> Guardar y Activar Mascota
+        </button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<div class="panel-toast" id="panel-toast"></div>
+
+<script src="js/atenciones.js"></script>
+
+<script src="js/chatbot.js"></script>
+<script src="js/theme.js"></script>
+<script>
+  
+  document.getElementById('menu-toggle')?.addEventListener('click', () => {
+    document.getElementById('sidebar')?.classList.toggle('active');
+  });
+  const fechaEl = document.getElementById('fecha-hoy');
+  if (fechaEl) fechaEl.textContent = new Date().toLocaleDateString('es-BO', {
+    weekday: 'long', year: 'numeric', month: 'long', day: 'numeric'
+  });
+</script>
+<script>
+  const hamburgerBtn = document.getElementById('hamburger-btn');
+  const sidebar = document.getElementById('sidebar');
+  const overlay = document.getElementById('sidebar-overlay');
+
+  function toggleSidebar() {
+    sidebar.classList.toggle('active');
+    overlay.classList.toggle('active');
+  }
+
+  hamburgerBtn?.addEventListener('click', toggleSidebar);
+  overlay?.addEventListener('click', toggleSidebar);
+</script>
+
+</body>
+</html>

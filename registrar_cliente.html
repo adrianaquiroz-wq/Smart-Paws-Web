@@ -1,0 +1,88 @@
+<!--registrar_cliente.html-->
+
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Smart Paws — Registrar Cliente</title>
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+  <link rel="stylesheet" href="css/chatbot.css">
+  <link rel="stylesheet" href="css/theme.css">
+</head>
+<body class="form-page">
+
+  <div class="form-topbar">
+    <h3><i class="fas fa-user-plus" style="margin-right:8px;"></i>Registrar Cliente</h3>
+    <a href="panel-vet.html"><i class="fas fa-arrow-left"></i> Volver al panel</a>
+  </div>
+
+  <div class="form-body">
+    <div class="form-card">
+      <h2>Nuevo cliente</h2>
+      <p class="form-subtitle">Completa los datos del dueño de la mascota.</p>
+      <form id="form-cliente" class="field-group">
+        <div class="field">
+          <label>Carnet de identidad</label>
+          <input type="number" name="carnetDue" id="cli-carnet" placeholder="Ej: 12345678" required>
+        </div>
+
+        <div class="field-row">
+  <div class="field">
+    <label>Nombre</label>
+    <input type="text" 
+           name="nombre" 
+           id="cli-nombre" 
+           placeholder="Juan" 
+           pattern="^[a-zA-ZáéíóúÁÉÍÓÚñÑ\s]+$" 
+           title="El nombre solo debe contener letras y espacios." 
+           required>
+  </div>
+  <div class="field">
+    <label>Apellido</label>
+    <input type="text" 
+           name="apellido" 
+           id="cli-apellido" 
+           placeholder="Pérez" 
+           pattern="^[a-zA-ZáéíóúÁÉÍÓÚñÑ\s]+$" 
+           title="El apellido solo debe contener letras y espacios." 
+           required>
+  </div>
+</div>
+
+        <div class="field">
+          <label>Correo electrónico</label>
+          <input type="email" name="usuario" id="cli-usuario" placeholder="juan@correo.com" required>
+        </div>
+        <div class="field">
+          <label>Fecha de nacimiento</label>
+          <input type="date" name="fecha_nacimiento" id="cli-nacimiento" required>
+        </div>
+        <div class="field">
+          <label>Dirección</label>
+          <input type="text" name="direccion" id="cli-direccion" placeholder="Av. Ejemplo 123, La Paz" required>
+        </div>
+        <button type="submit" class="btn-submit">
+          <i class="fas fa-user-check" style="margin-right:8px;"></i>Registrar cliente
+        </button>
+      </form>
+    </div>
+  </div>
+
+  <!-- Modal éxito -->
+  <div id="modal-exito" class="modal hidden">
+    <div class="modal-content">
+      <div style="font-size:2.8rem;margin-bottom:12px;">✅</div>
+      <h3>Cliente registrado</h3>
+      <p id="modal-info"></p>
+      <button onclick="cerrarModal()">Continuar</button>
+    </div>
+  </div>
+
+<script src="js/registro_dueno.js"></script>
+<script src="js/chatbot.js"></script>
+<script src="js/theme.js"></script>
+<script src="js/validaciones.js"></script>
+</body>
+</html>

@@ -1,0 +1,166 @@
+<!--mi-mascota.html-->
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Smart Paws — Mi Panel</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="css/cliente-dashboard.css">
+  <link rel="stylesheet" href="css/chatbot.css">
+  <link rel="stylesheet" href="css/theme.css">
+</head>
+<body>
+
+<div class="vet-page">
+
+  <div class="mobile-topbar">
+    <img src="img/logo.jpg" alt="Smart Paws" class="logo-circle">
+    <span class="brand">Smart Paws</span>
+    <button class="hamburger-btn" id="hamburger-btn" aria-label="Abrir menú">
+      <span></span>
+      <span></span>
+      <span></span>
+    </button>
+  </div>
+  <div class="sidebar-overlay" id="sidebar-overlay"></div>
+
+  
+  
+  <aside class="sidebar" id="sidebar">
+    <div class="vet-info">
+      <img src="img/dueno.jpg" alt="Usuario" class="avatar">
+      <h3 id="nombre-dueno">Cargando...</h3>
+      <span class="sidebar-tag">Dueño de Mascota</span>
+    </div>
+
+    <nav class="side-nav">
+      <a href="#" class="active"><i class="fas fa-paw"></i> Mis Mascotas</a>
+      <a href="tienda.html"><i class="fas fa-store"></i> Tienda</a>
+      <a href="#seccion-agendar"><i class="fas fa-calendar-plus"></i> Agendar Cita</a>
+      <a href="php/logout.php" class="logout"><i class="fas fa-sign-out-alt"></i> Cerrar sesión</a>
+    </nav>
+  </aside>
+
+  <main class="main-content">
+    
+    <div class="content-header">
+      <div class="header-titulo-agrupado">
+        <div>
+          <h1 id="saludo-dueno">¡Hola!</h1>
+          <p class="subtitulo-dashboard">Gestiona la salud de tus peluditos desde aquí.</p>
+        </div>
+      </div>
+      <span class="header-date" id="fecha-hoy"></span>
+    </div>
+
+    <div class="block">
+      <h3><i class="fas fa-dog" style="color:var(--verde-vivo)"></i> Mis Consentidos</h3>
+      <div id="lista-mis-mascotas" class="grid-mascotas">
+        </div>
+    </div>
+
+    <div class="grid-layout-desktop">
+      
+      <div class="card">
+        <h3><i class="fas fa-clock" style="color:var(--ambar)"></i> Mis Citas Programadas</h3>
+        <div id="citas-dueno" class="lista-citas-contenedor">
+          <p class="citas-vacias-texto">Cargando tus próximas citas...</p>
+        </div>
+      </div>
+
+      <div class="form-card" id="seccion-agendar">
+        <h3 class="form-card-title"><i class="fas fa-calendar-alt" style="color: var(--verde-vivo)"></i> Agendar una Nueva Cita</h3>
+        <p class="form-subtitle">Selecciona los datos para verificar los horarios del doctor en tiempo real.</p>
+        
+        <form id="form-agendar-cita" class="field-group">
+          
+          <div class="field">
+            <label for="select-mascotas">Selecciona tu mascota:</label>
+            <select id="select-mascotas" name="id_mascota" required>
+              <option value="" disabled selected>Cargando tus consentidos...</option>
+            </select>
+          </div>
+
+          <div class="field-row">
+            <div class="field">
+              <label for="select-veterinarios">Veterinario Especialista:</label>
+              <select id="select-veterinarios" name="carnetVet" required>
+                <option value="" disabled selected>Cargando médicos...</option>
+              </select>
+            </div>
+            
+            <div class="field">
+              <label for="input-fecha">Fecha Deseada:</label>
+              <input type="date" name="fecha" id="input-fecha" required>
+            </div>
+          </div>
+
+          <button type="button" id="btn-ver-horarios" class="btn-consultar-horas" disabled>
+            <i class="fas fa-search"></i> Consultar Disponibilidad de Horas
+          </button>
+
+          <div id="agenda-dia-container" class="agenda-dia-recuadro hidden">
+            <p><i class="fas fa-clock"></i> Horas del día seleccionado:</p>
+            <div id="grid-horas" class="grid-horas-bloques"></div>
+            
+            <input type="hidden" name="hora" id="input-hora-final" required>
+          </div>
+
+          <div class="field">
+            <label for="txt-motivo">Motivo de la atención médica:</label>
+            <textarea id="txt-motivo" name="motivo" placeholder="Ej: Control de rutina, vacunas anuales..." required></textarea>
+          </div>
+
+          <button type="submit" class="btn-submit">
+            <i class="fas fa-check-circle"></i> Confirmar Cita Programada
+          </button>
+        </form>
+      </div>
+
+    </div>
+  </main>
+</div>
+<div id="modal-confirmacion" class="custom-modal-overlay">
+    <div class="custom-modal-box">
+        <div class="custom-modal-icon">
+            <i class="fas fa-exclamation-triangle"></i>
+        </div>
+        <h3>¿Cerrar o Cancelar Cita?</h3>
+        <p>¿Estás seguro de que deseas cancelar esta cita médica? El doctor será notificado.</p>
+        <div class="custom-modal-buttons">
+            <button id="btn-modal-cancelar" class="btn-modal btn-secundario">Volver</button>
+            <button id="btn-modal-aceptar" class="btn-modal btn-peligro">Sí, cancelar</button>
+        </div>
+    </div>
+</div>
+ 
+<script src="js/cliente.js"></script>
+<script src="js/chatbot.js"></script>
+<script src="js/theme.js"></script>
+<script src="js/translation.js"></script>
+<script> 
+  // Ejecución segura de fecha local para Bolivia
+  const fechaEl = document.getElementById('fecha-hoy');
+  if (fechaEl) {
+    fechaEl.textContent = new Date().toLocaleDateString('es-BO', {
+      weekday: 'long', year: 'numeric', month: 'long', day: 'numeric'
+    });
+  }
+</script>
+<script>
+  const hamburgerBtn = document.getElementById('hamburger-btn');
+  const sidebar = document.getElementById('sidebar');
+  const overlay = document.getElementById('sidebar-overlay');
+
+  function toggleSidebar() {
+    sidebar.classList.toggle('active');
+    overlay.classList.toggle('active');
+  }
+
+  hamburgerBtn?.addEventListener('click', toggleSidebar);
+  overlay?.addEventListener('click', toggleSidebar);
+</script>
+</body>
+</html>

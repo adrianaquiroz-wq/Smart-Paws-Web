@@ -1,0 +1,434 @@
+<!--panel-vet.html-->
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Smart Paws — Panel Veterinario</title>
+
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+  <link rel="stylesheet" href="css/style.css?v=menu-toggle">
+  <link rel="stylesheet" href="css/inventario.css">
+  <link rel="stylesheet" href="css/calendario.css?v=responsive-calendar">
+  <link rel="stylesheet" href="css/chatbot.css">
+  <link rel="stylesheet" href="css/theme.css">
+  <script src='https://cdn.jsdelivr.net/npm/fullcalendar@6.1.11/index.global.min.js'></script>
+</head>
+
+<body>
+
+<div class="vet-page">
+
+  <!-- TOPBAR MÓVIL -->
+  <div class="mobile-topbar">
+    <img src="img/logo.jpg" alt="Smart Paws" class="logo-circle">
+    <span class="brand">Smart Paws</span>
+    <button class="hamburger-btn" id="hamburger-btn" aria-label="Abrir menú">
+      <span></span>
+      <span></span>
+      <span></span>
+    </button>
+  </div>
+
+  <div class="sidebar-overlay" id="sidebar-overlay"></div>
+
+  <!-- SIDEBAR -->
+  <aside class="sidebar" id="sidebar">
+
+    <div class="vet-info">
+      <img src="img/veterinaria.png" alt="Doctor" class="avatar">
+      <h3>Dr. Veterinario</h3>
+      <span class="sidebar-tag">Veterinario</span>
+    </div>
+
+    <nav class="side-nav">
+
+      <a href="#" onclick="window.scrollTo({top:0, behavior:'smooth'})" class="active">
+        <i class="fas fa-home"></i> Panel principal
+      </a>
+
+      <a href="#buscar-section">
+        <i class="fas fa-search"></i> Buscar paciente
+      </a>
+
+      <a href="#calendario-section">
+        <i class="fas fa-calendar-alt"></i> Citas del día
+      </a>
+
+      <a href="atenciones.html">
+        <i class="fas fa-notes-medical"></i> Atenciones
+      </a>
+
+      <a href="registrar_cliente.html">
+        <i class="fas fa-user-plus"></i> Registrar dueño
+      </a>
+
+      <a href="registrar_mascota.html">
+        <i class="fas fa-paw"></i> Registrar mascota
+      </a>
+
+      <a href="#pedidos-section">
+        <i class="fas fa-shopping-bag"></i> Pedidos tienda
+      </a>
+
+      <a href="#inventario-section">
+        <i class="fas fa-pills"></i> Inventario tienda
+      </a>
+
+      <a href="login.html" class="logout">
+        <i class="fas fa-sign-out-alt"></i> Cerrar sesión
+      </a>
+
+    </nav>
+
+  </aside>
+
+  <!-- CONTENIDO PRINCIPAL -->
+  <main class="main-content">
+
+    <div class="content-header">
+      <div style="display:flex;align-items:center;gap:14px;">
+        <button id="menu-toggle" class="menu-toggle" type="button" aria-label="Mostrar u ocultar opciones" aria-expanded="true">
+          <i class="fas fa-bars"></i>
+        </button>
+
+        <div>
+          <h1>Panel Principal</h1>
+          <p style="font-size:.8rem;color:var(--texto-suave);margin-top:2px;">
+            Bienvenido de vuelta, Dr. Veterinario
+          </p>
+        </div>
+      </div>
+      <span class="header-date" id="fecha-hoy"></span>
+    </div>
+
+    <!-- SOLICITUDES DE VETERINARIOS -->
+    <div class="block" id="solicitudes-vet-section">
+      <h3>
+        <i class="fas fa-user-md" style="color:var(--verde-vivo)"></i>
+        Solicitudes de veterinarios
+      </h3>
+      <div id="lista-solicitudes-vet">
+        <p style="color:var(--texto-suave);font-size:.9rem;">
+          Cargando solicitudes pendientes...
+        </p>
+      </div>
+    </div>
+
+    <!-- CALENDARIO -->
+    <div class="block" id="calendario-section">
+      <h3>
+        <i class="fas fa-calendar-alt" style="color:var(--verde-vivo)"></i>
+        Calendario de citas
+      </h3>
+      <div id="calendario"></div>
+    </div>
+
+    <!-- STATS -->
+    <div class="stats-row">
+
+      <div class="stat-card verde">
+        <div class="stat-card-icon"><i class="fas fa-paw"></i></div>
+        <div class="stat-num" id="stat-mascotas-hoy">--</div>
+        <div class="stat-label">Mascotas hoy</div>
+        <span class="stat-change up"><i class="fas fa-arrow-up"></i> Actualizado</span>
+      </div>
+
+      <div class="stat-card ambar">
+        <div class="stat-card-icon"><i class="fas fa-calendar-check"></i></div>
+        <div class="stat-num" id="stat-citas-pendientes">--</div>
+        <div class="stat-label">Citas pendientes</div>
+        <span class="stat-change neutral" id="label-proxima-cita">Cargando...</span>
+      </div>
+
+      <div class="stat-card azul">
+        <div class="stat-card-icon"><i class="fas fa-users"></i></div>
+        <div class="stat-num" id="stat-total-clientes">--</div>
+        <div class="stat-label">Clientes registrados</div>
+        <span class="stat-change up">Total histórico</span>
+      </div>
+
+      <div class="stat-card coral">
+        <div class="stat-card-icon"><i class="fas fa-paw"></i></div>
+        <div class="stat-num" id="stat-total-animales">--</div>
+        <div class="stat-label">Mascotas Registradas</div>
+        <span class="stat-change neutral">Total histórico</span>
+      </div>
+
+    </div>
+
+    <!-- GRID CITAS + NOTIFICACIONES -->
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:20px;margin-bottom:20px;">
+
+      <div class="card">
+        <h3><i class="fas fa-clock" style="color:var(--ambar)"></i> Próximas Citas</h3>
+        <div id="contenedor-proximas-citas">
+          <p style="color:var(--texto-suave);font-size:.9rem;padding:10px;">Buscando citas...</p>
+        </div>
+      </div>
+
+      <div class="card">
+        <h3><i class="fas fa-bell" style="color:var(--ambar)"></i> Notificaciones</h3>
+        <div id="contenedor-notificaciones">
+          <div class="mascota-item">
+            <span>Cargando avisos del sistema...</span>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- MASCOTAS RECIENTES -->
+    <div class="block">
+      <h3><i class="fas fa-paw" style="color:var(--verde-vivo)"></i> Mascotas registradas recientemente</h3>
+      <div id="lista-mascotas">
+        <p style="color:var(--texto-suave);font-size:.88rem;">Cargando mascotas...</p>
+      </div>
+    </div>
+
+    <!-- BUSCADOR -->
+    <div class="search-section" id="buscar-section">
+      <h3>
+        <i class="fas fa-search" style="color:var(--verde-vivo);margin-right:6px;"></i>
+        Buscar por Carnet del Dueño
+      </h3>
+      <div class="search-box">
+        <input type="number" id="busca-ci" placeholder="Ingrese el CI del dueño...">
+        <button onclick="buscarPacientes()">
+          <i class="fas fa-search"></i> Consultar
+        </button>
+      </div>
+      <div id="resultado-busqueda"></div>
+    </div>
+
+    <!-- PEDIDOS TIENDA -->
+    <div class="block" id="pedidos-section">
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:18px;flex-wrap:wrap;gap:10px;">
+        <h3 style="margin:0;">
+          <i class="fas fa-shopping-bag" style="color:var(--ambar);margin-right:8px;"></i>
+          Pedidos de la Tienda
+        </h3>
+        <div style="display:flex;gap:8px;align-items:center;">
+          <select id="filtro-estado-pedido" style="border:1.5px solid var(--arena);border-radius:999px;padding:6px 14px;font-size:.8rem;outline:none;font-family:inherit;">
+            <option value="todos">Todos los estados</option>
+            <option value="pendiente_verificacion">Pendiente verificación</option>
+            <option value="verificado">Verificado</option>
+            <option value="entregado">Entregado</option>
+          </select>
+          <button onclick="cargarPedidosTienda()" style="background:var(--verde-oscuro);color:#fff;border:none;border-radius:999px;padding:7px 16px;font-size:.8rem;font-weight:600;cursor:pointer;font-family:inherit;">
+            <i class="fas fa-sync-alt"></i> Actualizar
+          </button>
+        </div>
+      </div>
+
+      <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(130px,1fr));gap:12px;margin-bottom:20px;">
+        <div style="background:#fff4e0;border-radius:12px;padding:14px;text-align:center;">
+          <div style="font-size:1.5rem;font-weight:800;color:var(--ambar);" id="stat-pendientes">—</div>
+          <div style="font-size:.72rem;color:#b76e00;font-weight:600;">Pendientes</div>
+        </div>
+        <div style="background:#e8f8f0;border-radius:12px;padding:14px;text-align:center;">
+          <div style="font-size:1.5rem;font-weight:800;color:#1e7a4a;" id="stat-verificados">—</div>
+          <div style="font-size:.72rem;color:#1e7a4a;font-weight:600;">Verificados</div>
+        </div>
+        <div style="background:var(--crema);border-radius:12px;padding:14px;text-align:center;">
+          <div style="font-size:1.5rem;font-weight:800;color:var(--verde-oscuro);" id="stat-total-pedidos">—</div>
+          <div style="font-size:.72rem;color:var(--texto-suave);font-weight:600;">Total pedidos</div>
+        </div>
+      </div>
+
+      <div id="lista-pedidos">
+        <div style="text-align:center;padding:40px;color:var(--texto-suave);">
+          <i class="fas fa-spinner fa-spin" style="font-size:1.5rem;margin-bottom:10px;display:block;"></i>
+          Cargando pedidos…
+        </div>
+      </div>
+    </div>
+
+    <!-- MODAL COMPROBANTE — botón cancelar DENTRO del modal -->
+    <div id="modal-captura-pedido" style="display:none;position:fixed;inset:0;background:rgba(15,36,25,.7);z-index:9999;align-items:center;justify-content:center;backdrop-filter:blur(6px);">
+      <div style="background:#fff;border-radius:20px;padding:24px;max-width:480px;width:92%;max-height:88vh;overflow-y:auto;text-align:center;">
+        <h3 style="margin-bottom:12px;">
+          <i class="fas fa-camera" style="color:var(--verde-vivo);margin-right:8px;"></i>Comprobante de pago
+        </h3>
+        <div id="pedido-info-modal" style="background:var(--crema);border-radius:12px;padding:12px 16px;margin-bottom:14px;text-align:left;font-size:.82rem;"></div>
+        <img id="captura-modal-img" src="" alt="Comprobante" style="max-width:100%;max-height:320px;border-radius:12px;border:2px solid var(--verde-vivo);margin-bottom:16px;object-fit:contain;">
+        <div style="display:flex;gap:8px;flex-wrap:wrap;">
+          <button onclick="cambiarEstadoPedido(window._pedidoActual,'verificado')" style="flex:1;background:linear-gradient(135deg,var(--verde-vivo),var(--verde-medio));color:#fff;border:none;border-radius:999px;padding:11px;font-size:.84rem;font-weight:700;cursor:pointer;font-family:inherit;">
+            <i class="fas fa-check-circle"></i> Verificar pedido
+          </button>
+          <button onclick="cambiarEstadoPedido(window._pedidoActual,'entregado')" style="flex:1;background:var(--verde-oscuro);color:#fff;border:none;border-radius:999px;padding:11px;font-size:.84rem;font-weight:700;cursor:pointer;font-family:inherit;">
+            <i class="fas fa-box-open"></i> Marcar entregado
+          </button>
+          <!-- ✅ CORREGIDO: botón cancelar dentro del modal -->
+          <button onclick="cambiarEstadoPedido(window._pedidoActual,'cancelado')" style="flex:1;background:#dc3545;color:#fff;border:none;border-radius:999px;padding:11px;font-size:.84rem;font-weight:700;cursor:pointer;font-family:inherit;">
+            <i class="fas fa-times-circle"></i> Cancelar
+          </button>
+          <button onclick="cerrarModalCaptura()" style="flex:1;background:var(--arena);color:var(--texto);border:none;border-radius:999px;padding:11px;font-size:.84rem;cursor:pointer;font-family:inherit;">
+            Cerrar
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- INVENTARIO -->
+    <div class="block" id="inventario-section">
+
+      <div class="inv-header">
+        <h3 style="margin:0;">
+          <i class="fas fa-boxes" style="color:var(--verde-vivo);margin-right:8px;"></i>
+          Inventario de la Tienda
+        </h3>
+        <div class="inv-search">
+          <input type="text" id="inv-buscar" placeholder="🔍 Buscar producto…">
+          <select id="inv-filtro-cat">
+            <option value="">Todas las categorías</option>
+            <option value="Alimento">Alimento</option>
+            <option value="Higiene">Higiene</option>
+            <option value="Juguetes">Juguetes</option>
+            <option value="Accesorios">Accesorios</option>
+            <option value="Camas">Camas</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="inv-stats" id="inv-stats">
+        <div class="inv-stat">
+          <div class="ist-valor" id="ist-total">—</div>
+          <div class="ist-label">Productos en catálogo</div>
+        </div>
+        <div class="inv-stat ambar">
+          <div class="ist-valor" id="ist-bajos">—</div>
+          <div class="ist-label">Stock bajo (≤5)</div>
+        </div>
+        <div class="inv-stat coral">
+          <div class="ist-valor" id="ist-agotados">—</div>
+          <div class="ist-label">Agotados</div>
+        </div>
+        <div class="inv-stat azul">
+          <div class="ist-valor" id="ist-ingresos">—</div>
+          <div class="ist-label">Ingresos por ventas</div>
+        </div>
+      </div>
+
+      <div class="inv-table-wrap">
+        <table class="inv-table" id="inv-tabla">
+          <thead>
+            <tr>
+              <th>#</th>
+              <th>Producto</th>
+              <th>Categoría</th>
+              <th>Precio</th>
+              <th>Stock</th>
+              <th>Vendidos</th>
+              <th>Ingresos</th>
+              <th>Ajustar stock</th>
+            </tr>
+          </thead>
+          <tbody id="inv-tbody">
+            <tr>
+              <td colspan="8" style="text-align:center;padding:32px;color:var(--texto-suave);">
+                <i class="fas fa-spinner fa-spin"></i> Cargando inventario…
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+    </div>
+    <!-- FIN INVENTARIO -->
+
+  </main>
+
+</div>
+
+<!-- Toast -->
+<div class="panel-toast" id="panel-toast"></div>
+
+<script src="js/atenciones.js"></script>
+<script src="js/panel-vet.js"></script>
+<script src="js/inventario.js"></script>
+<script src="js/chatbot.js"></script>
+<script src="js/theme.js"></script>
+
+<script>
+  // 🛠️ CORRECCIÓN: Buscamos por clase (.) o por ID (#) según corresponda con tu HTML/CSS
+  const toggleBtn = document.querySelector('.menu-toggle');
+  const hamburgerBtn = document.querySelector('.hamburger-btn'); 
+  const sidebar = document.querySelector('.sidebar');
+  const overlay = document.querySelector('.sidebar-overlay');
+  const vetPage = document.querySelector('.vet-page');
+
+  function esMovil() {
+    return window.innerWidth <= 768;
+  }
+
+  function actualizarBotonMenu(abierto) {
+    if (!toggleBtn) return;
+    const icono = toggleBtn.querySelector('i');
+    if (icono) {
+      icono.className = abierto ? 'fas fa-times' : 'fas fa-bars';
+    }
+    toggleBtn.setAttribute('aria-expanded', abierto ? 'true' : 'false');
+  }
+
+  function reajustarCalendario() {
+    [60, 180, 340].forEach(delay => {
+      setTimeout(() => {
+        window.dispatchEvent(new Event('resize'));
+        if (window.smartPawsCalendar) {
+          window.smartPawsCalendar.updateSize();
+        }
+      }, delay);
+    });
+  }
+
+  function abrirCerrarSidebar() {
+    sidebar?.classList.toggle('active');
+    overlay?.classList.toggle('active');
+    actualizarBotonMenu(sidebar?.classList.contains('active'));
+    reajustarCalendario();
+  }
+
+  // Asignación de eventos limpia y segura
+  hamburgerBtn?.addEventListener('click', abrirCerrarSidebar);
+  overlay?.addEventListener('click', abrirCerrarSidebar);
+
+  toggleBtn?.addEventListener('click', () => {
+    if (esMovil()) {
+      abrirCerrarSidebar();
+    } else {
+      const colapsado = vetPage?.classList.toggle('sidebar-collapsed');
+      actualizarBotonMenu(!colapsado);
+      reajustarCalendario();
+    }
+  });
+
+  document.querySelectorAll('.side-nav a').forEach(link => {
+    link.addEventListener('click', () => {
+      if (window.innerWidth <= 768) {
+        sidebar?.classList.remove('active');
+        overlay?.classList.remove('active');
+        actualizarBotonMenu(false);
+      }
+    });
+  });
+
+  window.addEventListener('resize', () => {
+    // Solo cerramos el menú móvil si la pantalla pasa a ser de escritorio
+    if (!esMovil()) {
+      sidebar?.classList.remove('active');
+      overlay?.classList.remove('active');
+      actualizarBotonMenu(!vetPage?.classList.contains('sidebar-collapsed'));
+    }
+    reajustarCalendario();
+  });
+
+  const fechaEl = document.getElementById('fecha-hoy');
+  if (fechaEl) {
+    fechaEl.textContent = new Date().toLocaleDateString('es-BO', {
+      weekday: 'long', year: 'numeric', month: 'long', day: 'numeric'
+    });
+  }
+</script>
+</body>
+</html>

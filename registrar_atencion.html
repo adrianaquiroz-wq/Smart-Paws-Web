@@ -1,0 +1,672 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Smart Paws — Registrar Atención</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="css/atenciones.css">
+  <style>
+    /* ── Pet Card Header ── */
+    .pet-card-header {
+      display: flex; align-items: center; gap: 18px;
+      background: linear-gradient(135deg, #1a3a2e 0%, #0f5132 100%);
+      color: #fff; border-radius: 14px; padding: 20px 24px;
+      margin-bottom: 24px; box-shadow: 0 4px 16px rgba(0,0,0,0.18);
+    }
+    .pet-card-header.mode-emergencia {
+      background: linear-gradient(135deg, #5c0a12 0%, #e63946 100%);
+    }
+    .pet-avatar-frame {
+      width: 72px; height: 72px; border-radius: 50%;
+      overflow: hidden; border: 3px solid #2dc97e; flex-shrink: 0;
+      background: #0f5132;
+    }
+    .pet-avatar-frame img { width: 100%; height: 100%; object-fit: cover; }
+    .badge-alert {
+      background: #e63946; color: #fff; font-size: .7rem;
+      font-weight: 700; padding: 3px 10px; border-radius: 999px;
+      text-transform: uppercase; letter-spacing: .06em;
+    }
+    .badge-alert.hidden { display: none; }
+
+    /* ── Origen banner ── */
+    .origen-banner {
+      display: flex; align-items: center; gap: 12px;
+      background: #f0faf5; border: 1.5px solid #2dc97e;
+      border-radius: 10px; padding: 12px 18px; margin-bottom: 20px;
+      font-size: .9rem; color: #1a3a2e;
+    }
+    .origen-banner.emergencia {
+      background: #fff0f1; border-color: #e63946; color: #5c0a12;
+    }
+    .origen-banner i { font-size: 1.1rem; }
+
+    /* ── Buscador directo ── */
+    #wrapper-buscador-directo { background: #f8f9fa; border-radius: 10px; padding: 18px 20px; margin-bottom: 20px; }
+    #wrapper-buscador-directo .buscar-row { display: flex; gap: 10px; margin-top: 8px; }
+    #wrapper-buscador-directo input {
+      flex: 1; padding: 9px 14px; border: 1.5px solid #d0d7de;
+      border-radius: 8px; font-size: .92rem;
+    }
+
+    /* ── Cards de formulario ── */
+    .reg-card {
+      background: #fff; border-radius: 14px; padding: 28px 30px;
+      box-shadow: 0 2px 12px rgba(0,0,0,.07); margin-bottom: 20px;
+    }
+    .reg-card h3 {
+      font-size: 1rem; font-weight: 700; color: #1a3a2e;
+      margin-bottom: 18px; display: flex; align-items: center; gap: 8px;
+    }
+    .reg-card h3 i { color: #2dc97e; }
+    .form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+    .form-grid .full-width { grid-column: 1 / -1; }
+    .form-group { display: flex; flex-direction: column; gap: 5px; }
+    .form-group label { font-size: .82rem; font-weight: 600; color: #444; }
+    .form-group input,
+    .form-group select,
+    .form-group textarea {
+      padding: 9px 13px; border: 1.5px solid #d0d7de; border-radius: 8px;
+      font-size: .92rem; background: #fafbfc; transition: border-color .2s;
+    }
+    .form-group input:focus,
+    .form-group select:focus,
+    .form-group textarea:focus { outline: none; border-color: #2dc97e; background: #fff; }
+    .form-group textarea { resize: vertical; min-height: 88px; }
+
+    /* ── Botones ── */
+    .form-footer { display: flex; gap: 14px; justify-content: flex-end; margin-top: 8px; }
+    .btn-atencion {
+      display: inline-flex; align-items: center; gap: 8px;
+      padding: 11px 22px; border-radius: 9px; font-size: .92rem;
+      font-weight: 700; border: none; cursor: pointer; transition: opacity .2s, transform .1s;
+    }
+    .btn-atencion:hover { opacity: .88; transform: translateY(-1px); }
+    .btn-atencion:disabled { opacity: .55; cursor: not-allowed; transform: none; }
+    .btn-normal     { background: #0f5132; color: #fff; }
+    .btn-emergencia { background: #e63946; color: #fff; }
+    .btn-gris       { background: #6c757d; color: #fff; }
+
+    /* ── Modal de emergencia ── */
+    .modal-overlay {
+      position: fixed; inset: 0; background: rgba(0,0,0,.55);
+      display: flex; align-items: center; justify-content: center;
+      z-index: 1000; padding: 16px;
+    }
+    .modal-overlay.hidden { display: none; }
+    .modal-box {
+      background: #fff; border-radius: 16px; padding: 32px;
+      width: 100%; max-width: 540px;
+      box-shadow: 0 8px 40px rgba(0,0,0,.25);
+      animation: modalIn .2s ease;
+    }
+    @keyframes modalIn { from { transform: scale(.94); opacity: 0; } to { transform: scale(1); opacity: 1; } }
+    .modal-box h2 {
+      color: #e63946; font-size: 1.15rem; font-weight: 800;
+      margin-bottom: 6px; display: flex; align-items: center; gap: 10px;
+    }
+    .modal-box .modal-sub {
+      color: #666; font-size: .85rem; margin-bottom: 20px;
+    }
+    .modal-footer { display: flex; gap: 12px; justify-content: flex-end; margin-top: 24px; }
+
+    /* ── Toast ── */
+    .panel-toast {
+      position: fixed; bottom: 28px; left: 50%; transform: translateX(-50%) translateY(30px);
+      background: #1a3a2e; color: #fff; padding: 12px 28px; border-radius: 999px;
+      font-size: .92rem; font-weight: 600; opacity: 0;
+      transition: opacity .3s, transform .3s; pointer-events: none; z-index: 9999;
+    }
+    .panel-toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
+
+    .hidden { display: none !important; }
+
+    @media (max-width: 600px) {
+      .form-grid { grid-template-columns: 1fr; }
+      .modal-box { padding: 22px 18px; }
+    }
+  </style>
+</head>
+<body>
+<div class="vet-page">
+
+  <!-- ═══════════════════════ SIDEBAR ═══════════════════════ -->
+  <aside class="sidebar" id="sidebar">
+    <div class="vet-info">
+      <img src="img/veterinaria.png" alt="Doctor" class="avatar">
+      <h3>Dr. Veterinario</h3>
+      <span class="sidebar-tag">Veterinario</span>
+    </div>
+    <nav class="side-nav">
+      <a href="panel-vet.html"><i class="fas fa-home"></i> Panel principal</a>
+      <a href="panel-vet.html#buscar-section"><i class="fas fa-search"></i> Buscar paciente</a>
+      <a href="panel-vet.html#calendario-section"><i class="fas fa-calendar-alt"></i> Citas del día</a>
+      <a href="atenciones.html" class="active"><i class="fas fa-notes-medical"></i> Atenciones</a>
+      <a href="registrar_cliente.html"><i class="fas fa-user-plus"></i> Registrar dueño</a>
+      <a href="registrar_mascota.html"><i class="fas fa-paw"></i> Registrar mascota</a>
+      <a href="panel-vet.html#inventario-section"><i class="fas fa-pills"></i> Inventario tienda</a>
+      <a href="login.html" class="logout"><i class="fas fa-sign-out-alt"></i> Cerrar sesión</a>
+    </nav>
+  </aside>
+
+  <!-- ═══════════════════════ MAIN ═══════════════════════ -->
+  <main class="main-content">
+
+    <div class="content-header">
+      <div style="display:flex;align-items:center;gap:14px;">
+        <button id="menu-toggle" class="menu-toggle"><i class="fas fa-bars"></i></button>
+        <div>
+          <a href="atenciones.html" style="font-size:.8rem;color:var(--texto-suave);text-decoration:none;">
+            <i class="fas fa-arrow-left"></i> Volver a Atenciones
+          </a>
+          <h1 style="margin-top:2px;">Registrar Atención</h1>
+        </div>
+      </div>
+      <span class="header-date" id="fecha-hoy"></span>
+    </div>
+
+    <!-- ── Pet Card ── -->
+    <div id="pet-card" class="pet-card-header">
+      <div class="pet-avatar-frame">
+        <img id="clinical-pet-foto" src="img/huella.png" alt="Mascota">
+      </div>
+      <div class="pet-header-info">
+        <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap;">
+          <h2 id="clinical-pet-name" style="margin:0;">Cargando...</h2>
+          <span id="badge-tipo-consulta" class="badge-alert hidden">Emergencia</span>
+        </div>
+        <p id="clinical-pet-meta" style="margin:4px 0 0;opacity:.85;font-size:.88rem;">Especie: -- | Raza: --</p>
+        <p style="font-size:.82rem;opacity:.75;margin-top:2px;">
+          <i class="far fa-clock"></i> Inicio: <span id="clinical-hora-inicio">--:--</span>
+        </p>
+      </div>
+    </div>
+
+    <!-- Banner de origen -->
+    <div id="origen-banner" class="origen-banner">
+      <i class="fas fa-info-circle" style="color:#2dc97e;"></i>
+      <span id="origen-texto">Cargando...</span>
+    </div>
+
+    <!-- ══════════════════ FORMULARIO CLÍNICO ══════════════════ -->
+    <div id="vista-formulario">
+
+      <!-- Buscador (solo modo Directa) -->
+      <div id="wrapper-buscador-directo" class="hidden">
+        <div class="reg-card">
+          <h3><i class="fas fa-search"></i> Buscar Paciente Registrado</h3>
+          <div class="buscar-row">
+            <input type="text" id="input-buscar-paciente" placeholder="Escribe el nombre de la mascota...">
+            <button type="button" class="btn-atencion btn-normal" onclick="buscarMascotaDirecta()">
+              <i class="fas fa-search"></i> Buscar
+            </button>
+          </div>
+          <div id="resultado-busqueda-directa" style="margin-top:10px;"></div>
+        </div>
+      </div>
+
+      <form id="form-registro-clinico">
+
+        <!-- Acompañante -->
+        <div class="reg-card">
+          <h3><i class="fas fa-user-check"></i> Datos del Acompañante</h3>
+          <div class="form-grid">
+            <div class="form-group">
+              <label for="asistente_nombre">Nombre completo de quien lo trae:</label>
+              <input type="text" id="asistente_nombre" placeholder="Ej. Juan Pérez" required>
+            </div>
+            <div class="form-group">
+              <label for="asistente_relacion">Relación con el dueño:</label>
+              <select id="asistente_relacion" required>
+                <option value="Titular">Es el Propietario Titular</option>
+                <option value="Familiar">Familiar (Hijo/Hermano/Pareja)</option>
+                <option value="Paseador">Paseador / Tercero</option>
+                <option value="Rescatista">Rescatista (Caso callejero)</option>
+              </select>
+            </div>
+          </div>
+        </div>
+
+        <!-- Signos Vitales -->
+        <div class="reg-card">
+          <h3><i class="fas fa-heartbeat"></i> Signos Vitales</h3>
+          <div class="form-grid">
+            <div class="form-group">
+              <label for="peso_kg">Peso (Kg):</label>
+              <input type="number" step="0.01" id="peso_kg" placeholder="0.00" required>
+            </div>
+            <div class="form-group">
+              <label for="temperatura">Temperatura (°C):</label>
+              <input type="number" step="0.1" id="temperatura" placeholder="38.5" required>
+            </div>
+            <div class="form-group">
+              <label for="frecuencia_cardiaca">Frecuencia Cardíaca (LPM):</label>
+              <input type="number" id="frecuencia_cardiaca" placeholder="120" required>
+            </div>
+          </div>
+        </div>
+
+        <!-- Evaluación -->
+        <div class="reg-card">
+          <h3><i class="fas fa-file-medical"></i> Evaluación y Tratamiento</h3>
+          <div class="form-grid">
+            <div class="form-group full-width">
+              <label for="diagnostico">Diagnóstico Clínico:</label>
+              <textarea id="diagnostico" placeholder="Síntomas observados y dictamen médico..." required></textarea>
+            </div>
+            <div class="form-group full-width">
+              <label for="tratamiento">Tratamiento e Indicaciones:</label>
+              <textarea id="tratamiento" placeholder="Medicamentos, dosis y tratamiento ambulatorio..." required></textarea>
+            </div>
+            <div class="form-group full-width">
+              <label for="observaciones">Observaciones Internas:</label>
+              <textarea id="observaciones" placeholder="Notas adicionales o recordatorios confidenciales..."></textarea>
+            </div>
+            <div class="form-group">
+              <label for="prox_fecha">Próximo Control (Opcional):</label>
+              <input type="date" id="prox_fecha">
+            </div>
+          </div>
+        </div>
+
+        <div class="form-footer">
+          <button type="button" class="btn-atencion btn-gris" onclick="cancelarFlujo()">
+            <i class="fas fa-times"></i> Cancelar
+          </button>
+          <button type="button" class="btn-atencion btn-normal" id="btn-submit-clinico" onclick="procesarFormulario()">
+            <i class="fas fa-save"></i> Guardar Atención
+          </button>
+        </div>
+
+      </form>
+    </div><!-- /vista-formulario -->
+
+  </main>
+</div>
+
+<!-- ══════════════════ MODAL EMERGENCIA ══════════════════ -->
+<!--
+  Se muestra ANTES de que el formulario clínico sea visible.
+  El usuario llena datos mínimos del animal → se crea la mascota con
+  estado='sin_dueno' → se obtiene id_mascota → formulario clínico normal.
+-->
+<div id="modal-emergencia" class="modal-overlay hidden">
+  <div class="modal-box">
+    <h2><i class="fas fa-bolt"></i> Datos Rápidos del Paciente</h2>
+    <p class="modal-sub">
+      Completa la información mínima para identificar al animal antes de la consulta.
+      Podrás registrar al dueño más tarde desde la sección "Casos pendientes".
+    </p>
+
+    <form id="form-emergencia-rapida">
+
+      <div class="form-grid" style="margin-bottom:16px;">
+        <div class="form-group full-width">
+          <label for="em_nombre">Nombre provisional <span style="color:#e63946">*</span></label>
+          <input type="text" id="em_nombre" placeholder="Ej. Callejero, Peludo, Sin nombre..." required>
+        </div>
+        <div class="form-group">
+          <label for="em_especie">Especie <span style="color:#e63946">*</span></label>
+          <select id="em_especie" required>
+            <option value="">— Seleccionar —</option>
+            <!-- Se llenan dinámicamente desde get_especies.php -->
+          </select>
+        </div>
+        <div class="form-group">
+          <label for="em_color">Color predominante</label>
+          <select id="em_color">
+            <option value="">— Seleccionar —</option>
+            <!-- Se llenan dinámicamente desde get_colores.php si existe, o manual -->
+          </select>
+          
+        </div>
+
+        
+        <div class="form-group">
+          <label for="em_peso">Peso aprox. (Kg)</label>
+          <input type="number" step="0.1" id="em_peso" placeholder="0.0">
+        </div>
+        <div class="form-group full-width">
+          <label for="em_descripcion">Señas / Descripción física</label>
+          <textarea id="em_descripcion" placeholder="Color, marcas, collar, estado de salud aparente..." style="min-height:70px;"></textarea>
+        </div>
+      </div>
+
+      <div class="modal-footer">
+        <button type="button" class="btn-atencion btn-gris" onclick="cancelarEmergencia()">
+          <i class="fas fa-times"></i> Cancelar
+        </button>
+        <button type="submit" class="btn-atencion btn-emergencia" id="btn-crear-provisional">
+          <i class="fas fa-arrow-right"></i> Continuar a consulta
+        </button>
+      </div>
+
+    </form>
+  </div>
+</div>
+
+<div class="panel-toast" id="panel-toast"></div>
+
+<script>
+/* ═══════════════════════════════════════════════════════════
+   registrar_atencion.html — Script inline
+   Lee parámetros de URL para los modos: Normal | Directa | Emergencia
+═══════════════════════════════════════════════════════════ */
+
+let modoActual            = 'Normal';
+let mascotaSeleccionadaId = null;
+let citaSeleccionadaId    = null;
+
+// ─── Parámetros de URL ────────────────────────────────────
+const params        = new URLSearchParams(window.location.search);
+const paramModo     = params.get('modo')       || 'Normal';
+const paramIdCita   = params.get('id_cita')    || null;
+const paramIdMasc   = params.get('id_mascota') || null;
+const paramNombre   = params.get('nombre')     || 'Paciente';
+const paramEspecie  = params.get('especie')    || '--';
+const paramRaza     = params.get('raza')       || '--';
+const paramFechaNac = params.get('fecha_nac')  || null;
+const paramFoto     = params.get('foto')       || null;
+const paramHora     = params.get('hora')       || '--:--';
+const paramMotivo   = params.get('motivo')     || 'Consulta general';
+
+// ─── DOMContentLoaded ─────────────────────────────────────
+document.addEventListener('DOMContentLoaded', () => {
+
+  // Fecha header
+  const fechaEl = document.getElementById('fecha-hoy');
+  if (fechaEl) fechaEl.textContent = new Date().toLocaleDateString('es-BO', {
+    weekday: 'long', year: 'numeric', month: 'long', day: 'numeric'
+  });
+
+  // Sidebar
+  document.getElementById('menu-toggle')?.addEventListener('click', () => {
+    document.getElementById('sidebar')?.classList.toggle('active');
+  });
+
+  // Hora de inicio
+  document.getElementById('clinical-hora-inicio').textContent = obtenerHoraActual();
+
+  modoActual            = paramModo;
+  mascotaSeleccionadaId = paramIdMasc ? parseInt(paramIdMasc) : null;
+  citaSeleccionadaId    = paramIdCita ? parseInt(paramIdCita) : null;
+
+  // Rellenar pet-card según modo
+  if (modoActual === 'Emergencia') {
+    // Mostrar modal antes de todo
+    cargarSelectoresModal();
+    document.getElementById('modal-emergencia').classList.remove('hidden');
+    // Pet-card provisional
+    document.getElementById('clinical-pet-name').textContent = 'Paciente de Emergencia';
+    document.getElementById('clinical-pet-meta').textContent = 'Completa los datos mínimos en el modal.';
+    document.getElementById('badge-tipo-consulta').classList.remove('hidden');
+    document.getElementById('pet-card').classList.add('mode-emergencia');
+    document.getElementById('origen-banner').classList.add('emergencia');
+    document.getElementById('origen-banner').querySelector('i').className = 'fas fa-bolt';
+    document.getElementById('origen-texto').textContent =
+      'Modo Emergencia — se creará una mascota provisional para atender de inmediato.';
+    document.getElementById('btn-submit-clinico').innerHTML = '<i class="fas fa-save"></i> Guardar Atención de Emergencia';
+
+  } else if (modoActual === 'Directa') {
+    document.getElementById('wrapper-buscador-directo').classList.remove('hidden');
+    document.getElementById('clinical-pet-name').textContent = 'Buscar Paciente';
+    document.getElementById('clinical-pet-meta').textContent = 'Usa el buscador para vincular al paciente.';
+    document.getElementById('origen-texto').textContent = 'Modo Atención Directa — busca la mascota registrada.';
+    document.getElementById('btn-submit-clinico').innerHTML = '<i class="fas fa-save"></i> Guardar Atención Médica';
+
+  } else {
+    // Normal (desde cita)
+    document.getElementById('clinical-pet-name').textContent = decodeURIComponent(paramNombre);
+    document.getElementById('clinical-pet-meta').textContent =
+      `Especie: ${decodeURIComponent(paramEspecie)} | Raza: ${decodeURIComponent(paramRaza)} | Edad: ${calcularEdad(paramFechaNac)}`;
+    if (paramFoto) document.getElementById('clinical-pet-foto').src = decodeURIComponent(paramFoto);
+    document.getElementById('origen-banner').innerHTML =
+      `<i class="fas fa-calendar-check" style="color:#2dc97e;"></i>
+       <span>Cita programada — ${decodeURIComponent(paramHora)} — Motivo: <strong>${decodeURIComponent(paramMotivo)}</strong></span>`;
+    document.getElementById('btn-submit-clinico').innerHTML = '<i class="fas fa-save"></i> Guardar Atención Médica';
+  }
+
+  // Submit del modal de emergencia
+  document.getElementById('form-emergencia-rapida').addEventListener('submit', crearMascotaProvisional);
+});
+
+// ─── Modal: cargar species y colores ─────────────────────
+function cargarSelectoresModal() {
+  // Especies
+  fetch('php/get_especies.php')
+    .then(r => r.json())
+    .then(data => {
+      const sel = document.getElementById('em_especie');
+      data.forEach(e => {
+        const opt = document.createElement('option');
+        opt.value = e.id_especie;
+        opt.textContent = e.nombre;
+        sel.appendChild(opt);
+      });
+    })
+    .catch(() => {
+      // Fallback manual si el endpoint no existe aún
+      const sel = document.getElementById('em_especie');
+      [['1','Perro'],['2','Gato'],['3','Conejo'],['4','Ave'],['5','Reptil']].forEach(([v,t]) => {
+        const opt = document.createElement('option');
+        opt.value = v; opt.textContent = t;
+        sel.appendChild(opt);
+      });
+    });
+
+  // Colores (si existe el endpoint, si no, fallback)
+  fetch('php/get_colores.php')
+    .then(r => r.json())
+    .then(data => {
+      const sel = document.getElementById('em_color');
+      data.forEach(c => {
+        const opt = document.createElement('option');
+        opt.value = c.id_color;
+        opt.textContent = c.nombre;
+        sel.appendChild(opt);
+      });
+    })
+    .catch(() => {
+      const sel = document.getElementById('em_color');
+      [['1','Negro'],['2','Blanco'],['3','Marrón'],['6','Café'],['13','Gris'],['5','Naranja']].forEach(([v,t]) => {
+        const opt = document.createElement('option');
+        opt.value = v; opt.textContent = t;
+        sel.appendChild(opt);
+      });
+    });
+}
+
+// ─── Crear mascota provisional (modal submit) ─────────────
+function crearMascotaProvisional(e) {
+  e.preventDefault();
+
+  const btn = document.getElementById('btn-crear-provisional');
+  btn.disabled = true;
+  btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Creando...';
+
+  const payload = {
+    nombre_provisional: document.getElementById('em_nombre').value.trim(),
+    id_especie:         parseInt(document.getElementById('em_especie').value) || null,
+    id_color:           parseInt(document.getElementById('em_color').value)   || null,
+    descripcion:        document.getElementById('em_descripcion').value.trim(),
+    peso_aprox:         parseFloat(document.getElementById('em_peso').value)  || null
+  };
+
+  fetch('php/registrar_emer_comp.php', {
+    method:  'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body:    JSON.stringify(payload)
+  })
+  .then(r => r.json())
+  .then(res => {
+    if (res.status !== 'success') {
+      alert('Error al crear la mascota: ' + res.message);
+      btn.disabled = false;
+      btn.innerHTML = '<i class="fas fa-arrow-right"></i> Continuar a consulta';
+      return;
+    }
+
+    // Mascota provisional creada → guardar id y cerrar modal
+    mascotaSeleccionadaId = res.id_mascota;
+
+    // Actualizar pet-card con nombre provisional
+    const nombreProv = document.getElementById('em_nombre').value.trim();
+    document.getElementById('clinical-pet-name').textContent = nombreProv + ' (provisional)';
+    document.getElementById('clinical-pet-meta').textContent =
+      'Mascota sin dueño registrado — atención de emergencia';
+
+    // Cerrar modal
+    document.getElementById('modal-emergencia').classList.add('hidden');
+
+    mostrarToast('Mascota provisional creada. Completa el formulario clínico.');
+  })
+  .catch(err => {
+    console.error(err);
+    alert('Error de conexión al crear la mascota provisional.');
+    btn.disabled = false;
+    btn.innerHTML = '<i class="fas fa-arrow-right"></i> Continuar a consulta';
+  });
+}
+
+// ─── Cancelar modal emergencia ────────────────────────────
+function cancelarEmergencia() {
+  if (confirm('¿Cancelar la atención de emergencia?')) {
+    window.location.href = 'atenciones.html';
+  }
+}
+
+// ─── Procesar formulario clínico ──────────────────────────
+function procesarFormulario() {
+  const form = document.getElementById('form-registro-clinico');
+
+  // Validar campos HTML5
+  if (!form.reportValidity()) return;
+
+  if (!mascotaSeleccionadaId) {
+    alert(modoActual === 'Directa'
+      ? 'Debes buscar y seleccionar una mascota antes de guardar.'
+      : 'Error: no hay mascota vinculada. Recarga la página.');
+    return;
+  }
+
+  const btn = document.getElementById('btn-submit-clinico');
+  btn.disabled = true;
+  btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Guardando...';
+
+  const formData = new FormData();
+  formData.append('id_cita',             citaSeleccionadaId ?? '');
+  formData.append('id_mascota',          mascotaSeleccionadaId);
+  formData.append('asistente_nombre',    document.getElementById('asistente_nombre').value);
+  formData.append('asistente_relacion',  document.getElementById('asistente_relacion').value);
+  formData.append('peso_kg',             document.getElementById('peso_kg').value);
+  formData.append('temperatura',         document.getElementById('temperatura').value);
+  formData.append('frecuencia_cardiaca', document.getElementById('frecuencia_cardiaca').value);
+  formData.append('diagnostico',         document.getElementById('diagnostico').value);
+  formData.append('tratamiento',         document.getElementById('tratamiento').value);
+  formData.append('observaciones',       document.getElementById('observaciones').value);
+  formData.append('prox_fecha',          document.getElementById('prox_fecha').value);
+  formData.append('tipo_atencion',       modoActual === 'Emergencia' ? 'Emergencia' : 'Consulta');
+  formData.append('hora_inicio',         document.getElementById('clinical-hora-inicio').textContent);
+  formData.append('hora_fin',            obtenerHoraActual());
+
+  fetch('php/guardar_atencion.php', { method: 'POST', body: formData })
+    .then(r => r.json())
+    .then(res => {
+      if (res.status === 'success') {
+        mostrarToast('¡Atención registrada correctamente!');
+        setTimeout(() => { window.location.href = 'atenciones.html'; }, 1800);
+      } else {
+        alert('Error: ' + res.message);
+        btn.disabled = false;
+        btn.innerHTML = '<i class="fas fa-save"></i> Guardar Atención';
+      }
+    })
+    .catch(err => {
+      console.error(err);
+      btn.disabled = false;
+      btn.innerHTML = '<i class="fas fa-save"></i> Guardar Atención';
+    });
+}
+
+// ─── Cancelar flujo completo ──────────────────────────────
+function cancelarFlujo() {
+  if (confirm('¿Seguro que desea salir? Se perderán los datos del formulario.')) {
+    window.location.href = 'atenciones.html';
+  }
+}
+
+// ─── Buscador modo Directa ────────────────────────────────
+function buscarMascotaDirecta() {
+  const q    = document.getElementById('input-buscar-paciente').value.trim();
+  const caja = document.getElementById('resultado-busqueda-directa');
+  if (!q) return;
+
+  caja.innerHTML = `<p style="color:var(--texto-suave);font-size:.85rem;"><i class="fas fa-spinner fa-spin"></i> Buscando...</p>`;
+
+  fetch(`php/get_mascotas.php?q=${encodeURIComponent(q)}`)
+    .then(r => r.json())
+    .then(data => {
+      caja.innerHTML = '';
+      if (!data.length) {
+        caja.innerHTML = `<p style="color:#e63946;font-size:.85rem;">No se encontraron mascotas.</p>`;
+        return;
+      }
+      data.forEach(m => {
+        const div = document.createElement('div');
+        div.style.cssText = 'background:#fff;padding:10px;border-radius:6px;margin-bottom:6px;display:flex;justify-content:space-between;align-items:center;border:1px solid #ddd;';
+        div.innerHTML = `
+          <div>
+            <strong>${m.nombre}</strong> (${m.especie} - ${m.raza})
+            <br><span style="font-size:.8rem;color:#666;">Dueño: ${m.nombre_dueno || 'Registrado'}</span>
+          </div>
+          <button type="button" class="btn-atencion btn-normal" style="padding:6px 14px;font-size:.82rem;">Seleccionar</button>
+        `;
+        div.querySelector('button').addEventListener('click', () => {
+          seleccionarMascotaManual(m.id_mascota, m.nombre, m.especie, m.raza, m.fecha_nacimiento, m.foto);
+        });
+        caja.appendChild(div);
+      });
+    })
+    .catch(err => console.error(err));
+}
+
+function seleccionarMascotaManual(id, nombre, especie, raza, fNac, foto) {
+  mascotaSeleccionadaId = id;
+  document.getElementById('clinical-pet-name').textContent = nombre;
+  document.getElementById('clinical-pet-meta').textContent =
+    `Especie: ${especie} | Raza: ${raza} | Edad: ${calcularEdad(fNac)}`;
+  if (foto) document.getElementById('clinical-pet-foto').src = foto;
+  document.getElementById('resultado-busqueda-directa').innerHTML =
+    `<p style="color:#2a9d8f;font-weight:bold;font-size:.85rem;"><i class="fas fa-check-circle"></i> Vinculado a ${nombre}.</p>`;
+}
+
+// ─── Utils ────────────────────────────────────────────────
+function obtenerHoraActual() {
+  return new Date().toTimeString().split(' ')[0].substring(0, 5);
+}
+
+function calcularEdad(fechaNacimiento) {
+  if (!fechaNacimiento) return '--';
+  const cumple = new Date(fechaNacimiento);
+  const hoy    = new Date();
+  let anos  = hoy.getFullYear() - cumple.getFullYear();
+  let meses = hoy.getMonth()    - cumple.getMonth();
+  if (meses < 0 || (meses === 0 && hoy.getDate() < cumple.getDate())) { anos--; meses += 12; }
+  return anos === 0 ? `${meses} meses` : `${anos} años, ${meses} meses`;
+}
+
+function mostrarToast(msg) {
+  const t = document.getElementById('panel-toast');
+  if (!t) return;
+  t.textContent = msg;
+  t.classList.add('show');
+  setTimeout(() => t.classList.remove('show'), 3500);
+}
+
+</script>
+  <script src="js/atenciones.js"></script>
+  <script src="js/validaciones.js"></script>
+</body>
+</html>

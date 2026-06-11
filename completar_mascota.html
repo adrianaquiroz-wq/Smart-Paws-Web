@@ -1,0 +1,307 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Smart Paws — Completar Datos de Mascota</title>
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="css/chatbot.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body class="form-page">
+
+  <div class="form-topbar">
+    <h3><i class="fas fa-paw" style="margin-right:8px;"></i>Completar Datos de Mascota</h3>
+    <a href="atenciones.html" id="btn-volver">
+      <i class="fas fa-arrow-left"></i> Volver a atenciones
+    </a>
+  </div>
+
+  <div class="form-body">
+    <div class="form-card">
+
+      <!-- Encabezado con nombre de la mascota -->
+      <div id="mascota-header" style="display:flex;align-items:center;gap:16px;margin-bottom:20px;">
+        <div id="header-avatar" style="
+          width:60px;height:60px;border-radius:50%;
+          background:#d8f3e6;border:2.5px solid #2dc97e;
+          display:flex;align-items:center;justify-content:center;
+          color:#0f5132;font-size:1.6rem;flex-shrink:0;">
+          <i class="fas fa-paw"></i>
+        </div>
+        <div>
+          <h2 id="header-nombre" style="margin:0;font-size:1.2rem;color:#0f5132;">Cargando...</h2>
+          <p class="form-subtitle" style="margin:4px 0 0;">
+            Completa la información clínica del paciente de emergencia.
+          </p>
+        </div>
+      </div>
+
+      <!-- Mensaje de estado -->
+      <div id="msg-estado" style="
+        display:none;padding:10px 16px;border-radius:8px;
+        font-size:.87rem;font-weight:600;margin-bottom:16px;text-align:center;">
+      </div>
+
+      <form id="form-completar" enctype="multipart/form-data" class="field-group">
+        <input type="hidden" id="id_mascota">
+
+        <!-- Especie + Raza -->
+        <div class="field-row">
+          <div class="field">
+            <label>Especie <span style="color:#e63946">*</span></label>
+            <select id="especie" name="id_especie" onchange="cmCargarRazas()" required>
+              <option value="">Seleccione...</option>
+              <option value="1">Perro</option>
+              <option value="2">Gato</option>
+              <option value="3">Conejo</option>
+              <option value="4">Ave</option>
+              <option value="5">Reptil</option>
+            </select>
+          </div>
+          <div class="field">
+            <label>Raza <span style="color:#e63946">*</span></label>
+            <select id="raza" name="id_raza" required>
+              <option value="">Elige especie primero</option>
+            </select>
+          </div>
+        </div>
+
+        <!-- Color + Tamaño -->
+        <div class="field-row">
+          <div class="field">
+            <label>Color</label>
+            <select id="id_color" name="id_color">
+              <option value="">Seleccione...</option>
+              <option value="1">Negro</option>
+              <option value="2">Blanco</option>
+              <option value="3">Marrón</option>
+              <option value="5">Naranja</option>
+              <option value="6">Café</option>
+              <option value="7">Rojo</option>
+              <option value="8">Azul</option>
+              <option value="9">Amarillo</option>
+              <option value="10">Celeste</option>
+              <option value="11">Verde</option>
+              <option value="12">Rosa</option>
+              <option value="13">Gris</option>
+            </select>
+          </div>
+          <div class="field">
+            <label>Tamaño</label>
+            <select id="tamano" name="tamano">
+              <option value="">Seleccione...</option>
+              <option value="Pequeño">Pequeño</option>
+              <option value="Mediano">Mediano</option>
+              <option value="Grande">Grande</option>
+            </select>
+          </div>
+        </div>
+
+        <!-- Fecha de nacimiento -->
+        <div class="field">
+          <label>Fecha de nacimiento</label>
+          <input type="date" id="fecha_nacimiento" name="fecha_nacimiento">
+        </div>
+
+        <!-- Alergias -->
+        <div class="field">
+          <label>Alergias conocidas</label>
+          <textarea id="alergias" name="alergias" rows="2"
+            placeholder="Ninguna / Detallar medicamentos o sustancias a evitar..."></textarea>
+        </div>
+
+        <!-- Descripción -->
+        <div class="field">
+          <label>Descripción / observaciones</label>
+          <textarea id="descripcion" name="descripcion" rows="2"
+            placeholder="Características físicas o clínicas relevantes..."></textarea>
+        </div>
+
+        <!-- Foto -->
+        <div class="field">
+          <label>Foto de la mascota</label>
+          <input type="file" name="foto" accept="image/*" onchange="cmPreviewImg(event)">
+          <div class="preview">
+            <img id="img-preview" src="img/default.png" alt="Vista previa de la mascota">
+          </div>
+          <p style="font-size:0.75rem;color:var(--texto-suave);margin-top:8px;text-align:center;">
+            Selecciona una imagen de la mascota (JPG, PNG, WEBP)
+          </p>
+        </div>
+
+        <button type="submit" class="btn-submit" id="btn-guardar">
+          <i class="fas fa-save" style="margin-right:8px;"></i>Guardar datos
+        </button>
+
+      </form>
+    </div>
+  </div>
+
+  <script src="js/chatbot.js"></script>
+  <script>
+  // ══════════════════════════════════════════════════
+  // Leer id_mascota de la URL
+  // ══════════════════════════════════════════════════
+  const params     = new URLSearchParams(window.location.search);
+  const ID_MASCOTA = params.get('id_mascota');
+
+  document.addEventListener('DOMContentLoaded', () => {
+    if (!ID_MASCOTA) {
+      mostrarEstado('No se recibió el ID de la mascota. Volvé a Atenciones.', 'err');
+      document.getElementById('btn-guardar').disabled = true;
+      return;
+    }
+    document.getElementById('id_mascota').value = ID_MASCOTA;
+    cargarDatosMascota();
+  });
+
+  // ══════════════════════════════════════════════════
+  // Cargar datos existentes de la mascota
+  // ══════════════════════════════════════════════════
+  function cargarDatosMascota() {
+    fetch('php/get_mascota_detalle.php?id_mascota=' + ID_MASCOTA)
+      .then(r => r.json())
+      .then(m => {
+        if (!m || m.error) {
+          mostrarEstado('No se encontró la mascota.', 'err');
+          return;
+        }
+
+        // Encabezado
+        document.getElementById('header-nombre').textContent = m.nombre;
+        if (m.foto) {
+          document.getElementById('header-avatar').innerHTML =
+            `<img src="${m.foto}" style="width:60px;height:60px;border-radius:50%;object-fit:cover;">`;
+          document.getElementById('img-preview').src = m.foto;
+        }
+
+        // Pre-rellenar campos si ya tienen datos
+        if (m.id_color)         document.getElementById('id_color').value        = m.id_color;
+        if (m.tamano)           document.getElementById('tamano').value           = m.tamano;
+        if (m.fecha_nacimiento) document.getElementById('fecha_nacimiento').value = m.fecha_nacimiento;
+        if (m.alergias)         document.getElementById('alergias').value         = m.alergias;
+        if (m.descripcion)      document.getElementById('descripcion').value      = m.descripcion;
+
+        // Si ya tiene raza/especie, pre-seleccionar
+        if (m.id_especie) {
+          document.getElementById('especie').value = m.id_especie;
+          cmCargarRazas(m.id_raza); // carga razas y luego selecciona la correcta
+        }
+      })
+      .catch(() => mostrarEstado('Error al cargar los datos de la mascota.', 'err'));
+  }
+
+  // ══════════════════════════════════════════════════
+  // Cargar razas según especie
+  // ══════════════════════════════════════════════════
+  function cmCargarRazas(preseleccionarId = null) {
+    const idEspecie = document.getElementById('especie').value;
+    const sel       = document.getElementById('raza');
+    sel.innerHTML   = '<option value="">Cargando...</option>';
+
+    if (!idEspecie) {
+      sel.innerHTML = '<option value="">Elige especie primero</option>';
+      return;
+    }
+
+    fetch('php/get_razas.php?id_especie=' + idEspecie)
+      .then(r => r.json())
+      .then(razas => {
+        sel.innerHTML = '<option value="">Seleccione raza...</option>';
+        razas.forEach(r => {
+          const opt = document.createElement('option');
+          opt.value       = r.id_raza;
+          opt.textContent = r.nombre;
+          if (preseleccionarId && parseInt(r.id_raza) === parseInt(preseleccionarId)) {
+            opt.selected = true;
+          }
+          sel.appendChild(opt);
+        });
+      })
+      .catch(() => {
+        sel.innerHTML = '<option value="">Error al cargar razas</option>';
+      });
+  }
+
+  // ══════════════════════════════════════════════════
+  // Preview de foto
+  // ══════════════════════════════════════════════════
+  function cmPreviewImg(event) {
+    const file = event.target.files[0];
+    if (!file) return;
+    const reader = new FileReader();
+    reader.onload = e => {
+      document.getElementById('img-preview').src = e.target.result;
+      // También actualizar el avatar del header
+      document.getElementById('header-avatar').innerHTML =
+        `<img src="${e.target.result}" style="width:60px;height:60px;border-radius:50%;object-fit:cover;">`;
+    };
+    reader.readAsDataURL(file);
+  }
+
+  // ══════════════════════════════════════════════════
+  // Enviar formulario → completar_mascota.php
+  // ══════════════════════════════════════════════════
+  document.getElementById('form-completar').addEventListener('submit', function(e) {
+    e.preventDefault();
+
+    const idRaza = document.getElementById('raza').value;
+    if (!idRaza) {
+      mostrarEstado('Seleccioná la especie y la raza antes de guardar.', 'err');
+      return;
+    }
+
+    const btn = document.getElementById('btn-guardar');
+    btn.disabled  = true;
+    btn.innerHTML = '<i class="fas fa-spinner fa-spin" style="margin-right:8px;"></i>Guardando...';
+
+    const fd = new FormData();
+    fd.append('id_mascota',       document.getElementById('id_mascota').value);
+    fd.append('id_raza',          idRaza);
+    fd.append('id_color',         document.getElementById('id_color').value);
+    fd.append('tamano',           document.getElementById('tamano').value);
+    fd.append('fecha_nacimiento', document.getElementById('fecha_nacimiento').value);
+    fd.append('alergias',         document.getElementById('alergias').value);
+    fd.append('descripcion',      document.getElementById('descripcion').value);
+
+    const fotoFile = document.querySelector('input[name="foto"]').files[0];
+    if (fotoFile) fd.append('foto', fotoFile);
+
+    fetch('php/completar_mascota.php', { method: 'POST', body: fd })
+      .then(r => r.json())
+      .then(data => {
+        if (data.status === 'success') {
+          mostrarEstado('✓ Datos guardados correctamente.', 'ok');
+          btn.innerHTML = '<i class="fas fa-check" style="margin-right:8px;"></i>¡Guardado!';
+          // Volver a atenciones tras 1.8s
+          setTimeout(() => {
+            window.location.href = 'atenciones.html';
+          }, 1800);
+        } else {
+          mostrarEstado('✗ ' + data.message, 'err');
+          btn.disabled  = false;
+          btn.innerHTML = '<i class="fas fa-save" style="margin-right:8px;"></i>Guardar datos';
+        }
+      })
+      .catch(() => {
+        mostrarEstado('Error de conexión. Intentá de nuevo.', 'err');
+        btn.disabled  = false;
+        btn.innerHTML = '<i class="fas fa-save" style="margin-right:8px;"></i>Guardar datos';
+      });
+  });
+
+  // ══════════════════════════════════════════════════
+  // Mensaje de estado
+  // ══════════════════════════════════════════════════
+  function mostrarEstado(texto, tipo) {
+    const el = document.getElementById('msg-estado');
+    el.textContent   = texto;
+    el.style.display = 'block';
+    el.style.background = tipo === 'ok' ? '#d8f3e6' : '#ffe0e3';
+    el.style.color      = tipo === 'ok' ? '#0f5132' : '#9b1b2a';
+    if (tipo === 'ok') setTimeout(() => { el.style.display = 'none'; }, 3000);
+  }
+  </script>
+</body>
+</html>

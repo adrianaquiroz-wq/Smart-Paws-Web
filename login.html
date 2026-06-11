@@ -1,0 +1,181 @@
+<!--login.html-->
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Smart Paws — Acceso</title>
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="css/chatbot.css">
+  <link rel="stylesheet" href="css/theme.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+  <script src="js/theme.js"></script>
+  <script src="js/validaciones.js"></script> <!--Validaciones de formularios-->
+  <script src="js/translation.js"></script>
+</head>
+<body>
+
+  <a href="index.html" class="auth-back" data-translate="nav-back-home"><i class="fas fa-arrow-left"></i> Volver al inicio</a>
+
+  <div class="auth-page">
+    <div class="auth-wrapper">
+      <div class="auth-logo">
+        <img src="img/logo.jpg" alt="Smart Paws">
+        <h2>Smart Paws</h2>
+        <p data-translate="auth-subtitle">Veterinaria digital en La Paz</p>
+      </div>
+
+      <div class="auth-card">
+        <div class="tab-group">
+          <button class="tab-btn active" onclick="switchTab('login')" data-translate="auth-tab-login">Ingresar</button>
+          <button class="tab-btn" onclick="switchTab('registro')" data-translate="auth-tab-register">Registrarse</button>
+        </div>
+
+        <!-- LOGIN -->
+        <div id="section-login">
+          <form class="input-group" action="login.php" method="POST">
+            <input type="text" id="login-usuario" name="usuario" data-translate-placeholder="login-usuario" placeholder="Correo electrónico" required>
+            <input type="password" id="login-pass" name="contrasena" data-translate-placeholder="login-pass" placeholder="Contraseña" required>
+            
+            <select id="rol-login" name="rol" onchange="toggleCamposLoginVet(this.value)">
+              <option value="cliente" data-translate="auth-login-role-client">🐾 Soy Cliente</option>
+              <option value="veterinario" data-translate="auth-login-role-vet">🩺 Soy Veterinario</option>
+            </select>
+
+            <!-- Campos dinámicos para cuando un usuario quiera activar su perfil de veterinario -->
+            <div id="login-campos-vet" style="display: none; flex-direction: column; gap: inherit; width: 100%;">
+              <input type="text" id="login-especialidad" name="especialidad" data-translate-placeholder="login-especialidad" placeholder="Especialidad veterinaria">
+              <input type="text" id="login-matricula" name="matricula" data-translate-placeholder="login-matricula" placeholder="Matrícula profesional">
+            </div>
+
+            <button type="submit" class="btn-principal" data-translate="auth-login-btn">Entrar</button>
+          </form>
+          <p style="text-align:center;margin-top:14px;">
+            <a href="#" id="link-olvide" style="color:var(--verde-medio);font-size:.85rem;font-weight:600;" data-translate="auth-forgot-pass">
+              <i class="fas fa-key"></i> ¿Olvidaste tu contraseña?
+            </a>
+          </p>
+        </div>
+
+        <!-- RECUPERAR CONTRASEÑA — PASO 1: Ingresar correo + CAPTCHA -->
+        <div id="section-recuperar" class="hidden">
+          <p style="text-align:center;margin-bottom:18px;color:var(--texto-suave);font-size:.9rem;" data-translate="auth-recover-sub">
+            Ingresa tu correo y te enviaremos un código de verificación.
+          </p>
+          <form class="input-group" id="form-recuperar">
+            <input type="email" id="recup-correo" data-translate-placeholder="recup-correo" placeholder="Correo electrónico" required>
+            <!-- CAPTCHA matemático local (sin internet) -->
+            <div style="background:#f8faf9;border:1.5px solid var(--arena);border-radius:var(--radio-sm);padding:14px 18px;display:flex;align-items:center;gap:14px;">
+              <span id="captcha-pregunta" style="font-size:1.1rem;font-weight:700;color:var(--verde-oscuro);min-width:90px;"></span>
+              <input type="number" id="captcha-respuesta" data-translate-placeholder="captcha-respuesta" placeholder="Tu respuesta" style="flex:1;padding:10px 14px;border:1.5px solid var(--arena);border-radius:var(--radio-sm);font-size:.95rem;outline:none;" required>
+              <button type="button" onclick="generarCaptcha()" title="Nuevo CAPTCHA" style="background:none;border:none;cursor:pointer;color:var(--verde-medio);font-size:1.2rem;">🔄</button>
+            </div>
+            <button type="submit" class="btn-principal" data-translate="auth-captcha-btn">
+              <i class="fas fa-paper-plane"></i> Enviar código
+            </button>
+            <button type="button" class="btn-volver" onclick="volverALogin()" data-translate="auth-captcha-back">
+              <i class="fas fa-arrow-left"></i> Volver al login
+            </button>
+          </form>
+        </div>
+
+        <!-- RECUPERAR CONTRASEÑA — PASO 2: Verificar código -->
+        <div id="section-verificar" class="hidden">
+          <p style="text-align:center;margin-bottom:6px;color:var(--texto-suave);font-size:.9rem;" data-translate="auth-verify-sub">
+            Ingresa el código de 6 dígitos enviado a tu correo.
+          </p>
+          <p id="recup-correo-display" style="text-align:center;font-weight:700;color:var(--verde-oscuro);margin-bottom:18px;font-size:.88rem;"></p>
+          <form class="input-group" id="form-verificar">
+            <input type="text" id="codigo-input" data-translate-placeholder="codigo-input" placeholder="● ● ● ● ● ●"
+              maxlength="6" style="text-align:center;font-size:1.5rem;letter-spacing:8px;font-weight:700;" required>
+            <button type="submit" class="btn-principal" data-translate="auth-verify-btn">
+              <i class="fas fa-check-circle"></i> Verificar código
+            </button>
+            <button type="button" class="btn-volver" onclick="volverRecuperar()" data-translate="auth-verify-resend">
+              <i class="fas fa-redo"></i> Reenviar código
+            </button>
+          </form>
+        </div>
+
+        <!-- RECUPERAR CONTRASEÑA — PASO 3: Nueva contraseña -->
+        <div id="section-nueva-pass" class="hidden">
+          <p style="text-align:center;margin-bottom:18px;color:var(--texto-suave);font-size:.9rem;" data-translate="auth-newpass-sub">
+            Crea tu nueva contraseña.
+          </p>
+          <form class="input-group" id="form-nueva-pass">
+            <div style="position:relative;">
+              <input type="password" id="nueva-pass" data-translate-placeholder="nueva-pass" placeholder="Nueva contraseña" required style="padding-right:46px;">
+              <span onclick="togglePass('nueva-pass',this)" style="position:absolute;right:14px;top:50%;transform:translateY(-50%);cursor:pointer;color:var(--texto-suave);">
+                <i class="fas fa-eye"></i>
+              </span>
+            </div>
+            <div style="position:relative;">
+              <input type="password" id="confirmar-pass" data-translate-placeholder="confirmar-pass" placeholder="Confirmar contraseña" required style="padding-right:46px;">
+              <span onclick="togglePass('confirmar-pass',this)" style="position:absolute;right:14px;top:50%;transform:translateY(-50%);cursor:pointer;color:var(--texto-suave);">
+                <i class="fas fa-eye"></i>
+              </span>
+            </div>
+            <!-- Indicador de fuerza -->
+            <div id="pass-strength-bar" style="height:5px;border-radius:4px;background:#e0e0e0;transition:.3s;">
+              <div id="pass-strength-fill" style="height:100%;border-radius:4px;width:0;transition:.4s;"></div>
+            </div>
+            <p id="pass-strength-txt" style="font-size:.78rem;color:var(--texto-suave);margin-top:-8px;"></p>
+            <button type="submit" class="btn-principal" data-translate="auth-newpass-btn">
+              <i class="fas fa-lock"></i> Actualizar contraseña
+            </button>
+          </form>
+        </div>
+
+        <!-- REGISTRO -->
+        <div id="section-registro" class="hidden">
+          <form class="input-group" id="form-registro">
+            <select id="reg-rol">
+              <option value="cliente" data-translate="auth-reg-role-client">Crear cuenta de Cliente</option>
+              <option value="veterinario" data-translate="auth-reg-role-vet">Solicitar cuenta de Veterinario</option>
+            </select>
+            <input type="number" id="reg-carnet" data-translate-placeholder="reg-carnet" placeholder="Carnet de Identidad" required>
+            <input type="text" id="reg-nombre" data-translate-placeholder="reg-nombre" placeholder="Nombres" required>
+            <input type="text" id="reg-apellido" data-translate-placeholder="reg-apellido" placeholder="Apellidos" required>
+            <input type="email" id="reg-correo" data-translate-placeholder="reg-correo" placeholder="Correo electrónico" required>
+            <input type="password" id="reg-pass" data-translate-placeholder="reg-pass" placeholder="Crear contraseña" required>
+            <input type="tel" id="reg-celular" data-translate-placeholder="reg-celular" placeholder="Celular">
+            <input type="text" id="reg-direccion" data-translate-placeholder="reg-direccion" placeholder="Direccion">
+            <div id="campos-veterinario" class="hidden">
+              <input type="text" id="reg-especialidad" data-translate-placeholder="reg-especialidad" placeholder="Especialidad veterinaria">
+              <input type="text" id="reg-matricula" data-translate-placeholder="reg-matricula" placeholder="Matricula profesional">
+              <p style="font-size:.78rem;color:var(--texto-suave);text-align:center;line-height:1.5;" data-translate="auth-reg-vet-note">
+                Las cuentas de veterinario quedan pendientes hasta que la administracion las apruebe.
+              </p>
+            </div>
+            <p id="registro-ayuda" style="font-size:.8rem;color:var(--texto-suave);text-align:center;" data-translate="auth-reg-help">
+              Selecciona el tipo de cuenta que deseas crear.
+            </p>
+            <button type="submit" class="btn-principal" data-translate="auth-reg-btn">Crear cuenta</button>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script src="js/auth.js"></script>
+  <script src="js/chatbot.js"></script>
+  <script src="js/theme.js"></script>
+  <script>
+    function toggleCamposLoginVet(rol) {
+      const camposVet = document.getElementById('login-campos-vet');
+      const esp = document.getElementById('login-especialidad');
+      const mat = document.getElementById('login-matricula');
+      
+      if (rol === 'veterinario') {
+        camposVet.style.display = 'flex';
+        esp.required = true;
+        mat.required = true;
+      } else {
+        camposVet.style.display = 'none';
+        esp.required = false;
+        mat.required = false;
+      }
+    }
+  </script>
+</body>
+</html>

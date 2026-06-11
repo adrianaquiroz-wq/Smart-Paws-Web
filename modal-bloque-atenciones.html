@@ -1,0 +1,268 @@
+<!-- ══════════════════════════════════════════════════════════
+     PASO 1: Pegá estos estilos DENTRO del <style> que ya tenés
+     en atenciones.html (al final, antes del </style>)
+     ══════════════════════════════════════════════════════════ -->
+<style>
+  /* ── Tarjeta resumen mascota ── */
+  .resumen-mascota-card {
+    background: #f0faf5; border: 1.5px solid #b7e4c7; border-radius: 10px;
+    padding: 12px 16px; margin-bottom: 16px;
+    display: flex; align-items: center; justify-content: space-between;
+    gap: 12px; flex-wrap: wrap;
+  }
+  .resumen-mascota-card .rm-info { display: flex; align-items: center; gap: 12px; flex: 1; }
+  .resumen-mascota-card .rm-avatar {
+    width: 46px; height: 46px; border-radius: 50%;
+    object-fit: cover; border: 2px solid #2dc97e; flex-shrink: 0;
+  }
+  .resumen-mascota-card .rm-avatar-icon {
+    width: 46px; height: 46px; border-radius: 50%;
+    background: #d8f3e6; border: 2px solid #2dc97e;
+    display: flex; align-items: center; justify-content: center;
+    color: #0f5132; font-size: 1.3rem; flex-shrink: 0;
+  }
+  .resumen-mascota-card .rm-nombre { font-weight: 700; color: #0f5132; font-size: .97rem; }
+  .resumen-mascota-card .rm-meta   { font-size: .78rem; color: #555; margin-top: 2px; }
+
+  /* ── Botón editar animal ── */
+  .btn-editar-animal {
+    background: none; border: 1.5px solid #0f5132; color: #0f5132;
+    padding: 6px 14px; border-radius: 7px; font-size: .8rem; font-weight: 700;
+    cursor: pointer; display: inline-flex; align-items: center; gap: 6px;
+    transition: background .18s, color .18s; white-space: nowrap; flex-shrink: 0;
+  }
+  .btn-editar-animal:hover, .btn-editar-animal.activo { background: #0f5132; color: #fff; }
+
+  /* ── Panel colapsable editar animal ── */
+  .panel-editar-animal {
+    overflow: hidden; max-height: 0; opacity: 0;
+    transition: max-height .38s ease, opacity .3s ease, margin .3s ease;
+    margin-bottom: 0;
+  }
+  .panel-editar-animal.abierto { max-height: 1000px; opacity: 1; margin-bottom: 8px; }
+  .panel-editar-inner {
+    background: #fafffe; border: 1.5px dashed #b7e4c7;
+    border-radius: 10px; padding: 18px 16px 14px;
+  }
+  .ea-titulo {
+    font-size: .82rem; font-weight: 700; color: #0f5132;
+    margin-bottom: 14px; display: flex; align-items: center; gap: 7px;
+  }
+  .ea-titulo i { color: #2dc97e; }
+  .ea-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+  .ea-grid .full { grid-column: 1 / -1; }
+  .ea-group { display: flex; flex-direction: column; gap: 3px; }
+  .ea-group label { font-size: .75rem; font-weight: 600; color: #444; }
+  .ea-group input, .ea-group select, .ea-group textarea {
+    padding: 7px 11px; border: 1.5px solid #d0d7de; border-radius: 7px;
+    font-size: .87rem; background: #fff; transition: border-color .2s; font-family: inherit;
+  }
+  .ea-group input:focus, .ea-group select:focus, .ea-group textarea:focus {
+    outline: none; border-color: #2dc97e;
+  }
+  .ea-group textarea { resize: vertical; min-height: 54px; }
+
+  /* foto */
+  .ea-foto-row { display: flex; align-items: center; gap: 14px; }
+  .ea-foto-preview {
+    width: 64px; height: 64px; border-radius: 10px;
+    object-fit: cover; border: 2px solid #b7e4c7; flex-shrink: 0;
+  }
+  .ea-foto-input { flex: 1; }
+
+  /* botón guardar animal */
+  .btn-guardar-animal {
+    margin-top: 14px; width: 100%; padding: 9px;
+    background: #2dc97e; color: #fff; border: none;
+    border-radius: 8px; font-size: .88rem; font-weight: 700;
+    cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 7px;
+    transition: opacity .2s, transform .1s;
+  }
+  .btn-guardar-animal:hover { opacity: .88; transform: translateY(-1px); }
+  .btn-guardar-animal:disabled { opacity: .5; cursor: not-allowed; transform: none; }
+
+  /* mensaje inline */
+  .ea-msg {
+    font-size: .8rem; font-weight: 600; text-align: center;
+    padding: 6px; border-radius: 6px; margin-top: 8px; display: none;
+  }
+  .ea-msg.ok  { background: #d8f3e6; color: #0f5132; }
+  .ea-msg.err { background: #ffe0e3; color: #9b1b2a; }
+
+  @media (max-width: 500px) {
+    .ea-grid { grid-template-columns: 1fr; }
+    .resumen-mascota-card { flex-direction: column; align-items: flex-start; }
+    .btn-editar-animal { width: 100%; justify-content: center; }
+  }
+</style>
+
+
+<!-- ══════════════════════════════════════════════════════════
+     PASO 2: Reemplazá el <div id="modal-completar" ...> entero
+     en atenciones.html con este bloque
+     ══════════════════════════════════════════════════════════ -->
+
+<div id="modal-completar" class="modal-overlay hidden">
+  <div class="modal-box">
+
+    <h2><i class="fas fa-user-check"></i> Completar Registro del Paciente</h2>
+    <p class="modal-sub">
+      Ingresa los datos del propietario para vincular la mascota y activar su registro completo.
+    </p>
+
+    <!-- ── Tarjeta resumen + botón Editar animal ── -->
+    <div class="resumen-mascota-card" id="modal-resumen-mascota">
+      <!-- Rellenado por abrirModalCompletar() en atenciones.js -->
+    </div>
+
+    <!-- ── Panel colapsable: datos del animal ── -->
+    <div class="panel-editar-animal" id="panel-editar-animal">
+      <div class="panel-editar-inner">
+        <p class="ea-titulo"><i class="fas fa-paw"></i> Datos del animal</p>
+
+        <div class="ea-grid">
+
+          <div class="ea-group">
+            <label>Especie</label>
+            <select id="ea-especie" onchange="eaCargarRazas()">
+              <option value="">Seleccione...</option>
+              <option value="1">Perro</option>
+              <option value="2">Gato</option>
+              <option value="3">Conejo</option>
+              <option value="4">Ave</option>
+              <option value="5">Reptil</option>
+            </select>
+          </div>
+
+          <div class="ea-group">
+            <label>Raza</label>
+            <select id="ea-raza" name="id_raza">
+              <option value="">Elige especie primero</option>
+            </select>
+          </div>
+
+          <div class="ea-group">
+            <label>Color</label>
+            <select id="ea-color" name="id_color">
+              <option value="">Seleccione...</option>
+              <option value="1">Negro</option>
+              <option value="2">Blanco</option>
+              <option value="3">Marrón</option>
+              <option value="5">Naranja</option>
+              <option value="6">Café</option>
+              <option value="7">Rojo</option>
+              <option value="8">Azul</option>
+              <option value="9">Amarillo</option>
+              <option value="10">Celeste</option>
+              <option value="11">Verde</option>
+              <option value="12">Rosa</option>
+              <option value="13">Gris</option>
+            </select>
+          </div>
+
+          <div class="ea-group">
+            <label>Tamaño</label>
+            <select id="ea-tamano" name="tamano">
+              <option value="">Seleccione...</option>
+              <option value="Pequeño">Pequeño</option>
+              <option value="Mediano">Mediano</option>
+              <option value="Grande">Grande</option>
+            </select>
+          </div>
+
+          <div class="ea-group">
+            <label>Fecha de nacimiento</label>
+            <input type="date" id="ea-fecha-nac" name="fecha_nacimiento">
+          </div>
+
+          <div class="ea-group">
+            <label>Alergias</label>
+            <input type="text" id="ea-alergias" name="alergias"
+              placeholder="Ninguna / detallar...">
+          </div>
+
+          <div class="ea-group full">
+            <label>Descripción / observaciones</label>
+            <textarea id="ea-descripcion" name="descripcion"
+              placeholder="Características relevantes del animal..."></textarea>
+          </div>
+
+          <div class="ea-group full">
+            <label>Foto de la mascota</label>
+            <div class="ea-foto-row">
+              <img id="ea-foto-preview" src="img/default.png"
+                alt="preview" class="ea-foto-preview">
+              <div class="ea-foto-input">
+                <input type="file" id="ea-foto" name="foto"
+                  accept="image/*" onchange="eaPreviewFoto(event)">
+                <p style="font-size:.72rem;color:#888;margin-top:5px;">JPG, PNG o WEBP</p>
+              </div>
+            </div>
+          </div>
+
+        </div><!-- /ea-grid -->
+
+        <button type="button" class="btn-guardar-animal"
+          id="btn-guardar-animal" onclick="guardarDatosAnimal()">
+          <i class="fas fa-save"></i> Guardar datos del animal
+        </button>
+
+        <p class="ea-msg" id="ea-msg"></p>
+      </div>
+    </div><!-- /panel-editar-animal -->
+
+
+    <!-- ── Formulario dueño ── -->
+    <form id="form-completar-registro">
+      <input type="hidden" id="comp_id_mascota">
+
+      <p class="modal-section-title">
+        <i class="fas fa-id-card"></i> Datos del Propietario
+      </p>
+
+      <div class="form-grid">
+        <div class="form-group">
+          <label>Carnet de Identidad (CI) <span style="color:#e63946">*</span></label>
+          <input type="number" id="comp_ci" placeholder="Ej. 12345678" required>
+        </div>
+        <div class="form-group">
+          <label>Celular <span style="color:#e63946">*</span></label>
+          <input type="text" id="comp_celular" placeholder="Ej. 77712345" required>
+        </div>
+        <div class="form-group">
+          <label>Nombre <span style="color:#e63946">*</span></label>
+          <input type="text" id="comp_nombre" placeholder="Nombre" required>
+        </div>
+        <div class="form-group">
+          <label>Apellido <span style="color:#e63946">*</span></label>
+          <input type="text" id="comp_apellido" placeholder="Apellido" required>
+        </div>
+        <div class="form-group full-width">
+          <label>Dirección</label>
+          <input type="text" id="comp_direccion" placeholder="Ej. Av. América #456">
+        </div>
+        <div class="form-group full-width">
+          <label>Usuario (correo) <span style="color:#e63946">*</span></label>
+          <input type="email" id="comp_usuario" placeholder="correo@ejemplo.com" required>
+          <span style="font-size:.76rem;color:#888;margin-top:3px;">
+            <i class="fas fa-info-circle"></i>
+            La contraseña se genera automáticamente y se mostrará al guardar.
+          </span>
+        </div>
+      </div>
+
+      <div class="modal-footer">
+        <button type="button" class="btn-atencion btn-gris"
+          onclick="cerrarModalCompletar()">
+          <i class="fas fa-times"></i> Cancelar
+        </button>
+        <button type="submit" class="btn-atencion btn-normal"
+          id="btn-guardar-completar">
+          <i class="fas fa-save"></i> Guardar y Activar Mascota
+        </button>
+      </div>
+    </form>
+
+  </div>
+</div>
+ 
