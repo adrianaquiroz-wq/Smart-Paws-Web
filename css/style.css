@@ -120,7 +120,8 @@ a{color:inherit;text-decoration:none;}
   font-family:inherit;
   font-size:.92rem;
 
-  color:rgb(0, 0, 0);
+  /* ── FIX P1: texto blanco sobre fondo verde ── */
+  color: rgba(255, 255, 255, 0.95);
 
   background:rgb(225, 247, 220);
 
@@ -136,10 +137,26 @@ a{color:inherit;text-decoration:none;}
 
   box-shadow:0 0 0 4px rgba(255, 255, 255, 0.934);
 
-  background:rgb(255, 255, 255);
+  /* ── FIX P1: fondo NO cambia a blanco al hacer foco ── */
+  /* background eliminado intencionalmente */
 }
 .input-group input::placeholder{
-  color:rgb(0, 0, 0);
+  /* ── FIX P1: placeholder visible sobre fondo verde ── */
+  color: rgba(255, 255, 255, 0.60);
+}
+
+/* ── FIX P1: neutralizar el autocompletado del navegador (Chrome, Edge) ─── */
+/* Chrome inyecta un fondo amarillo/blanco al autocompletar;
+   este truco lo sobreescribe con el color original del input.           */
+.input-group input:-webkit-autofill,
+.input-group input:-webkit-autofill:hover,
+.input-group input:-webkit-autofill:focus {
+  /* Inyecta una sombra interna opaca del mismo color que el fondo original */
+  -webkit-box-shadow: 0 0 0px 1000px rgb(225, 247, 220) inset !important;
+  /* Mantiene el texto blanco incluso cuando el navegador autocompletó */
+  -webkit-text-fill-color: rgba(255, 255, 255, 0.95) !important;
+  /* Retrasa el cambio de color de fondo para que la sombra lo tape */
+  transition: background-color 5000s ease-in-out 0s;
 }
 #campos-veterinario{display:flex;flex-direction:column;gap:14px;}
 #campos-veterinario.hidden{display:none!important;}
@@ -714,4 +731,73 @@ a{color:inherit;text-decoration:none;}
   border: 2px solid var(--verde-vivo);
   box-shadow: 0 0 16px rgba(61, 153, 112, .4);
   display: block;    /* Quita espacios fantasmas inferiores */
+}
+
+
+/* ════════════════════════════════════════════════════════
+   VALIDACIÓN EN TIEMPO REAL  (validaciones.js)
+   Integrado con el sistema de diseño de Smart Paws.
+   Reutiliza: --coral, --radio-pill, --transicion
+   ════════════════════════════════════════════════════════ */
+
+/* Wrapper flex-row que rodea [input + badge] */
+.val-wrapper {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  width: 100%;
+}
+
+/* El input ocupa todo el espacio disponible */
+.val-wrapper input,
+.val-wrapper textarea {
+  flex: 1;
+  min-width: 0;   /* evita desbordamiento en grids */
+}
+
+/* Badge base — oculto por defecto */
+.val-badge {
+  display: none;
+  align-items: center;
+  gap: 4px;
+  font-size: .70rem;
+  font-weight: 700;
+  padding: 3px 10px;
+  border-radius: var(--radio-pill);
+  white-space: nowrap;
+  flex-shrink: 0;
+  animation: fadeInBadge .18s cubic-bezier(.4,0,.2,1);
+  font-family: 'DM Sans', sans-serif;
+}
+
+/* Badge visible */
+.val-badge.visible {
+  display: inline-flex;
+}
+
+/* Badge: error en campo de LETRAS (rojo, mismo tono que .status-badge.urgente) */
+.val-badge.error-letras {
+  background: #fee2e2;
+  color: var(--coral);
+  border: 1px solid rgba(224,85,85,.20);
+}
+
+/* Badge: error en campo de NÚMEROS (ámbar, mismo tono que .status-badge.pendiente) */
+.val-badge.error-numeros {
+  background: #fef3c7;
+  color: #d97706;
+  border: 1px solid rgba(217,119,6,.20);
+}
+
+/* Borde rojo en el input inválido */
+.input-invalid {
+  border-color: var(--coral) !important;
+  box-shadow: 0 0 0 3px rgba(224,85,85,.12) !important;
+  transition: var(--transicion);
+}
+
+/* Animación de entrada del badge (aparece deslizando desde la derecha) */
+@keyframes fadeInBadge {
+  from { opacity: 0; transform: translateX(8px); }
+  to   { opacity: 1; transform: translateX(0);   }
 }
